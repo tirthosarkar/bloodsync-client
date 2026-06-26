@@ -26,6 +26,7 @@ import { uploadImageToImgBB } from '@/lib/imageUpload';
 import { signUp } from '@/lib/auth-client';
 import Image from 'next/image';
 import ClientMetadata from '@/components/seo/ClientMetadata';
+import { serverMutation } from '@/lib/core/server';
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const genders = ['Male', 'Female', 'Other'];
@@ -187,32 +188,6 @@ export default function RegisterPage() {
         setIsUploading(false);
       }
 
-      //!   const userData = {
-      //     name: formData.name,
-      //     email: formData.email,
-      //     avatar: avatarUrl,
-      //     phone: formData.phone,
-      //     gender: formData.gender,
-      //     bloodGroup: formData.bloodGroup,
-      //     district: formData.districtName,
-      //     upazila: formData.upazilaName,
-      //     password: formData.password,
-      //     role: "donor",
-      //     status: "active",
-      //   };
-
-      //   const response = await fetch(
-      //     `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
-      //     {
-      //       method: "POST",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: JSON.stringify(userData),
-      //     },
-      //   );
-      //    const result = await response.json();
-
       const { data, error } = await signUp.email({
         name: formData.name.trim(),
         email: formData.email.trim(),
@@ -232,11 +207,53 @@ export default function RegisterPage() {
         //   callbackURL: "/dashboard",
       });
 
-      // 3. Handle errors returned straight from the Auth Engine
+      console.log('DATA:', data);
+      console.log('ERROR:', error);
+      // 1. FIRST check error
       if (error) {
         toast.error(error.message || 'Registration failed');
         return;
       }
+
+      if (data?.user) {
+        const userPayload = {
+          authId: data.user.id,
+
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+
+          image: avatarUrl,
+
+          phone: formData.phone,
+
+          gender: formData.gender,
+
+          bloodGroup: formData.bloodGroup,
+
+          district: formData.districtName,
+
+          upazila: formData.upazilaName,
+
+          role: 'donor',
+
+          status: 'active',
+          donationCount: 0,
+
+          lastDonationDate: null,
+
+          createdAt: new Date().toISOString(),
+        };
+
+        await serverMutation('/api/users', userPayload);
+
+        toast.success('Account created successfully');
+      }
+
+      // 3. Handle errors returned straight from the Auth Engine
+      // if (error) {
+      //   toast.error(error.message || "Registration failed");
+      //   return;
+      // }
 
       // 4. Success state management
       // Better Auth handles immediate background sessions perfectly.
@@ -244,7 +261,7 @@ export default function RegisterPage() {
 
       toast.success('Registration successful! Redirecting to login...');
       setTimeout(() => {
-        router.push('/login');
+        router.push('/auth/signin');
       }, 2000);
     } catch (error) {
       console.error('Registration error encountered:', error);

@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { signIn } from '@/lib/auth-client';
 
 export default function LoginForm() {
   const router = useRouter(); // Initialize router
@@ -48,8 +49,9 @@ export default function LoginForm() {
 
       // Safety fallback route management if callbackURL is not handled implicitly
       setTimeout(() => {
-        router.push('/');
-        router.refresh(); // Cleans up cached headers/server component routing configurations
+        window.location.href = '/';
+        // router.push("/");
+        // router.refresh(); // Cleans up cached headers/server component routing configurations
       }, 1000);
     } catch (error) {
       console.error('Login unexpected error:', error);
