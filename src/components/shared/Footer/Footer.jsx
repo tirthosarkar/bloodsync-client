@@ -153,7 +153,7 @@ export default function Footer() {
             <ul className="mt-5 space-y-4">
               <li>
                 <Link
-                  href="/about"
+                  href="/resources/about"
                   className="group flex items-center gap-3 text-gray-600 hover:text-red-600 transition"
                 >
                   <FaInfoCircle className="text-red-500 transition-transform group-hover:scale-110" />
@@ -163,7 +163,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/faq"
+                  href="/resources/faq"
                   className="group flex items-center gap-3 text-gray-600 hover:text-red-600 transition"
                 >
                   <FaQuestionCircle className="text-red-500 transition-transform group-hover:scale-110" />
@@ -173,7 +173,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/privacy-policy"
+                  href="/resources/privacy-policy"
                   className="group flex items-center gap-3 text-gray-600 hover:text-red-600 transition"
                 >
                   <FaShieldAlt className="text-red-500 transition-transform group-hover:scale-110" />
@@ -183,7 +183,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/terms"
+                  href="/resources/terms"
                   className="group flex items-center gap-3 text-gray-600 hover:text-red-600 transition"
                 >
                   <FaFileContract className="text-red-500 transition-transform group-hover:scale-110" />

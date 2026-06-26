@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { Button, Avatar, Dropdown } from '@heroui/react';
+import { FaArrowRight, FaHandHoldingHeart } from 'react-icons/fa';
+import { TbLogin2 } from 'react-icons/tb';
 
 // ── Placeholder: replace with BetterAuth session later ──
 const user = null;
@@ -64,22 +66,19 @@ export default function Navbar() {
           {!user ? (
             // ── Not Logged In ──
             <>
-              <Link href="/login" className="hidden md:block">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-gray-700  hover:scale-105 hover:text-red-600"
-                >
-                  Login
-                </Button>
+              <Link
+                href="/login"
+                className="hidden md:inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:border-red-300 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
+              >
+                <TbLogin2 className="text-lg sm:text-xl" />
+                Login
               </Link>
-              <Link href="/register">
-                <Button
-                  size="sm"
-                  className="bg-red-500 hover:bg-red-600 text-white font-medium hover:scale-105"
-                >
-                  Join as Donor
-                </Button>
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-red-700 rounded-lg hover:from-red-700 hover:to-red-800 shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/30 hover:-translate-y-0.5 transition-all duration-300 group"
+              >
+                <FaHandHoldingHeart className="text-lg sm:text-xl" />
+                Join as Donor
               </Link>
             </>
           ) : (

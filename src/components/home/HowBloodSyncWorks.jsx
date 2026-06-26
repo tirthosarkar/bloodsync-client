@@ -32,7 +32,7 @@ export default function HowBloodSyncWorks() {
           </span>
 
           <h2 className="mt-4 text-4xl font-bold text-gray-900">
-            How BloodSync Works
+            How <span className="text-red-600">Blood</span>Sync Works
           </h2>
 
           <p className="mt-4 text-gray-600 leading-7">

@@ -35,7 +35,8 @@ export default function WhyChooseBloodSync() {
             </span>
 
             <h2 className="mt-5 text-4xl font-bold text-gray-900 leading-tight">
-              Why Thousands Trust BloodSync
+              Why Thousands Trust <span className="text-red-600">Blood</span>
+              Sync
             </h2>
 
             <p className="mt-5 text-gray-600 leading-8">
