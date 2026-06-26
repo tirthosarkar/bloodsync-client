@@ -67,7 +67,7 @@ export default function Navbar() {
             // ── Not Logged In ──
             <>
               <Link
-                href="/login"
+                href="/auth/signin"
                 className="hidden md:inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:border-red-300 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
               >
                 <TbLogin2 className="text-lg sm:text-xl" />
@@ -178,7 +178,7 @@ export default function Navbar() {
           {!user && (
             <li>
               <Link
-                href="/login"
+                href="/auth/signin"
                 onClick={() => setIsMenuOpen(false)}
                 className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-red-50"
               >

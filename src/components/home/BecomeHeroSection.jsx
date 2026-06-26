@@ -13,7 +13,7 @@ export default function BecomeHeroSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
-          className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-red-600 to-red-500 px-8 py-16 md:px-16 text-white"
+          className="relative overflow-hidden rounded-[32px] bg-linear-to-br from-red-600 to-red-500 px-8 py-16 md:px-16 text-white"
         >
           {/* Animated Decorative circles */}
           <motion.div
