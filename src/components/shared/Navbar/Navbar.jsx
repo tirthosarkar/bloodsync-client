@@ -1,4 +1,3 @@
-// components/Navbar.jsx
 'use client';
 
 import { useState } from 'react';
@@ -74,7 +73,7 @@ export default function Navbar() {
                 Login
               </Link>
               <Link
-                href="/register"
+                href="/auth/register"
                 className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-red-700 rounded-lg hover:from-red-700 hover:to-red-800 shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/30 hover:-translate-y-0.5 transition-all duration-300 group"
               >
                 <FaHandHoldingHeart className="text-lg sm:text-xl" />

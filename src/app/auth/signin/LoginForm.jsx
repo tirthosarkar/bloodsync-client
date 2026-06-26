@@ -326,7 +326,7 @@ export default function LoginForm() {
           <p className="text-center text-sm text-gray-500 mt-5">
             Don&apos;t have an account?{' '}
             <Link
-              href="/register"
+              href="/auth/register"
               className="text-red-600 font-semibold hover:underline"
             >
               Register to donate
