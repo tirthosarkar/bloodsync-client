@@ -66,9 +66,9 @@ export default function Navbar() {
             <>
               <Link href="/login" className="hidden md:block">
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
-                  className="text-gray-700 hover:text-red-600"
+                  className="text-gray-700  hover:scale-105 hover:text-red-600"
                 >
                   Login
                 </Button>
@@ -76,7 +76,7 @@ export default function Navbar() {
               <Link href="/register">
                 <Button
                   size="sm"
-                  className="bg-red-600 hover:bg-red-700 text-white font-medium"
+                  className="bg-red-500 hover:bg-red-600 text-white font-medium hover:scale-105"
                 >
                   Join as Donor
                 </Button>
