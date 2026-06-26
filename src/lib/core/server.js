@@ -1,6 +1,6 @@
 'use server';
 
-const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000';
+const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
 
 export const serverFetch = async path => {
   try {

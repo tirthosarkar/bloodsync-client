@@ -12,23 +12,48 @@ import {
   FaShieldAlt,
   FaHeartbeat,
 } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 export default function LoginForm() {
+  const router = useRouter(); // Initialize router
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (!formData.email || !formData.password) {
+      toast.error('Please fill in all fields.');
+      return;
+    }
     setIsLoading(true);
 
     try {
-      // 💡 later: replace with BetterAuth signIn
-      console.log(formData);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Execute Better Auth sign-in method
+      const { data, error } = await signIn.email({
+        email: formData.email.trim(),
+        password: formData.password,
+        // callbackURL: "/dashboard", // Tells Better Auth where to route on success
+      });
+
+      // Handle Better Auth Specific Errors (e.g., Wrong password, Invalid User)
+      if (error) {
+        toast.error(error.message || 'Invalid email or password.');
+        return;
+      }
+
+      toast.success('Welcome back! Redirecting...');
+
+      // Safety fallback route management if callbackURL is not handled implicitly
+      setTimeout(() => {
+        router.push('/');
+        router.refresh(); // Cleans up cached headers/server component routing configurations
+      }, 1000);
     } catch (error) {
-      console.error(error);
+      console.error('Login unexpected error:', error);
+      toast.error('An unexpected network error occurred.');
     } finally {
       setIsLoading(false);
     }
