@@ -4,9 +4,18 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Avatar } from '@heroui/react';
 
+const DASHBOARD_PATHS = {
+  admin: '/dashboard/admin',
+  volunteer: '/dashboard/volunteer',
+  donor: '/dashboard/donor',
+};
+
 export default function UserDropdown({ user, handleLogout, isLoggingOut }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const dashboardPath =
+    DASHBOARD_PATHS[user?.role?.toLowerCase()] || '/dashboard/donor';
 
   // Close on outside click
   useEffect(() => {
@@ -75,7 +84,7 @@ export default function UserDropdown({ user, handleLogout, isLoggingOut }) {
         {/* Menu Items */}
         <div className="py-1">
           <Link
-            href="/dashboard"
+            href={dashboardPath}
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors group"
           >
