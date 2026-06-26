@@ -2,7 +2,12 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { FaHeart, FaArrowRight } from 'react-icons/fa';
+import {
+  FaHeart,
+  FaArrowRight,
+  FaHandHoldingHeart,
+  FaEye,
+} from 'react-icons/fa';
 
 export default function BecomeHeroSection() {
   return (
@@ -143,6 +148,7 @@ export default function BecomeHeroSection() {
                   href="/register"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-red-600 font-semibold text-base rounded-xl hover:bg-red-50 transition-colors duration-300 shadow-lg shadow-white/20 group"
                 >
+                  <FaHandHoldingHeart className="text-lg sm:text-xl" />
                   Join as Donor
                   <FaArrowRight className="text-sm group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -156,6 +162,7 @@ export default function BecomeHeroSection() {
                   href="/donation-requests"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30 text-white font-semibold text-base rounded-xl hover:bg-white/10 transition-colors duration-300 backdrop-blur-sm"
                 >
+                  <FaEye className="text-lg group-hover:scale-110 transition-transform" />
                   View Requests
                 </Link>
               </motion.div>
