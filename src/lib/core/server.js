@@ -1,6 +1,19 @@
 'use server';
 
+import { getUserToken } from './session';
+
 const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
+
+export const authHeader = async () => {
+  const token = await getUserToken();
+  const header = token
+    ? {
+        authorization: `Bearer ${token}`,
+      }
+    : {};
+
+  return header;
+};
 
 export const serverFetch = async path => {
   try {
