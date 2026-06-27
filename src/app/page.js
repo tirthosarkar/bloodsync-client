@@ -1,5 +1,3 @@
-// import Image from "next/image";
-
 import Banner from '@/components/home/Banner';
 import BecomeHeroSection from '@/components/home/BecomeHeroSection';
 import HowBloodSyncWorks from '@/components/home/HowBloodSyncWorks';
