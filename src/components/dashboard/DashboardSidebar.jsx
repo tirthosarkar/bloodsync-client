@@ -65,14 +65,14 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
         },
         {
           label: 'All Requests',
-          href: '/dashboard/admin/all-blood-donation-request',
+          href: '/dashboard/all-blood-donation-request',
           icon: FaClipboardList,
         },
       ],
       volunteer: [
         {
           label: 'All Requests',
-          href: '/dashboard/volunteer/all-blood-donation-request',
+          href: '/dashboard/all-blood-donation-request',
           icon: FaClipboardList,
         },
       ],
