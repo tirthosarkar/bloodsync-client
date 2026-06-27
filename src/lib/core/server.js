@@ -30,8 +30,11 @@ export const serverFetch = async path => {
  */
 export const serverMutation = async (path, data, method = 'POST') => {
   try {
+    // ✅ Print to console to verify the method is actually "PATCH"
+    console.log(`🚀 Request Method: ${method} | URL: ${baseURL}${path}`);
+
     const res = await fetch(`${baseURL}${path}`, {
-      method: method,
+      method: method, // ✅ Now correctly sends PATCH / DELETE
       headers: {
         'Content-Type': 'application/json',
       },

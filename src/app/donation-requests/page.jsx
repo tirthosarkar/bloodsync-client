@@ -15,11 +15,11 @@ export default async function PublicRequestsPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+        <h1 className="mt-5 md:mt-10 text-3xl md:text-4xl font-bold text-gray-900">
           Blood <span className="text-red-600">Donation Requests</span>
         </h1>
         <p className="text-gray-500 mt-3 text-lg">
-          Browse pending requests and be the hero who saves a life today.
+          Browse Blood requests and be the hero who saves a life today.
         </p>
       </div>
 
