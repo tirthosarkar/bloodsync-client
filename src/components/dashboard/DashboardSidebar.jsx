@@ -38,12 +38,12 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
       donor: [
         {
           label: 'My Requests',
-          href: '/dashboard/my-donation-requests',
+          href: '/dashboard/donor/my-donation-requests',
           icon: FaClipboardList,
         },
         {
           label: 'Create Request',
-          href: '/dashboard/create-donation-request',
+          href: '/dashboard/donor/create-donation-request',
           icon: FaPlusCircle,
         },
       ],
