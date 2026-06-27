@@ -200,8 +200,11 @@ export default function RegisterPage() {
         phone: formData.phone,
         gender: formData.gender,
         bloodGroup: formData.bloodGroup,
-        district: formData.districtName,
-        upazila: formData.upazilaName,
+        // ✅ Send both ID and Name to your MongoDB
+        district: formData.district,
+        districtName: formData.districtName,
+        upazila: formData.upazila,
+        upazilaName: formData.upazilaName,
 
         // Tell Better Auth where to send the user once authenticated successfully
         //   callbackURL: "/dashboard",
@@ -230,9 +233,11 @@ export default function RegisterPage() {
 
           bloodGroup: formData.bloodGroup,
 
-          district: formData.districtName,
-
-          upazila: formData.upazilaName,
+          // ✅ Send both ID and Name to your MongoDB
+          district: formData.district,
+          districtName: formData.districtName,
+          upazila: formData.upazila,
+          upazilaName: formData.upazilaName,
 
           role: 'donor',
 
