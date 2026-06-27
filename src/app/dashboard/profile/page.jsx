@@ -3,6 +3,38 @@ import { auth } from '@/lib/auth'; // Your Better Auth server instance
 import { headers } from 'next/headers';
 import ProfileClient from './ProfileClient';
 
+// ✅ 1. Dynamic Metadata (Runs on the server)
+export async function generateMetadata() {
+  // Get the session to access the user's name
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const user = session?.user;
+  const userName = user?.name || 'User';
+
+  return {
+    title: `${userName} - Profile`,
+    description: `Manage your personal information and donor credentials on BloodSync. Welcome, ${userName}!`,
+    keywords: [
+      'blood donation',
+      'donate blood',
+      'blood bank',
+      'blood request',
+      'save lives',
+      'donor registration',
+      'profile settings',
+    ],
+    authors: [{ name: 'Shahadat Hossain' }],
+    // Optional: Add Open Graph for better sharing
+    openGraph: {
+      title: `${userName} - Profile Settings | BloodSync`,
+      description: `Manage your donor profile and credentials on BloodSync.`,
+      type: 'website',
+    },
+  };
+}
+
 export default async function ProfilePage() {
   // 1. Get the session on the server
   const session = await auth.api.getSession({
