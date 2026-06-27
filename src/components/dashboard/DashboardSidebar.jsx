@@ -32,20 +32,30 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
         icon: MdSpaceDashboard,
       },
       { label: 'Profile', href: '/dashboard/profile', icon: FaUser },
+      {
+        label: 'My Requests',
+        href: '/dashboard/my-donation-requests',
+        icon: FaClipboardList,
+      },
+      {
+        label: 'Create Request',
+        href: '/dashboard/create-donation-request',
+        icon: FaPlusCircle,
+      },
     ];
 
     const roleSpecificItems = {
       donor: [
-        {
-          label: 'My Requests',
-          href: '/dashboard/donor/my-donation-requests',
-          icon: FaClipboardList,
-        },
-        {
-          label: 'Create Request',
-          href: '/dashboard/donor/create-donation-request',
-          icon: FaPlusCircle,
-        },
+        // {
+        //   label: "My Requests",
+        //   href: "/dashboard/donor/my-donation-requests",
+        //   icon: FaClipboardList,
+        // },
+        // {
+        //   label: "Create Request",
+        //   href: "/dashboard/donor/create-donation-request",
+        //   icon: FaPlusCircle,
+        // },
       ],
       admin: [
         {

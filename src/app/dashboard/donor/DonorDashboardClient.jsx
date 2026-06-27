@@ -301,7 +301,7 @@ export default function DonorDashboardClient({ userId }) {
                         <button
                           onClick={() =>
                             router.push(
-                              `/dashboard/donor/edit-donation-request/${req._id}`,
+                              `/dashboard/edit-donation-request/${req._id}`,
                             )
                           }
                           className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors shrink-0"
