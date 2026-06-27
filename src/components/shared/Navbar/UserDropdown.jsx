@@ -76,7 +76,7 @@ export default function UserDropdown({ user, handleLogout, isLoggingOut }) {
           <p className="text-sm font-semibold text-gray-800 leading-none truncate">
             {user?.name}
           </p>
-          <p className="text-xs text-gray-400 mt-1 truncate max-w-[180px]">
+          <p className="text-xs text-gray-400 mt-1 truncate max-w-45">
             {user?.email}
           </p>
         </div>

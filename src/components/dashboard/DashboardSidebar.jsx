@@ -16,6 +16,7 @@ import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { MdSpaceDashboard } from 'react-icons/md';
 import Image from 'next/image';
+import { Avatar, Button } from '@heroui/react';
 
 export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
   const pathname = usePathname();
@@ -110,9 +111,15 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
 
         <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">
-              {user?.name?.charAt(0).toUpperCase() || 'U'}
-            </div>
+            <Avatar
+              size="sm"
+              className="cursor-pointer ring-2 ring-red-200 hover:ring-red-400 transition-all"
+            >
+              <Avatar.Image src={user?.image || user?.avatar} />
+              <Avatar.Fallback>
+                {user?.name ? user?.name?.charAt(0).toUpperCase() || 'U' : '?'}
+              </Avatar.Fallback>
+            </Avatar>
             <div>
               <p className="text-sm font-semibold text-gray-800">
                 {user?.name}
@@ -151,12 +158,12 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
         </nav>
 
         <div className="border-t border-gray-200 p-4">
-          <button
+          <Button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="md:w-full inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 lg:py-4 bg-linear-to-r from-red-600 to-red-700 text-white font-semibold text-sm sm:text-base rounded-xl shadow-lg shadow-red-500/30 hover:shadow-red-500/40 hover:-translate-y-0.5 transition-all duration-300 group"
           >
             <FaSignOutAlt /> <span className="text-sm font-medium">Logout</span>
-          </button>
+          </Button>
         </div>
       </aside>
     </>
