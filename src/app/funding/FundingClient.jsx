@@ -17,6 +17,7 @@ import {
   FaUser,
   FaChevronLeft,
   FaChevronRight,
+  FaHeartbeat,
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
@@ -327,8 +328,11 @@ export default function FundingClient({ currentUserId }) {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg sm:max-w-xl p-6 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-xl font-bold text-gray-900 mb-1">
-              💝 Support BloodSync
+            <h3 className="text-xl font-bold text-gray-900 mb-1 inline-flex items-center gap-2">
+              <FaHeartbeat className="text-red-600 text-2xl" />
+              <span className="text-xl font-bold text-gray-800">
+                <span className="text-red-600">Blood</span>Sync
+              </span>
             </h3>
             <p className="text-sm text-gray-500 mb-4">
               Enter the amount you wish to donate securely.

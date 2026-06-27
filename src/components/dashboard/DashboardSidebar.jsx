@@ -28,7 +28,7 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
       { label: 'HomePage', href: `/`, icon: FaHome },
       {
         label: 'Dashboard',
-        href: `/dashboard/${role}`,
+        href: `/dashboard`,
         icon: MdSpaceDashboard,
       },
       { label: 'Profile', href: '/dashboard/profile', icon: FaUser },

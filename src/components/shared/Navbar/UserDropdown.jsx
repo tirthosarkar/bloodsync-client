@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { Avatar } from '@heroui/react';
 
 const DASHBOARD_PATHS = {
-  admin: '/dashboard/admin',
-  volunteer: '/dashboard/volunteer',
+  admin: '/dashboard',
+  volunteer: '/dashboard',
   donor: '/dashboard/donor',
 };
 
