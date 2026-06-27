@@ -51,52 +51,6 @@ export default function DonorDashboardClient({ userId }) {
   }, [userId]);
 
   // 2. Handle Status Update (Done / Canceled)
-  //   const handleStatusUpdate = async (requestId, newStatus) => {
-  //     try {
-  //       console.log(`🚀 Attempting to update ${requestId} to ${newStatus}`);
-
-  //       const session = await authClient.getSession();
-  //       console.log("📦 Session data:", session);
-
-  //       // Safely extract user data
-  //       const userId = session?.user?.id || session?.data?.user?.id;
-  //       const role = session?.user?.role || session?.data?.user?.role;
-
-  //       if (!userId) {
-  //         toast.error("User ID missing! Check session structure.");
-  //         console.error("Session object was:", session);
-  //         return;
-  //       }
-
-  //       console.log("👤 Sending UserID:", userId, "Role:", role);
-
-  //       const response = await serverMutation(
-  //         `/api/donation-requests/${requestId}`,
-  //         {
-  //           status: newStatus,
-  //           userId: userId,
-  //           role: role,
-  //         },
-  //         "PATCH",
-  //       );
-
-  //       console.log("✅ Server Response:", response);
-
-  //       if (response.success) {
-  //         toast.success(`Request marked as ${newStatus}!`);
-  //         setRequests((prev) =>
-  //           prev.map((req) =>
-  //             req._id === requestId ? { ...req, status: newStatus } : req,
-  //           ),
-  //         );
-  //       } else {
-  //         toast.error(response.message || "Server returned success: false");
-  //       }
-  //     } catch (error) {
-  //       console.error("❌ CATCH BLOCK TRIGGERED:", error);
-  //       toast.error(error.message || "Update failed (check console)");
-  //     }
-  //   };
   const handleStatusUpdate = async (requestId, newStatus) => {
     try {
       const session = await authClient.getSession();
@@ -112,13 +66,11 @@ export default function DonorDashboardClient({ userId }) {
       if (response.success) {
         toast.success(`Request marked as ${newStatus}!`);
 
-        // 🔥 ADD THIS: Re-fetch the list immediately so the UI updates!
+        // Re-fetch the list immediately so the UI updates!
         const updatedData = await serverFetch(
           `/api/donation-requests/recent/${userId}`,
         );
         setRequests(updatedData);
-
-        // Optional: You can remove the old manual map, since we are fetching fresh data
       }
     } catch (error) {
       toast.error(error.message || 'Failed to update status');
@@ -132,40 +84,6 @@ export default function DonorDashboardClient({ userId }) {
   };
 
   // 4. Handle Delete Request (Called from Modal)
-  //   const handleDeleteConfirm = async () => {
-  //     if (!deletingRequestId) return;
-
-  //     try {
-  //       setIsDeleting(true);
-
-  //       const session = await authClient.getSession();
-
-  //       const response = await serverMutation(
-  //         `/api/donation-requests/${deletingRequestId}`,
-  //         {
-  //           userId: session.data.user.id,
-  //           role: session.data.user.role,
-  //         },
-  //         "DELETE",
-  //       );
-
-  //       if (response.success) {
-  //         toast.success("Request deleted successfully");
-
-  //         setRequests((prev) =>
-  //           prev.filter((req) => req._id !== deletingRequestId),
-  //         );
-
-  //         setIsDeleteModalOpen(false);
-  //         setDeletingRequestId(null);
-  //       }
-  //     } catch (error) {
-  //       toast.error(error.message || "Failed to delete request");
-  //     } finally {
-  //       setIsDeleting(false);
-  //     }
-  //   };
-
   const handleDeleteConfirm = async () => {
     if (!deletingRequestId) return;
 
@@ -173,11 +91,10 @@ export default function DonorDashboardClient({ userId }) {
       setIsDeleting(true);
       const session = await authClient.getSession();
 
-      // 🛡️ SAFE EXTRACTION: Check both possible paths!
+      // Safe extraction: Check both possible paths!
       const userId = session?.data?.user?.id || session?.user?.id;
       const role = session?.data?.user?.role || session?.user?.role;
 
-      // 🛑 Validate before sending
       if (!userId) {
         toast.error('User ID not found. Please log in again.');
         setIsDeleting(false);
@@ -256,10 +173,10 @@ export default function DonorDashboardClient({ userId }) {
         </p>
 
         <Link
-          href="/dashboard/my-donation-requests"
+          href="/dashboard/donor" // Updated to go to donor dashboard
           className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors shadow-md shadow-red-500/20"
         >
-          View My All Requests
+          Go to Dashboard
           <FaArrowRight size={14} />
         </Link>
       </div>
@@ -354,7 +271,7 @@ export default function DonorDashboardClient({ userId }) {
                         <button
                           onClick={() =>
                             router.push(
-                              `/dashboard/edit-donation-request/${req._id}`,
+                              `/dashboard/donor/edit-donation-request/${req._id}`,
                             )
                           }
                           className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
@@ -492,7 +409,7 @@ export default function DonorDashboardClient({ userId }) {
                       <button
                         onClick={() =>
                           router.push(
-                            `/dashboard/edit-donation-request/${req._id}`,
+                            `/dashboard/donor/edit-donation-request/${req._id}`, // ✅ FIXED: Added /donor/
                           )
                         }
                         className="p-2 text-blue-600 bg-blue-50 rounded-md"
@@ -527,7 +444,7 @@ export default function DonorDashboardClient({ userId }) {
         {/* ── FOOTER ── */}
         <div className="p-6 border-t border-gray-200 bg-gray-50 flex justify-end">
           <Link
-            href="/dashboard/my-donation-requests"
+            href="/dashboard/donor" // Updated to donor dashboard
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors shadow-md shadow-red-500/20"
           >
             View My All Requests
