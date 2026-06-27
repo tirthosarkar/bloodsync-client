@@ -40,7 +40,7 @@ export default function AllUsersClient() {
   const fetchUsers = async (page = 1, status = 'all') => {
     try {
       setLoading(true);
-      let url = `/api/users?page=${page}&limit=${limit}`;
+      let url = `/api/admin/users?page=${page}&limit=${limit}`;
       if (status && status !== 'all') {
         url += `&status=${status}`;
       }
@@ -81,16 +81,14 @@ export default function AllUsersClient() {
     }
   };
 
-  // 4. Handle User Actions (Block, Unblock, Make Volunteer, Make Admin)
+  // 4. Handle User Actions
   const handleUserAction = async (userId, action) => {
     try {
       setProcessingId(userId);
       setOpenDropdownId(null);
 
-      // Find the user's authId from the state list
       const targetUser = users.find(u => u._id === userId);
 
-      // 🟢 Log to browser console to verify the ID is correct
       console.log('🔍 Sending authId to backend:', targetUser?.authId);
 
       if (!targetUser || !targetUser.authId) {
@@ -100,7 +98,7 @@ export default function AllUsersClient() {
       }
 
       const response = await serverMutation(
-        `/api/admin/users/${targetUser.authId.trim()}`, // ✅ NEW ADMIN URL
+        `/api/admin/users/${targetUser.authId.trim()}`,
         { action },
         'PATCH',
       );
@@ -133,6 +131,22 @@ export default function AllUsersClient() {
       : 'bg-red-100 text-red-800 border-red-200';
   };
 
+  // ── Reusable Avatar ──
+  const UserAvatar = ({ image, name, size = 8 }) =>
+    image ? (
+      <div
+        className={`relative w-${size} h-${size} rounded-full overflow-hidden shrink-0 border border-gray-200`}
+      >
+        <Image src={image} alt={name} fill className="object-cover" />
+      </div>
+    ) : (
+      <div
+        className={`w-${size} h-${size} rounded-full bg-gray-200 flex items-center justify-center text-gray-500 shrink-0`}
+      >
+        <FaUser size={14} />
+      </div>
+    );
+
   if (loading && users.length === 0) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -146,7 +160,7 @@ export default function AllUsersClient() {
       {/* ── Header & Filters ── */}
       <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex flex-wrap items-center gap-2 min-w-0">
-          <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 truncate">
+          <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800">
             All Users
           </h2>
           <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full whitespace-nowrap shrink-0">
@@ -189,17 +203,20 @@ export default function AllUsersClient() {
         <>
           {/* ── DESKTOP TABLE VIEW ── */}
           <div className="hidden lg:block w-full overflow-x-auto">
+            {/* CHANGED: minWidth 750 → 680, table-fixed removed so columns breathe */}
             <table
               className="w-full text-sm text-left text-gray-600"
-              style={{ minWidth: '750px' }}
+              style={{ minWidth: '680px' }}
             >
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-3 lg:px-4 py-3">User</th>
-                  <th className="px-3 lg:px-4 py-3">Email</th>
-                  <th className="px-3 lg:px-4 py-3">Role</th>
-                  <th className="px-3 lg:px-4 py-3">Status</th>
-                  <th className="px-3 lg:px-4 py-3 text-right">Actions</th>
+                  {/* CHANGED: w-[220px] so User col gets enough room */}
+                  <th className="px-4 py-3 w-[220px]">User</th>
+                  {/* CHANGED: hide Email on lg, show on xl */}
+                  <th className="px-4 py-3 w-[220px]">Email</th>
+                  <th className="px-4 py-3 w-[100px]">Role</th>
+                  <th className="px-4 py-3 w-[100px]">Status</th>
+                  <th className="px-4 py-3 text-right w-[80px]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -208,49 +225,36 @@ export default function AllUsersClient() {
                     key={user._id}
                     className="hover:bg-gray-50 transition-colors"
                   >
-                    <td className="px-3 lg:px-4 py-4">
-                      <div className="flex items-center gap-3">
-                        {user.avatar ? (
-                          <Image
-                            src={user.avatar}
-                            alt={user.name}
-                            width={32}
-                            height={32}
-                            className="rounded-full object-cover border border-gray-200"
-                          />
-                        ) : (
-                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                            <FaUser size={14} />
-                          </div>
-                        )}
-                        <span className="font-medium text-gray-900 truncate max-w-[150px]">
-                          {user.name}
-                        </span>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-2.5">
+                        <UserAvatar image={user.image} name={user.name} />
+                        <div>
+                          <span className="font-medium text-gray-900 whitespace-nowrap block">
+                            {user.name}
+                          </span>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-3 lg:px-4 py-4 truncate max-w-[200px]">
+                    {/* CHANGED: hidden xl:table-cell */}
+                    <td className="px-4 py-4 w-[220px] text-gray-600">
                       {user.email}
                     </td>
-                    <td className="px-3 lg:px-4 py-4">
+                    <td className="px-4 py-4">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getRoleBadge(
-                          user.role,
-                        )}`}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getRoleBadge(user.role)}`}
                       >
                         {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                       </span>
                     </td>
-                    <td className="px-3 lg:px-4 py-4">
+                    <td className="px-4 py-4">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusBadge(
-                          user.status,
-                        )}`}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusBadge(user.status)}`}
                       >
                         {user.status.charAt(0).toUpperCase() +
                           user.status.slice(1)}
                       </span>
                     </td>
-                    <td className="px-3 lg:px-4 py-4 text-right relative">
+                    <td className="px-4 py-4 text-right relative">
                       <div className="flex items-center justify-end">
                         <button
                           onClick={() =>
@@ -262,9 +266,9 @@ export default function AllUsersClient() {
                           disabled={processingId === user._id}
                         >
                           {processingId === user._id ? (
-                            <FaSpinner className="animate-spin" size={16} />
+                            <FaSpinner className="animate-spin" size={15} />
                           ) : (
-                            <FaEllipsisV size={16} />
+                            <FaEllipsisV size={15} />
                           )}
                         </button>
 
@@ -329,19 +333,8 @@ export default function AllUsersClient() {
               >
                 <div className="flex justify-between items-start mb-2 gap-2 min-w-0">
                   <div className="flex items-center gap-2 min-w-0">
-                    {user.avatar ? (
-                      <Image
-                        src={user.avatar}
-                        alt={user.name}
-                        width={32}
-                        height={32}
-                        className="rounded-full object-cover border border-gray-200 shrink-0"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 shrink-0">
-                        <FaUser size={14} />
-                      </div>
-                    )}
+                    {/* CHANGED: user.avatar → user.image, use fill pattern */}
+                    <UserAvatar image={user.image} name={user.name} />
                     <h3 className="font-medium text-gray-900 text-sm truncate">
                       {user.name}
                     </h3>
