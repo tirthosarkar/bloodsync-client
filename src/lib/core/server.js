@@ -50,6 +50,7 @@ export const serverMutation = async (path, data, method = 'POST') => {
       method: method, // ✅ Now correctly sends PATCH / DELETE
       headers: {
         'Content-Type': 'application/json',
+        ...(await authHeader()),
       },
       body: data ? JSON.stringify(data) : undefined,
     });
