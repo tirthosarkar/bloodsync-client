@@ -18,6 +18,7 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
+import { authClient } from '@/lib/auth-client';
 
 export default function DonorDashboardClient({ userId }) {
   const router = useRouter();
@@ -50,21 +51,74 @@ export default function DonorDashboardClient({ userId }) {
   }, [userId]);
 
   // 2. Handle Status Update (Done / Canceled)
+  //   const handleStatusUpdate = async (requestId, newStatus) => {
+  //     try {
+  //       console.log(`🚀 Attempting to update ${requestId} to ${newStatus}`);
+
+  //       const session = await authClient.getSession();
+  //       console.log("📦 Session data:", session);
+
+  //       // Safely extract user data
+  //       const userId = session?.user?.id || session?.data?.user?.id;
+  //       const role = session?.user?.role || session?.data?.user?.role;
+
+  //       if (!userId) {
+  //         toast.error("User ID missing! Check session structure.");
+  //         console.error("Session object was:", session);
+  //         return;
+  //       }
+
+  //       console.log("👤 Sending UserID:", userId, "Role:", role);
+
+  //       const response = await serverMutation(
+  //         `/api/donation-requests/${requestId}`,
+  //         {
+  //           status: newStatus,
+  //           userId: userId,
+  //           role: role,
+  //         },
+  //         "PATCH",
+  //       );
+
+  //       console.log("✅ Server Response:", response);
+
+  //       if (response.success) {
+  //         toast.success(`Request marked as ${newStatus}!`);
+  //         setRequests((prev) =>
+  //           prev.map((req) =>
+  //             req._id === requestId ? { ...req, status: newStatus } : req,
+  //           ),
+  //         );
+  //       } else {
+  //         toast.error(response.message || "Server returned success: false");
+  //       }
+  //     } catch (error) {
+  //       console.error("❌ CATCH BLOCK TRIGGERED:", error);
+  //       toast.error(error.message || "Update failed (check console)");
+  //     }
+  //   };
   const handleStatusUpdate = async (requestId, newStatus) => {
     try {
+      const session = await authClient.getSession();
+      const userId = session?.user?.id || session?.data?.user?.id;
+      const role = session?.user?.role || session?.data?.user?.role;
+
       const response = await serverMutation(
         `/api/donation-requests/${requestId}`,
-        { status: newStatus },
+        { status: newStatus, userId, role },
         'PATCH',
       );
 
       if (response.success) {
         toast.success(`Request marked as ${newStatus}!`);
-        setRequests(prev =>
-          prev.map(req =>
-            req._id === requestId ? { ...req, status: newStatus } : req,
-          ),
+
+        // 🔥 ADD THIS: Re-fetch the list immediately so the UI updates!
+        const updatedData = await serverFetch(
+          `/api/donation-requests/recent/${userId}`,
         );
+        setRequests(updatedData);
+
+        // Optional: You can remove the old manual map, since we are fetching fresh data
       }
     } catch (error) {
       toast.error(error.message || 'Failed to update status');
@@ -78,14 +132,61 @@ export default function DonorDashboardClient({ userId }) {
   };
 
   // 4. Handle Delete Request (Called from Modal)
+  //   const handleDeleteConfirm = async () => {
+  //     if (!deletingRequestId) return;
+
+  //     try {
+  //       setIsDeleting(true);
+
+  //       const session = await authClient.getSession();
+
+  //       const response = await serverMutation(
+  //         `/api/donation-requests/${deletingRequestId}`,
+  //         {
+  //           userId: session.data.user.id,
+  //           role: session.data.user.role,
+  //         },
+  //         "DELETE",
+  //       );
+
+  //       if (response.success) {
+  //         toast.success("Request deleted successfully");
+
+  //         setRequests((prev) =>
+  //           prev.filter((req) => req._id !== deletingRequestId),
+  //         );
+
+  //         setIsDeleteModalOpen(false);
+  //         setDeletingRequestId(null);
+  //       }
+  //     } catch (error) {
+  //       toast.error(error.message || "Failed to delete request");
+  //     } finally {
+  //       setIsDeleting(false);
+  //     }
+  //   };
+
   const handleDeleteConfirm = async () => {
     if (!deletingRequestId) return;
 
     try {
       setIsDeleting(true);
+      const session = await authClient.getSession();
+
+      // 🛡️ SAFE EXTRACTION: Check both possible paths!
+      const userId = session?.data?.user?.id || session?.user?.id;
+      const role = session?.data?.user?.role || session?.user?.role;
+
+      // 🛑 Validate before sending
+      if (!userId) {
+        toast.error('User ID not found. Please log in again.');
+        setIsDeleting(false);
+        return;
+      }
+
       const response = await serverMutation(
         `/api/donation-requests/${deletingRequestId}`,
-        {},
+        { userId, role },
         'DELETE',
       );
 
