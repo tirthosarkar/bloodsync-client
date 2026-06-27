@@ -283,13 +283,14 @@ export default function DonorDashboardClient({ userId }) {
 
                       {req.status === 'inprogress' && req.donorName && (
                         // CHANGED: max-w + truncate on donor info
-                        <div className="mt-1 flex items-center gap-1 text-xs text-gray-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100 w-fit max-w-[160px]">
+                        <div className="mt-1 flex-row items-center gap-1 text-xs text-gray-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100 w-fit inline-flex ">
                           <FaUser
                             className="text-blue-500 shrink-0"
                             size={10}
                           />
-                          <span className="font-medium truncate">
-                            {req.donorName}
+                          <span className="font-medium ">{req.donorName}</span>
+                          <span className="text-gray-400">
+                            ({req.donorEmail})
                           </span>
                         </div>
                       )}
@@ -405,7 +406,7 @@ export default function DonorDashboardClient({ userId }) {
                       <span className="font-medium truncate">
                         {req.donorName}
                       </span>
-                      <span className="text-gray-400 truncate hidden sm:inline">
+                      <span className="text-gray-400 truncate ">
                         ({req.donorEmail})
                       </span>
                     </div>
