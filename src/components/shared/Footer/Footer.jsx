@@ -34,8 +34,12 @@ export default function Footer() {
   const navLinks = [
     { icon: FaHome, href: '/', label: 'Home' },
     { icon: FaTint, href: '/donation-requests', label: 'Donation Requests' },
-    { icon: FaHandHoldingHeart, href: '/register', label: 'Become a Donor' },
-    { icon: FaSignInAlt, href: '/login', label: 'Login' },
+    {
+      icon: FaHandHoldingHeart,
+      href: '/auth/register',
+      label: 'Become a Donor',
+    },
+    { icon: FaSignInAlt, href: '/auth/signin', label: 'Login' },
   ];
 
   const resourceLinks = [
@@ -168,7 +172,7 @@ export default function Footer() {
             className="lg:col-span-2"
           >
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-              Resources
+              <Link href={'/resources '}> Resources </Link>
             </h3>
 
             <ul className="mt-5 space-y-4">
@@ -232,7 +236,7 @@ export default function Footer() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <Link
-                    href="/register"
+                    href="/auth/register"
                     className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50 hover:shadow-lg group"
                   >
                     <FaHandHoldingHeart className="text-lg sm:text-xl" />
