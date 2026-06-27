@@ -2,7 +2,6 @@
 
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/context/AuthContext';
-import { serverFetch, serverMutation } from '@/lib/core/server';
 import { uploadImageToImgBB } from '@/lib/imageUpload';
 import { useGeoData } from '@/hooks/useGeoData';
 import {
@@ -21,6 +20,8 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { getUserById } from '@/lib/api/users';
+import { updateUserById } from '@/lib/action/users';
 
 // ✅ Receive the initial user data from the server
 export default function ProfileClient({ initialUser }) {
@@ -59,8 +60,7 @@ export default function ProfileClient({ initialUser }) {
         // Use the current user from AuthContext (which has the proper authId)
         if (!user?.id) return;
 
-        const data = await serverFetch(`/api/users/${user.id}`);
-        console.log(data, 'from server');
+        const data = await getUserById(user.id);
 
         const loadedData = {
           name: data.name || '',
@@ -165,11 +165,7 @@ export default function ProfileClient({ initialUser }) {
         // ❌ Status is NOT included here - it stays unchanged (Only Admin can change it)
       };
 
-      const response = await serverMutation(
-        `/api/users/${user.id}`,
-        updatedData,
-        'PATCH',
-      );
+      const response = await updateUserById(user.id, updatedData);
 
       toast.success(response.message || 'Profile updated successfully!');
 
