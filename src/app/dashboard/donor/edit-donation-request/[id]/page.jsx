@@ -247,7 +247,7 @@ export default function EditDonationRequestPage() {
     try {
       // Prepare the payload
       const payload = {
-        requesterId: user.id,
+        requesterId: user.authId || user.id, // ✅ Ensure you send the authId used in the database,
         requesterName: user.name,
         requesterEmail: user.email,
         recipientName: formData.recipientName.trim(),
@@ -261,7 +261,7 @@ export default function EditDonationRequestPage() {
         donationDate: formData.donationDate,
         donationTime: formData.donationTime,
         requestMessage: formData.requestMessage.trim(),
-        userId: user.id,
+        userId: user.authId || user.id, // ✅ Critical: This must match request.requesterId in DB,
         role: user.role || 'donor',
       };
 
