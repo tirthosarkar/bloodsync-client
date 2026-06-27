@@ -1,4 +1,3 @@
-// app/register/page.jsx
 'use client';
 
 import { useState } from 'react';
@@ -205,6 +204,8 @@ export default function RegisterPage() {
         districtName: formData.districtName,
         upazila: formData.upazila,
         upazilaName: formData.upazilaName,
+        donationCount: 0,
+        lastDonationDate: null,
 
         // Tell Better Auth where to send the user once authenticated successfully
         //   callbackURL: "/dashboard",

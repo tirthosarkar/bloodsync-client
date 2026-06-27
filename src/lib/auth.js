@@ -16,8 +16,48 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        default: 'donor',
         type: 'string',
+        default: 'donor',
+      },
+      status: {
+        type: 'string',
+        default: 'active',
+      },
+      phone: {
+        type: 'string',
+        required: true,
+      },
+      gender: {
+        type: 'string',
+        required: true,
+      },
+      bloodGroup: {
+        type: 'string',
+        required: true,
+      },
+      district: {
+        type: 'string',
+        required: true,
+      },
+      districtName: {
+        type: 'string',
+        required: true,
+      },
+      upazila: {
+        type: 'string',
+        required: true,
+      },
+      upazilaName: {
+        type: 'string',
+        required: true,
+      },
+      donationCount: {
+        type: 'number',
+        default: 0,
+      },
+      lastDonationDate: {
+        type: 'date',
+        default: null,
       },
     },
   },
