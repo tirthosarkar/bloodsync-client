@@ -10,98 +10,122 @@ import {
   FaUsers,
   FaSignOutAlt,
   FaTimes,
-  FaHeartbeat,
 } from 'react-icons/fa';
-import { useContext } from 'react';
-import { AuthContext } from '@/context/AuthContext';
 import { MdSpaceDashboard } from 'react-icons/md';
+import {
+  TbLayoutSidebarLeftCollapse,
+  TbLayoutSidebarLeftExpand,
+} from 'react-icons/tb';
+import { useContext, useState } from 'react';
+import { AuthContext } from '@/context/AuthContext';
 import Image from 'next/image';
-import { Avatar, Button } from '@heroui/react';
+import { Avatar } from '@heroui/react';
+
+const ROLE_BADGE = {
+  admin: 'bg-purple-100 text-purple-700 border border-purple-200',
+  volunteer: 'bg-blue-100   text-blue-700   border border-blue-200',
+  donor: 'bg-red-100    text-red-700    border border-red-200',
+};
+
+const COMMON_ITEMS = [
+  { label: 'Home', href: '/', icon: FaHome },
+  { label: 'Dashboard', href: '/dashboard', icon: MdSpaceDashboard },
+  { label: 'Profile', href: '/dashboard/profile', icon: FaUser },
+  {
+    label: 'My Requests',
+    href: '/dashboard/my-donation-requests',
+    icon: FaClipboardList,
+  },
+  {
+    label: 'Create Request',
+    href: '/dashboard/create-donation-request',
+    icon: FaPlusCircle,
+  },
+];
+
+const ROLE_ITEMS = {
+  admin: [
+    { label: 'All Users', href: '/dashboard/admin/all-users', icon: FaUsers },
+    {
+      label: 'All Requests',
+      href: '/dashboard/all-blood-donation-request',
+      icon: FaClipboardList,
+    },
+  ],
+  volunteer: [
+    {
+      label: 'All Requests',
+      href: '/dashboard/all-blood-donation-request',
+      icon: FaClipboardList,
+    },
+  ],
+  donor: [],
+};
 
 export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
   const pathname = usePathname();
   const { logout } = useContext(AuthContext);
   const role = user?.role?.toLowerCase() || 'donor';
+  const [collapsed, setCollapsed] = useState(false);
 
-  const getNavItems = () => {
-    const commonItems = [
-      { label: 'HomePage', href: `/`, icon: FaHome },
-      {
-        label: 'Dashboard',
-        href: `/dashboard`,
-        icon: MdSpaceDashboard,
-      },
-      { label: 'Profile', href: '/dashboard/profile', icon: FaUser },
-      {
-        label: 'My Requests',
-        href: '/dashboard/my-donation-requests',
-        icon: FaClipboardList,
-      },
-      {
-        label: 'Create Request',
-        href: '/dashboard/create-donation-request',
-        icon: FaPlusCircle,
-      },
-    ];
+  const navItems = [...COMMON_ITEMS, ...(ROLE_ITEMS[role] || [])];
 
-    const roleSpecificItems = {
-      donor: [
-        // {
-        //   label: "My Requests",
-        //   href: "/dashboard/donor/my-donation-requests",
-        //   icon: FaClipboardList,
-        // },
-        // {
-        //   label: "Create Request",
-        //   href: "/dashboard/donor/create-donation-request",
-        //   icon: FaPlusCircle,
-        // },
-      ],
-      admin: [
-        {
-          label: 'All Users',
-          href: '/dashboard/admin/all-users',
-          icon: FaUsers,
-        },
-        {
-          label: 'All Requests',
-          href: '/dashboard/all-blood-donation-request',
-          icon: FaClipboardList,
-        },
-      ],
-      volunteer: [
-        {
-          label: 'All Requests',
-          href: '/dashboard/all-blood-donation-request',
-          icon: FaClipboardList,
-        },
-      ],
-    };
-
-    return [...commonItems, ...(roleSpecificItems[role] || [])];
-  };
-
-  const navItems = getNavItems();
+  const initials = user?.name
+    ? user.name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : '?';
 
   const handleLogout = async () => {
     await logout();
     window.location.href = '/auth/signin';
   };
 
+  const handleLinkClick = () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768)
+      toggleSidebar();
+  };
+
+  // collapsed only affects md+ screens
+  // on mobile: always show full expanded drawer
+  const isCollapsed = collapsed; // used with md: prefix everywhere
+
   return (
     <>
+      {/* Mobile backdrop */}
       {isOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-20"
+          className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-20"
           onClick={toggleSidebar}
         />
       )}
+
       <aside
-        className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} flex flex-col h-full`}
+        className={`
+          fixed md:relative inset-y-0 left-0 z-30
+          w-72 ${isCollapsed ? 'md:w-[72px]' : 'md:w-64'}
+          flex flex-col h-full
+          bg-white border-r border-gray-200
+          transform transition-all duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
       >
-        {/* Sidebar Header with Logo */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
-          <Link href="/" className="flex items-center">
+        {/* ── Logo ── */}
+        <div
+          className={`
+            h-16 flex items-center border-b border-gray-100 shrink-0
+            justify-between px-5
+            ${isCollapsed ? 'md:justify-center md:px-0' : ''}
+          `}
+        >
+          {/* Mobile + expanded desktop: full logo */}
+          <Link
+            href="/"
+            className={`flex items-center gap-2.5 ${isCollapsed ? 'md:hidden' : ''}`}
+          >
             <Image
               src="/assets/nav-logo.png"
               alt="BloodSync Logo"
@@ -110,45 +134,72 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
               priority
               className="object-contain"
             />
+            {/* <span className="text-[17px] font-bold tracking-tight text-gray-900">
+              Blood<span className="text-red-600">Sync</span>
+            </span> */}
           </Link>
+
+          {/* Collapsed desktop: favicon only */}
+          {isCollapsed && (
+            <Link href="/" className="hidden md:flex">
+              <Image
+                src="/assets/logo-db.png"
+                alt="BloodSync"
+                width={28}
+                height={28}
+                className="object-contain"
+              />
+            </Link>
+          )}
+
+          {/* Mobile close button */}
           <button
             onClick={toggleSidebar}
-            className="md:hidden text-gray-500 hover:text-red-600"
+            className="md:hidden p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
           >
-            <FaTimes size={20} />
+            <FaTimes size={16} />
           </button>
         </div>
 
-        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
-          <div className="flex items-center gap-3">
-            <Avatar
-              size="sm"
-              className="cursor-pointer ring-2 ring-red-200 hover:ring-red-400 transition-all"
-            >
+        {/* ── User card ── */}
+        <div
+          className={`
+            border-b border-gray-100 bg-gray-50 shrink-0
+            px-4 py-4
+            ${isCollapsed ? 'md:px-0 md:py-4 md:flex md:justify-center' : ''}
+          `}
+        >
+          {/* Collapsed desktop: avatar only */}
+          {isCollapsed && (
+            <div className="hidden md:flex justify-center">
+              <Avatar size="sm" className="ring-2 ring-red-200 shrink-0">
+                <Avatar.Image src={user?.image || user?.avatar} />
+                <Avatar.Fallback className="bg-red-50 text-red-600 text-xs font-bold">
+                  {initials}
+                </Avatar.Fallback>
+              </Avatar>
+            </div>
+          )}
+
+          {/* Mobile + expanded desktop: full user card */}
+          <div
+            className={`flex items-center gap-3 ${isCollapsed ? 'md:hidden' : ''}`}
+          >
+            <Avatar size="sm" className="ring-2 ring-red-200 shrink-0">
               <Avatar.Image src={user?.image || user?.avatar} />
-              <Avatar.Fallback>
-                {user?.name
-                  ? user.name
-                      .split(' ')
-                      .map(n => n[0])
-                      .join('')
-                      .toUpperCase()
-                      .slice(0, 2)
-                  : '?'}
+              <Avatar.Fallback className="bg-red-50 text-red-600 text-xs font-bold">
+                {initials}
               </Avatar.Fallback>
             </Avatar>
-            <div>
-              <p className="text-sm font-semibold text-gray-800">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-gray-800 truncate leading-tight">
                 {user?.name}
               </p>
+              <p className="text-[11px] text-gray-400 truncate mb-1">
+                {user?.email}
+              </p>
               <span
-                className={`inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                  role === 'admin'
-                    ? 'bg-purple-100 text-purple-700'
-                    : role === 'volunteer'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'bg-green-100 text-green-700'
-                }`}
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${ROLE_BADGE[role] ?? ROLE_BADGE.donor}`}
               >
                 {role.charAt(0).toUpperCase() + role.slice(1)}
               </span>
@@ -156,8 +207,9 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
           </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4">
-          <ul className="space-y-1 px-3">
+        {/* ── Nav ── */}
+        <nav className="flex-1 overflow-y-auto py-3 scrollbar-none">
+          <ul className={`space-y-0.5 px-3 ${isCollapsed ? 'md:px-2' : ''}`}>
             {navItems.map(item => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
@@ -165,17 +217,41 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={() => {
-                      if (window.innerWidth < 768) toggleSidebar();
-                    }}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive ? 'bg-red-50 text-red-600' : 'text-gray-600 hover:bg-gray-50 hover:text-red-600'}`}
+                    onClick={handleLinkClick}
+                    title={isCollapsed ? item.label : undefined}
+                    className={`
+                      flex items-center gap-3 px-3 py-2.5 rounded-lg
+                      transition-all duration-150 group relative
+                      ${isCollapsed ? 'md:justify-center md:p-3 md:gap-0' : ''}
+                      ${
+                        isActive
+                          ? 'bg-red-50 text-red-600'
+                          : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+                      }
+                    `}
                   >
-                    <Icon
-                      className={isActive ? 'text-red-500' : 'text-gray-400'}
-                    />
-                    <span className="text-sm font-medium">{item.label}</span>
+                    {/* Active left bar */}
                     {isActive && (
-                      <span className="ml-auto w-1.5 h-6 bg-red-500 rounded-full" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-red-500 rounded-r-full" />
+                    )}
+
+                    <Icon
+                      size={15}
+                      className={`shrink-0 ${isActive ? 'text-red-500' : 'text-gray-400 group-hover:text-gray-600'}`}
+                    />
+
+                    {/* Label: always visible on mobile, hidden when collapsed on desktop */}
+                    <span
+                      className={`text-sm font-medium truncate ${isCollapsed ? 'md:hidden' : ''}`}
+                    >
+                      {item.label}
+                    </span>
+
+                    {/* Active dot */}
+                    {isActive && (
+                      <span
+                        className={`ml-auto w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 ${isCollapsed ? 'md:hidden' : ''}`}
+                      />
                     )}
                   </Link>
                 </li>
@@ -184,13 +260,61 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
           </ul>
         </nav>
 
-        <div className="border-t border-gray-200 p-4">
-          <Button
-            onClick={handleLogout}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 lg:py-4 bg-linear-to-r from-red-600 to-red-700 text-white font-semibold text-sm sm:text-base rounded-xl shadow-lg shadow-red-500/30 hover:shadow-red-500/40 hover:-translate-y-0.5 transition-all duration-300 group"
+        {/* ── Help box: hidden when collapsed on desktop ── */}
+        <div
+          className={`mx-3 mb-3 p-3 rounded-xl bg-red-50 border border-red-100 ${isCollapsed ? 'md:hidden' : ''}`}
+        >
+          <p className="text-xs font-semibold text-red-700 mb-0.5">
+            Need help?
+          </p>
+          <p className="text-[11px] text-red-400 leading-relaxed">
+            Contact support or visit our docs anytime.
+          </p>
+        </div>
+
+        {/* ── Bottom ── */}
+        <div className="border-t border-gray-100 p-3 shrink-0 flex flex-col gap-2">
+          {/* Collapse toggle — desktop only */}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className={`
+              hidden md:flex items-center rounded-lg px-3 py-2.5
+              text-gray-400 hover:text-gray-700 hover:bg-gray-50
+              transition-all duration-150
+              ${isCollapsed ? 'md:justify-center md:p-3' : 'gap-3'}
+            `}
+            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <FaSignOutAlt /> <span className="text-sm font-medium">Logout</span>
-          </Button>
+            {isCollapsed ? (
+              <TbLayoutSidebarLeftExpand size={17} />
+            ) : (
+              <>
+                <TbLayoutSidebarLeftCollapse size={17} />
+                <span className="text-sm font-medium">Collapse</span>
+              </>
+            )}
+          </button>
+
+          {/* Logout */}
+          <button
+            onClick={handleLogout}
+            className={`
+              flex items-center rounded-lg gap-3 px-3 py-2.5
+              bg-red-50 hover:bg-red-100
+              text-red-600 hover:text-red-700
+              border border-red-200
+              transition-all duration-150
+              ${isCollapsed ? 'md:justify-center md:p-3 md:gap-0' : ''}
+            `}
+            title={isCollapsed ? 'Sign out' : undefined}
+          >
+            <FaSignOutAlt size={14} className="shrink-0" />
+            <span
+              className={`text-sm font-semibold ${isCollapsed ? 'md:hidden' : ''}`}
+            >
+              Sign Out
+            </span>
+          </button>
         </div>
       </aside>
     </>
