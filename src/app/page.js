@@ -36,14 +36,6 @@ export default async function Home() {
       <WhyChooseBloodSync />
       <BecomeHeroSection />
       <ContactSection />
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        theme="light"
-      />
     </>
   );
 }
