@@ -1,28 +1,28 @@
 // components/home/HowBloodSyncWorks.jsx
-"use client";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { FaRegFileAlt, FaSearch, FaHeart } from "react-icons/fa";
+'use client';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { FaRegFileAlt, FaSearch, FaHeart } from 'react-icons/fa';
 
 export default function HowBloodSyncWorks() {
   const steps = [
     {
       icon: <FaRegFileAlt />,
-      title: "Create a Request",
+      title: 'Create a Request',
       description:
-        "Submit a blood request with patient details, blood group, location, and urgency information.",
+        'Submit a blood request with patient details, blood group, location, and urgency information.',
     },
     {
       icon: <FaSearch />,
-      title: "Find Donors",
+      title: 'Find Donors',
       description:
-        "BloodSync helps connect suitable donors based on blood group and availability.",
+        'BloodSync helps connect suitable donors based on blood group and availability.',
     },
     {
       icon: <FaHeart />,
-      title: "Save Lives",
+      title: 'Save Lives',
       description:
-        "Connect with donors quickly and help patients receive blood when they need it most.",
+        'Connect with donors quickly and help patients receive blood when they need it most.',
     },
   ];
 
@@ -33,7 +33,7 @@ export default function HowBloodSyncWorks() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
           className="text-center max-w-2xl mx-auto"
         >
@@ -52,7 +52,7 @@ export default function HowBloodSyncWorks() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-4 text-4xl font-bold text-gray-900"
+            className="mt-4 text-3xl md:text-4xl font-bold text-gray-900"
           >
             How <span className="text-red-600">Blood</span>Sync Works
           </motion.h2>
@@ -80,12 +80,12 @@ export default function HowBloodSyncWorks() {
               transition={{
                 duration: 0.6,
                 delay: 0.4 + index * 0.15,
-                type: "spring",
+                type: 'spring',
                 stiffness: 100,
               }}
               whileHover={{
                 y: -10,
-                boxShadow: "0 20px 40px rgba(239, 68, 68, 0.15)",
+                boxShadow: '0 20px 40px rgba(239, 68, 68, 0.15)',
               }}
               className="relative rounded-3xl border border-red-100 bg-white p-8 shadow-sm transition-all duration-300 cursor-default"
             >
@@ -97,7 +97,7 @@ export default function HowBloodSyncWorks() {
                 transition={{
                   duration: 0.5,
                   delay: 0.6 + index * 0.15,
-                  type: "spring",
+                  type: 'spring',
                   stiffness: 200,
                 }}
                 whileHover={{ rotate: 10, scale: 1.1 }}
@@ -134,9 +134,9 @@ export default function HowBloodSyncWorks() {
                 transition={{
                   duration: 0.5,
                   delay: 0.9 + index * 0.15,
-                  type: "spring",
+                  type: 'spring',
                 }}
-                whileHover={{ scale: 1.2, color: "#fecaca" }}
+                whileHover={{ scale: 1.2, color: '#fecaca' }}
                 className="absolute top-6 right-6 text-4xl font-black text-red-50 transition-colors"
               >
                 0{index + 1}

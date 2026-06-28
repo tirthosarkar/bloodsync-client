@@ -7,11 +7,12 @@ import {
   FaHeartbeat,
   FaShieldAlt,
   FaUsers,
-  FaHospital,
+  FaDonate,
 } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import { useEffect, useState } from 'react';
+import { BiDonateHeart } from 'react-icons/bi';
 
 const Banner = ({ stats = {} }) => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const Banner = ({ stats = {} }) => {
       const path = DASHBOARD_PATHS[role?.toLowerCase()] || '/dashboard/donor';
       router.push(path);
     } else {
-      router.push('/register');
+      router.push('/auth/register');
     }
   };
   return (
@@ -123,7 +124,7 @@ const Banner = ({ stats = {} }) => {
                   label: 'Requests Made',
                 },
                 {
-                  icon: FaHospital,
+                  icon: FaDonate,
                   number: stats.totalFunding
                     ? (() => {
                         const amount = stats.totalFunding;
