@@ -1,26 +1,26 @@
-"use client";
-import { motion } from "framer-motion";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { toast } from "react-toastify";
-import { useState } from "react";
+'use client';
+import { motion } from 'framer-motion';
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
+    name: '',
+    email: '',
+    message: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     // Here you would send the data to your backend API
-    console.log("Contact Form Submitted:", formData);
+    console.log('Contact Form Submitted:', formData);
     toast.success("Your message has been sent! We'll get back to you soon.");
-    setFormData({ name: "", email: "", message: "" });
+    setFormData({ name: '', email: '', message: '' });
   };
 
   return (
@@ -36,7 +36,7 @@ export default function ContactSection() {
           <span className="inline-flex px-4 py-1 rounded-full bg-red-50 text-red-600 text-sm font-semibold border border-red-100">
             Get In Touch
           </span>
-          <h2 className="mt-4 text-4xl font-bold text-gray-900">
+          <h2 className="mt-4 text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
             We&apos;d Love to <span className="text-red-600">Hear</span> From
             You
           </h2>

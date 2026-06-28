@@ -1,30 +1,30 @@
 // components/home/WhyChooseBloodSync.jsx
-"use client";
-import { motion } from "framer-motion";
-import { FaShieldAlt, FaBolt, FaMapMarkerAlt, FaHeart } from "react-icons/fa";
+'use client';
+import { motion } from 'framer-motion';
+import { FaShieldAlt, FaBolt, FaMapMarkerAlt, FaHeart } from 'react-icons/fa';
 
 export default function WhyChooseBloodSync() {
   const features = [
     {
       icon: <FaShieldAlt />,
-      title: "Trusted Community",
+      title: 'Trusted Community',
       description:
-        "Building a safer and more reliable donor network for everyone.",
+        'Building a safer and more reliable donor network for everyone.',
     },
     {
       icon: <FaBolt />,
-      title: "Emergency Support",
-      description: "Quickly connect patients with available blood donors.",
+      title: 'Emergency Support',
+      description: 'Quickly connect patients with available blood donors.',
     },
     {
       icon: <FaMapMarkerAlt />,
-      title: "Location Based",
-      description: "Find donors and requests closer to your area.",
+      title: 'Location Based',
+      description: 'Find donors and requests closer to your area.',
     },
     {
       icon: <FaHeart />,
-      title: "Always Free",
-      description: "Helping save lives without unnecessary barriers.",
+      title: 'Always Free',
+      description: 'Helping save lives without unnecessary barriers.',
     },
   ];
 
@@ -36,15 +36,24 @@ export default function WhyChooseBloodSync() {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8 }}
           >
-            <motion.span
+            {/* <motion.span
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="inline-flex px-4 py-1 rounded-full bg-white text-red-600 text-sm font-semibold border border-red-100"
+            >
+              Why BloodSync
+            </motion.span> */}
+            <motion.span
+              initial={{ opacity: 0, y: -10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex px-4 py-1.5 rounded-full bg-red-50 border border-red-100 text-red-600 text-xs font-bold  tracking-wider shadow-sm"
             >
               Why BloodSync
             </motion.span>
@@ -54,7 +63,7 @@ export default function WhyChooseBloodSync() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-5 text-4xl font-bold text-gray-900 leading-tight"
+              className="mt-5 text-3xl  md:text-4xl font-black text-gray-900 leading-tight"
             >
               Why Thousands Trust <span className="text-red-600">Blood</span>
               Sync
@@ -82,7 +91,7 @@ export default function WhyChooseBloodSync() {
                   whileHover={{
                     scale: 1.05,
                     boxShadow:
-                      "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                      '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
                   }}
                   className="bg-white rounded-2xl border border-red-100 p-5 transition-all duration-300 cursor-default"
                 >
@@ -110,7 +119,7 @@ export default function WhyChooseBloodSync() {
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="relative"
           >
@@ -126,7 +135,7 @@ export default function WhyChooseBloodSync() {
                 transition={{
                   duration: 3,
                   repeat: Infinity,
-                  ease: "easeInOut",
+                  ease: 'easeInOut',
                 }}
                 className="w-24 h-24 mx-auto rounded-full bg-red-100 flex items-center justify-center"
               >

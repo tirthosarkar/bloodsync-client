@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import { useEffect, useState } from 'react';
 import { BiDonateHeart } from 'react-icons/bi';
+import { LuArrowRight } from 'react-icons/lu';
 
 const Banner = ({ stats = {} }) => {
   const router = useRouter();
@@ -166,21 +167,7 @@ const Banner = ({ stats = {} }) => {
               >
                 <FaHandHoldingHeart className="text-lg sm:text-xl" />
                 Join as a Donor
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  className="group-hover:translate-x-1 transition-transform"
-                >
-                  <path
-                    d="M5 10H15M10 5L15 10L10 15"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <LuArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <Link

@@ -48,7 +48,7 @@ export default async function FeaturedRequests({ isLoggedIn }) {
               </span>
             </div>
 
-            <h2 className="text-3xl font-bold text-gray-900 md:text-4xl lg:text-5xl">
+            <h2 className="text-3xl font-black text-gray-900 md:text-4xl tracking-tight">
               Featured{' '}
               <span className="bg-linear-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
                 Blood Requests

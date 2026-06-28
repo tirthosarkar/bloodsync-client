@@ -27,46 +27,49 @@ const ROLE_BADGE = {
   donor: 'bg-red-100    text-red-700    border border-red-200',
 };
 
-const COMMON_ITEMS = [
-  { label: 'Home', href: '/', icon: FaHome },
-  { label: 'Dashboard', href: '/dashboard', icon: MdSpaceDashboard },
-  { label: 'Profile', href: '/dashboard/profile', icon: FaUser },
-  {
-    label: 'My Requests',
-    href: '/dashboard/my-donation-requests',
-    icon: FaClipboardList,
-  },
-  {
-    label: 'Create Request',
-    href: '/dashboard/create-donation-request',
-    icon: FaPlusCircle,
-  },
-];
-
-const ROLE_ITEMS = {
-  admin: [
-    { label: 'All Users', href: '/dashboard/admin/all-users', icon: FaUsers },
-    {
-      label: 'All Requests',
-      href: '/dashboard/all-blood-donation-request',
-      icon: FaClipboardList,
-    },
-  ],
-  volunteer: [
-    {
-      label: 'All Requests',
-      href: '/dashboard/all-blood-donation-request',
-      icon: FaClipboardList,
-    },
-  ],
-  donor: [],
-};
-
 export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
   const pathname = usePathname();
   const { logout } = useContext(AuthContext);
   const role = user?.role?.toLowerCase() || 'donor';
   const [collapsed, setCollapsed] = useState(false);
+
+  // 1. Dynamic root calculation based on user's role
+  const dashboardRoot = role === 'donor' ? '/dashboard/donor' : '/dashboard';
+
+  const COMMON_ITEMS = [
+    { label: 'Home', href: '/', icon: FaHome },
+    { label: 'Dashboard', href: dashboardRoot, icon: MdSpaceDashboard },
+    { label: 'Profile', href: '/dashboard/profile', icon: FaUser },
+    {
+      label: 'My Requests',
+      href: '/dashboard/my-donation-requests',
+      icon: FaClipboardList,
+    },
+    {
+      label: 'Create Request',
+      href: '/dashboard/create-donation-request',
+      icon: FaPlusCircle,
+    },
+  ];
+
+  const ROLE_ITEMS = {
+    admin: [
+      { label: 'All Users', href: '/dashboard/admin/all-users', icon: FaUsers },
+      {
+        label: 'All Requests',
+        href: '/dashboard/all-blood-donation-request',
+        icon: FaClipboardList,
+      },
+    ],
+    volunteer: [
+      {
+        label: 'All Requests',
+        href: '/dashboard/all-blood-donation-request',
+        icon: FaClipboardList,
+      },
+    ],
+    donor: [],
+  };
 
   const navItems = [...COMMON_ITEMS, ...(ROLE_ITEMS[role] || [])];
 
@@ -211,7 +214,9 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
         <nav className="flex-1 overflow-y-auto py-3 scrollbar-none">
           <ul className={`space-y-0.5 px-3 ${isCollapsed ? 'md:px-2' : ''}`}>
             {navItems.map(item => {
-              const isActive = pathname === item.href;
+              // 2. Updated conditional active state checks
+              const isActive =
+                item.href === '/' ? pathname === '/' : pathname === item.href;
               const Icon = item.icon;
               return (
                 <li key={item.href}>
