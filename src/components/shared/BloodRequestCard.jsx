@@ -11,14 +11,14 @@ import {
 } from 'react-icons/fa';
 
 const BLOOD_GROUP_COLORS = {
-  'A+': 'bg-red-600',
-  'A-': 'bg-red-700',
+  'A+': 'bg-red-500',
+  'A-': 'bg-red-600',
   'B+': 'bg-rose-600',
   'B-': 'bg-rose-700',
-  'O+': 'bg-orange-600',
-  'O-': 'bg-orange-700',
-  'AB+': 'bg-purple-600',
-  'AB-': 'bg-purple-700',
+  'O+': 'bg-orange-500',
+  'O-': 'bg-orange-600',
+  'AB+': 'bg-purple-500',
+  'AB-': 'bg-purple-600',
 };
 
 export default function BloodRequestCard({ req, onViewDetails }) {

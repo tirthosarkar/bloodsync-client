@@ -1,20 +1,28 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
-import { FaHandHoldingHeart } from "react-icons/fa";
-import { TbLogin2 } from "react-icons/tb";
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { FaHandHoldingHeart } from 'react-icons/fa';
+import { TbLogin2 } from 'react-icons/tb';
 
-import { authClient, signOut } from "@/lib/auth-client"; // Make sure this path points to your client instance
-import { toast } from "react-toastify";
-import UserDropdown from "./UserDropdown";
+import { authClient, signOut } from '@/lib/auth-client'; // Make sure this path points to your client instance
+import { toast } from 'react-toastify';
+import UserDropdown from './UserDropdown';
+import {
+  MdAttachMoney,
+  MdBloodtype,
+  MdDashboard,
+  MdHome,
+  MdLogout,
+  MdPerson,
+} from 'react-icons/md';
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Donation Requests", href: "/donation-requests" },
-  { label: "Funding", href: "/funding" },
+  { label: 'Home', href: '/', icon: MdHome },
+  { label: 'Donation Requests', href: '/donation-requests', icon: MdBloodtype },
+  { label: 'Funding', href: '/funding', icon: MdAttachMoney },
 ];
 
 export default function Navbar() {
@@ -28,7 +36,7 @@ export default function Navbar() {
   const user = session?.user || null;
   console.log(user);
 
-  const isActive = (href) => pathname === href;
+  const isActive = href => pathname === href;
 
   // ── Better Auth Logout Handler ──
   const handleLogout = async () => {
@@ -37,20 +45,20 @@ export default function Navbar() {
       await signOut({
         fetchOptions: {
           onSuccess: () => {
-            toast.success("Logged out successfully");
+            toast.success('Logged out successfully');
             setIsMenuOpen(false);
             // router.push("/auth/signin"); // Route user back to login
             // router.refresh(); // Clear server layer cache
-            window.location.href = "/auth/signin";
+            window.location.href = '/auth/signin';
           },
-          onError: (ctx) => {
-            toast.error(ctx.error.message || "Failed to log out.");
+          onError: ctx => {
+            toast.error(ctx.error.message || 'Failed to log out.');
           },
         },
       });
     } catch (error) {
-      console.error("Logout unexpected error:", error);
-      toast.error("An error occurred while logging out.");
+      console.error('Logout unexpected error:', error);
+      toast.error('An error occurred while logging out.');
     } finally {
       setIsLoggingOut(false);
     }
@@ -58,7 +66,7 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-red-100 bg-white/80 backdrop-blur-lg shadow-sm">
-      <header className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+      <header className="max-w-7xl mx-auto flex h-17.5 items-center justify-between px-4 md:px-6">
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center">
           <Image
@@ -73,16 +81,16 @@ export default function Navbar() {
 
         {/* ── Desktop Nav Links ── */}
         <ul className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => {
-            if (link.href === "/funding" && !user) return null;
+          {navLinks.map(link => {
+            if (link.href === '/funding' && !user) return null;
             return (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive(link.href)
-                      ? "bg-red-50 text-red-600"
-                      : "text-gray-600 hover:text-red-600 hover:bg-red-50"
+                      ? 'bg-red-50 text-red-600'
+                      : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
                   }`}
                 >
                   {link.label}
@@ -128,13 +136,13 @@ export default function Navbar() {
             aria-label="Toggle menu"
           >
             <span
-              className={`block w-5 h-0.5 bg-gray-700 transition-transform duration-300 ${isMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+              className={`block w-5 h-0.5 bg-gray-700 transition-transform duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}
             />
             <span
-              className={`block w-5 h-0.5 bg-gray-700 transition-opacity duration-300 ${isMenuOpen ? "opacity-0" : ""}`}
+              className={`block w-5 h-0.5 bg-gray-700 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}
             />
             <span
-              className={`block w-5 h-0.5 bg-gray-700 transition-transform duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+              className={`block w-5 h-0.5 bg-gray-700 transition-transform duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}
             />
           </button>
         </div>
@@ -142,22 +150,24 @@ export default function Navbar() {
 
       {/* ── Mobile Side Menu Menu ── */}
       <div
-        className={`md:hidden transition-all duration-300 overflow-hidden ${isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+        className={`md:hidden transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <ul className="flex flex-col px-4 pb-4 gap-1 border-t border-gray-100 bg-white">
-          {navLinks.map((link) => {
-            if (link.href === "/funding" && !user) return null;
+          {navLinks.map(link => {
+            if (link.href === '/funding' && !user) return null;
+            const Icon = link.icon;
             return (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive(link.href)
-                      ? "bg-red-50 text-red-600"
-                      : "text-gray-600 hover:text-red-600 hover:bg-red-50"
+                      ? 'bg-red-50 text-red-600'
+                      : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
                   }`}
                 >
+                  <Icon size={18} /> {/* ← icon */}
                   {link.label}
                 </Link>
               </li>
@@ -166,25 +176,65 @@ export default function Navbar() {
 
           {/* Mobile Auth Routing Adjustments */}
           {!user ? (
-            <li>
-              <Link
-                href="/auth/signin"
-                onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-red-50"
-              >
-                Login
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link
+                  href="/auth/signin"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-red-50"
+                >
+                  <TbLogin2 size={18} />
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/auth/register"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-red-600 hover:bg-red-700 text-center justify-center"
+                >
+                  <FaHandHoldingHeart size={16} />
+                  Join as Donor
+                </Link>
+              </li>
+            </>
           ) : (
-            <li>
-              <button
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                className="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-2"
-              >
-                {isLoggingOut ? "Processing..." : "Logout"}
-              </button>
-            </li>
+            <>
+              <li>
+                <Link
+                  href={
+                    user?.role === 'admin' || user?.role === 'volunteer'
+                      ? '/dashboard'
+                      : '/dashboard/donor'
+                  }
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-red-50"
+                >
+                  <MdDashboard size={18} />
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dashboard/profile"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-red-50"
+                >
+                  <MdPerson size={18} />
+                  My Profile
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                >
+                  <MdLogout size={18} />
+                  {isLoggingOut ? 'Processing...' : 'Logout'}
+                </button>
+              </li>
+            </>
           )}
         </ul>
       </div>
