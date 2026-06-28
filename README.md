@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![BloodSync Banner](https://raw.githubusercontent.com/your-username/bloodsync-client/main/public/assets/nav-logo.png)
+![BloodSync Banner](https://raw.githubusercontent.com/shahadat-hossain99/bloodsync-client/main/public/assets/nav-logo.png)
 
 **A modern blood donation platform connecting donors with those in need.**
 
@@ -13,6 +13,14 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38BDF8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
 
 </div>
+
+---
+
+## 📌 Project Overview
+
+**BloodSync** is a full-stack blood donation management platform built to bridge the gap between blood donors and recipients. The platform enables users to register as donors, create blood donation requests, search for compatible donors, and fund the organization — all in one seamless experience.
+
+> _"Because every drop of blood is a chance to save a life."_
 
 ---
 
