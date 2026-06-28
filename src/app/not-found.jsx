@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -93,7 +93,7 @@ export default function NotFound() {
         <h1 className="text-2xl font-bold text-gray-800">Page Not Found</h1>
         <p className="text-gray-500 text-sm leading-relaxed">
           Oops! The page you&apos;re looking for doesn&apos;t exist or may have
-          been moved. But every drop counts —{' '}
+          been moved. But every drop counts —{" "}
           <span className="text-red-600 font-semibold">BloodSync</span> is still
           here to help you save lives.
         </p>

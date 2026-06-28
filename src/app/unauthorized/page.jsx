@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { FaLock, FaArrowLeft, FaEnvelope } from 'react-icons/fa';
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { FaLock, FaArrowLeft, FaEnvelope } from "react-icons/fa";
 
 export default function UnauthorizedPage() {
   return (
@@ -24,7 +24,7 @@ export default function UnauthorizedPage() {
               visible: {
                 scale: 1,
                 rotate: 0,
-                transition: { type: 'spring', stiffness: 260, damping: 20 },
+                transition: { type: "spring", stiffness: 260, damping: 20 },
               },
             }}
             className="inline-flex items-center justify-center w-24 h-24 bg-red-100 rounded-full mb-6 shadow-lg shadow-red-200"
@@ -34,7 +34,7 @@ export default function UnauthorizedPage() {
               transition={{
                 duration: 2.5,
                 repeat: Infinity,
-                ease: 'easeInOut',
+                ease: "easeInOut",
               }}
             >
               <FaLock className="text-red-600 text-4xl" />
@@ -109,7 +109,7 @@ export default function UnauthorizedPage() {
             className="mt-10 pt-6 border-t border-gray-200"
           >
             <p className="text-sm text-gray-400">
-              Need help? Email us at{' '}
+              Need help? Email us at{" "}
               <span className="text-red-600 font-medium">
                 support@bloodsync.com
               </span>

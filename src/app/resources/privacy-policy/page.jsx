@@ -1,13 +1,13 @@
-import Breadcrumb from '@/components/Breadcrumb';
+import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata = {
-  title: 'Privacy Policy',
+  title: "Privacy Policy",
   description:
-    'Learn how BloodSync collects, uses, and protects your personal information securely.',
+    "Learn how BloodSync collects, uses, and protects your personal information securely.",
   keywords: [
-    'privacy policy bloodsync',
-    'data protection blood donation',
-    'user privacy blood bank platform',
+    "privacy policy bloodsync",
+    "data protection blood donation",
+    "user privacy blood bank platform",
   ],
 };
 
@@ -16,8 +16,8 @@ export default function PrivacyPage() {
     <main className="max-w-4xl mx-auto px-4 py-20">
       <Breadcrumb
         items={[
-          { label: 'Resources', href: '/resources' },
-          { label: 'Privacy Policy' },
+          { label: "Resources", href: "/resources" },
+          { label: "Privacy Policy" },
         ]}
       />
 

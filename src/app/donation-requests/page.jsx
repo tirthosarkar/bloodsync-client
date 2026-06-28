@@ -1,10 +1,10 @@
-import { getUserSession } from '@/lib/core/session';
-import PublicRequestsClient from './PublicRequestsClient';
+import { getUserSession } from "@/lib/core/session";
+import PublicRequestsClient from "./PublicRequestsClient";
 
 export async function generateMetadata() {
   return {
-    title: 'Blood Donation Requests | BloodSync',
-    description: 'Browse pending blood donation requests and help save lives.',
+    title: "Blood Donation Requests | BloodSync",
+    description: "Browse pending blood donation requests and help save lives.",
   };
 }
 

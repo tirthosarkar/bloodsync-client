@@ -1,9 +1,9 @@
 // components/Footer.jsx
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   FaFacebookF,
   FaInstagram,
@@ -19,41 +19,41 @@ import {
   FaFileContract,
   FaHeartbeat,
   FaArrowRight,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: FaFacebookF, href: '#', label: 'Facebook' },
-    { icon: FaInstagram, href: '#', label: 'Instagram' },
-    { icon: FaLinkedinIn, href: '#', label: 'LinkedIn' },
-    { icon: FaGithub, href: '#', label: 'GitHub' },
+    { icon: FaFacebookF, href: "#", label: "Facebook" },
+    { icon: FaInstagram, href: "#", label: "Instagram" },
+    { icon: FaLinkedinIn, href: "#", label: "LinkedIn" },
+    { icon: FaGithub, href: "#", label: "GitHub" },
   ];
 
   const navLinks = [
-    { icon: FaHome, href: '/', label: 'Home' },
-    { icon: FaTint, href: '/donation-requests', label: 'Donation Requests' },
+    { icon: FaHome, href: "/", label: "Home" },
+    { icon: FaTint, href: "/donation-requests", label: "Donation Requests" },
     {
       icon: FaHandHoldingHeart,
-      href: '/auth/register',
-      label: 'Become a Donor',
+      href: "/auth/register",
+      label: "Become a Donor",
     },
-    { icon: FaSignInAlt, href: '/auth/signin', label: 'Login' },
+    { icon: FaSignInAlt, href: "/auth/signin", label: "Login" },
   ];
 
   const resourceLinks = [
-    { icon: FaInfoCircle, href: '/resources/about', label: 'About Us' },
-    { icon: FaQuestionCircle, href: '/resources/faq', label: 'FAQ' },
+    { icon: FaInfoCircle, href: "/resources/about", label: "About Us" },
+    { icon: FaQuestionCircle, href: "/resources/faq", label: "FAQ" },
     {
       icon: FaShieldAlt,
-      href: '/resources/privacy-policy',
-      label: 'Privacy Policy',
+      href: "/resources/privacy-policy",
+      label: "Privacy Policy",
     },
     {
       icon: FaFileContract,
-      href: '/resources/terms',
-      label: 'Terms of Service',
+      href: "/resources/terms",
+      label: "Terms of Service",
     },
   ];
 
@@ -71,7 +71,7 @@ export default function Footer() {
         transition={{
           duration: 4,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: "easeInOut",
         }}
         className="absolute right-0 top-10 pointer-events-none"
       >
@@ -121,7 +121,7 @@ export default function Footer() {
 
             {/* Social Links */}
             <div className="mt-6 flex items-center gap-3">
-              {socialLinks.map(social => (
+              {socialLinks.map((social) => (
                 <motion.a
                   key={social.label}
                   href={social.href}
@@ -149,7 +149,7 @@ export default function Footer() {
             </h3>
 
             <ul className="mt-5 space-y-4">
-              {navLinks.map(link => (
+              {navLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
@@ -172,11 +172,11 @@ export default function Footer() {
             className="lg:col-span-2"
           >
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-              <Link href={'/resources '}> Resources </Link>
+              <Link href={"/resources "}> Resources </Link>
             </h3>
 
             <ul className="mt-5 space-y-4">
-              {resourceLinks.map(link => (
+              {resourceLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
@@ -205,7 +205,7 @@ export default function Footer() {
                   scale: [1, 1.2, 1],
                   rotate: [0, 90, 0],
                 }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                 className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/10"
               />
               <motion.div
@@ -213,7 +213,7 @@ export default function Footer() {
                   scale: [1, 1.3, 1],
                   rotate: [0, -90, 0],
                 }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
                 className="absolute -left-6 -bottom-6 h-24 w-24 rounded-full bg-white/10"
               />
 

@@ -1,14 +1,14 @@
-import Breadcrumb from '@/components/Breadcrumb';
+import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata = {
-  title: 'Terms & Conditions',
+  title: "Terms & Conditions",
   description:
-    'Read the terms and conditions for using BloodSync platform responsibly and safely.',
+    "Read the terms and conditions for using BloodSync platform responsibly and safely.",
   keywords: [
-    'bloodSync terms',
-    'blood donation rules',
-    'platform usage policy',
-    'donor guidelines',
+    "bloodSync terms",
+    "blood donation rules",
+    "platform usage policy",
+    "donor guidelines",
   ],
 };
 
@@ -17,8 +17,8 @@ export default function TermsPage() {
     <main className="max-w-4xl mx-auto px-4 py-20">
       <Breadcrumb
         items={[
-          { label: 'Resources', href: '/resources' },
-          { label: 'Terms & Conditions' },
+          { label: "Resources", href: "/resources" },
+          { label: "Terms & Conditions" },
         ]}
       />
 

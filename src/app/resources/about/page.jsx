@@ -1,14 +1,14 @@
-import Breadcrumb from '@/components/Breadcrumb';
+import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata = {
-  title: 'About Us',
+  title: "About Us",
   description:
-    'Learn about BloodSync mission, vision, and how we connect blood donors with patients in need.',
+    "Learn about BloodSync mission, vision, and how we connect blood donors with patients in need.",
   keywords: [
-    'about bloodsync',
-    'blood donation platform',
-    'donor network',
-    'save lives blood donation',
+    "about bloodsync",
+    "blood donation platform",
+    "donor network",
+    "save lives blood donation",
   ],
 };
 
@@ -17,8 +17,8 @@ export default function AboutPage() {
     <main className="max-w-5xl mx-auto px-4 py-20">
       <Breadcrumb
         items={[
-          { label: 'Resources', href: '/resources' },
-          { label: 'About Us' },
+          { label: "Resources", href: "/resources" },
+          { label: "About Us" },
         ]}
       />
 

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useGeoData } from '@/hooks/useGeoData';
-import { serverFetch, serverMutation } from '@/lib/core/server';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useGeoData } from "@/hooks/useGeoData";
+import { serverFetch, serverMutation } from "@/lib/core/server";
+import { toast } from "react-toastify";
 import {
   FaSpinner,
   FaUser,
@@ -16,13 +16,13 @@ import {
   FaCalendar,
   FaClock,
   FaCommentDots,
-} from 'react-icons/fa';
-import { motion } from 'framer-motion';
-import { BiSolidDonateBlood } from 'react-icons/bi';
-import { Button } from '@heroui/react';
-import { createDonationRequest } from '@/lib/action/donationRequest';
+} from "react-icons/fa";
+import { motion } from "framer-motion";
+import { BiSolidDonateBlood } from "react-icons/bi";
+import { Button } from "@heroui/react";
+import { createDonationRequest } from "@/lib/action/donationRequest";
 
-const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 export default function CreateDonationRequestClient({ user }) {
   const router = useRouter();
@@ -37,15 +37,15 @@ export default function CreateDonationRequestClient({ user }) {
   const [loadingStatus, setLoadingStatus] = useState(true);
 
   const [formData, setFormData] = useState({
-    recipientName: '',
-    recipientDistrict: '',
-    recipientUpazila: '',
-    hospitalName: '',
-    fullAddress: '',
-    bloodGroup: '',
-    donationDate: '',
-    donationTime: '',
-    requestMessage: '',
+    recipientName: "",
+    recipientDistrict: "",
+    recipientUpazila: "",
+    hospitalName: "",
+    fullAddress: "",
+    bloodGroup: "",
+    donationDate: "",
+    donationTime: "",
+    requestMessage: "",
   });
 
   // 1. Check if the user is blocked (Server-side protection fallback)
@@ -54,14 +54,14 @@ export default function CreateDonationRequestClient({ user }) {
       try {
         if (!user?.id) return;
         const data = await serverFetch(`/api/users/${user.id}`);
-        if (data.status === 'blocked') {
+        if (data.status === "blocked") {
           setIsUserBlocked(true);
           toast.error(
-            'Your account has been blocked. You cannot create donation requests.',
+            "Your account has been blocked. You cannot create donation requests.",
           );
         }
       } catch (error) {
-        console.error('Failed to check user status:', error);
+        console.error("Failed to check user status:", error);
       } finally {
         setLoadingStatus(false);
       }
@@ -70,73 +70,73 @@ export default function CreateDonationRequestClient({ user }) {
   }, [user]);
 
   // 2. Handle form input changes
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 3. Handle District Change
-  const handleDistrictChange = e => {
+  const handleDistrictChange = (e) => {
     const selectedDistrictId = e.target.value;
-    const selectedDistrict = districts.find(d => d.id === selectedDistrictId);
+    const selectedDistrict = districts.find((d) => d.id === selectedDistrictId);
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       recipientDistrict: selectedDistrictId,
-      recipientDistrictName: selectedDistrict ? selectedDistrict.name : '', // ✅ Save Name
-      recipientUpazila: '', // Reset upazila
-      recipientUpazilaName: '', // Reset upazila name
+      recipientDistrictName: selectedDistrict ? selectedDistrict.name : "", // ✅ Save Name
+      recipientUpazila: "", // Reset upazila
+      recipientUpazilaName: "", // Reset upazila name
     }));
   };
 
   // 4. Handle Upazila Change
-  const handleUpazilaChange = e => {
+  const handleUpazilaChange = (e) => {
     const selectedUpazilaId = e.target.value;
     const upazilas = getUpazilasByDistrict(formData.recipientDistrict);
-    const selectedUpazila = upazilas.find(u => u.id === selectedUpazilaId);
+    const selectedUpazila = upazilas.find((u) => u.id === selectedUpazilaId);
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       recipientUpazila: selectedUpazilaId,
-      recipientUpazilaName: selectedUpazila ? selectedUpazila.name : '', // ✅ Save Name
+      recipientUpazilaName: selectedUpazila ? selectedUpazila.name : "", // ✅ Save Name
     }));
   };
 
   // 5. Handle Form Submission
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validation
     if (!formData.recipientName.trim()) {
-      toast.error('Recipient name is required');
+      toast.error("Recipient name is required");
       return;
     }
     if (!formData.recipientDistrict) {
-      toast.error('Please select a district');
+      toast.error("Please select a district");
       return;
     }
     if (!formData.recipientUpazila) {
-      toast.error('Please select an upazila');
+      toast.error("Please select an upazila");
       return;
     }
     if (!formData.hospitalName.trim()) {
-      toast.error('Hospital name is required');
+      toast.error("Hospital name is required");
       return;
     }
     if (!formData.fullAddress.trim()) {
-      toast.error('Full address is required');
+      toast.error("Full address is required");
       return;
     }
     if (!formData.bloodGroup) {
-      toast.error('Please select a blood group');
+      toast.error("Please select a blood group");
       return;
     }
     if (!formData.donationDate) {
-      toast.error('Please select a donation date');
+      toast.error("Please select a donation date");
       return;
     }
     if (!formData.donationTime) {
-      toast.error('Please select a donation time');
+      toast.error("Please select a donation time");
       return;
     }
     if (
@@ -144,14 +144,14 @@ export default function CreateDonationRequestClient({ user }) {
       formData.requestMessage.length < 20
     ) {
       toast.error(
-        'Please write a detailed request message (minimum 20 characters)',
+        "Please write a detailed request message (minimum 20 characters)",
       );
       return;
     }
 
     // Blocked user check
     if (isUserBlocked) {
-      toast.error('Your account is blocked. You cannot create requests.');
+      toast.error("Your account is blocked. You cannot create requests.");
       return;
     }
 
@@ -174,38 +174,38 @@ export default function CreateDonationRequestClient({ user }) {
         donationDate: formData.donationDate,
         donationTime: formData.donationTime,
         requestMessage: formData.requestMessage.trim(),
-        status: 'pending',
+        status: "pending",
       };
 
       // Send to backend
       const response = await createDonationRequest(payload);
 
       if (response.success) {
-        toast.success('Donation request created successfully!');
+        toast.success("Donation request created successfully!");
         // Reset form
         setFormData({
-          recipientName: '',
-          recipientDistrict: '',
-          recipientUpazila: '',
-          hospitalName: '',
-          fullAddress: '',
-          bloodGroup: '',
-          donationDate: '',
-          donationTime: '',
-          requestMessage: '',
+          recipientName: "",
+          recipientDistrict: "",
+          recipientUpazila: "",
+          hospitalName: "",
+          fullAddress: "",
+          bloodGroup: "",
+          donationDate: "",
+          donationTime: "",
+          requestMessage: "",
         });
         // Redirect to My Requests page after a short delay
         setTimeout(() => {
-          router.push('/dashboard/my-donation-requests');
+          router.push("/dashboard/my-donation-requests");
         }, 1500);
 
-        toast.success('Donation request created successfully!');
+        toast.success("Donation request created successfully!");
       } else {
-        toast.error(response.message || 'Failed to create request');
+        toast.error(response.message || "Failed to create request");
       }
     } catch (error) {
-      console.error('Error creating donation request:', error);
-      toast.error(error.message || 'An error occurred. Please try again.');
+      console.error("Error creating donation request:", error);
+      toast.error(error.message || "An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -254,7 +254,7 @@ export default function CreateDonationRequestClient({ user }) {
             </label>
             <input
               type="text"
-              value={user?.name || ''}
+              value={user?.name || ""}
               disabled
               className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 cursor-not-allowed text-gray-500"
             />
@@ -266,7 +266,7 @@ export default function CreateDonationRequestClient({ user }) {
             </label>
             <input
               type="email"
-              value={user?.email || ''}
+              value={user?.email || ""}
               disabled
               className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 cursor-not-allowed text-gray-500"
             />
@@ -305,7 +305,7 @@ export default function CreateDonationRequestClient({ user }) {
                 required
               >
                 <option value="">Select Blood Group</option>
-                {bloodGroups.map(group => (
+                {bloodGroups.map((group) => (
                   <option key={group} value={group}>
                     {group}
                   </option>
@@ -331,9 +331,9 @@ export default function CreateDonationRequestClient({ user }) {
                 required
               >
                 <option value="">
-                  {geoLoading ? 'Loading districts...' : 'Select District'}
+                  {geoLoading ? "Loading districts..." : "Select District"}
                 </option>
-                {districts.map(district => (
+                {districts.map((district) => (
                   <option key={district.id} value={district.id}>
                     {district.name}
                   </option>
@@ -356,10 +356,10 @@ export default function CreateDonationRequestClient({ user }) {
               >
                 <option value="">
                   {!formData.recipientDistrict
-                    ? 'Select district first'
-                    : 'Select Upazila'}
+                    ? "Select district first"
+                    : "Select Upazila"}
                 </option>
-                {currentUpazilas.map(upazila => (
+                {currentUpazilas.map((upazila) => (
                   <option key={upazila.id} value={upazila.id}>
                     {upazila.name}
                   </option>
@@ -420,7 +420,7 @@ export default function CreateDonationRequestClient({ user }) {
                 name="donationDate"
                 value={formData.donationDate}
                 onChange={handleChange}
-                min={new Date().toISOString().split('T')[0]} // Prevent past dates
+                min={new Date().toISOString().split("T")[0]} // Prevent past dates
                 className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors"
                 required
               />
@@ -476,7 +476,7 @@ export default function CreateDonationRequestClient({ user }) {
           size="lg"
         >
           {!isSubmitting && <BiSolidDonateBlood size={22} />}
-          {isSubmitting ? 'Submitting Request...' : 'Create Donation Request'}
+          {isSubmitting ? "Submitting Request..." : "Create Donation Request"}
         </Button>
       </form>
     </motion.div>

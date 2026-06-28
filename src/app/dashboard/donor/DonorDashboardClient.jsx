@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { serverFetch, serverMutation } from '@/lib/core/server';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { serverFetch, serverMutation } from "@/lib/core/server";
 import {
   FaEye,
   FaEdit,
@@ -15,10 +15,10 @@ import {
   FaTimesCircle,
   FaUser,
   FaExclamationTriangle,
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import Link from 'next/link';
-import { authClient } from '@/lib/auth-client';
+} from "react-icons/fa";
+import { toast } from "react-toastify";
+import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 export default function DonorDashboardClient({ userId }) {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function DonorDashboardClient({ userId }) {
         );
         setRequests(data);
       } catch (error) {
-        toast.error('Failed to load donation requests');
+        toast.error("Failed to load donation requests");
         console.error(error);
       } finally {
         setLoading(false);
@@ -60,7 +60,7 @@ export default function DonorDashboardClient({ userId }) {
       const response = await serverMutation(
         `/api/donation-requests/${requestId}`,
         { status: newStatus, userId, role },
-        'PATCH',
+        "PATCH",
       );
 
       if (response.success) {
@@ -73,12 +73,12 @@ export default function DonorDashboardClient({ userId }) {
         setRequests(updatedData);
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to update status');
+      toast.error(error.message || "Failed to update status");
     }
   };
 
   // 3. Open Delete Confirmation Modal
-  const openDeleteModal = requestId => {
+  const openDeleteModal = (requestId) => {
     setDeletingRequestId(requestId);
     setIsDeleteModalOpen(true);
   };
@@ -96,7 +96,7 @@ export default function DonorDashboardClient({ userId }) {
       const role = session?.data?.user?.role || session?.user?.role;
 
       if (!userId) {
-        toast.error('User ID not found. Please log in again.');
+        toast.error("User ID not found. Please log in again.");
         setIsDeleting(false);
         return;
       }
@@ -104,17 +104,19 @@ export default function DonorDashboardClient({ userId }) {
       const response = await serverMutation(
         `/api/donation-requests/${deletingRequestId}`,
         { userId, role },
-        'DELETE',
+        "DELETE",
       );
 
       if (response.success) {
-        toast.success('Request deleted successfully');
-        setRequests(prev => prev.filter(req => req._id !== deletingRequestId));
+        toast.success("Request deleted successfully");
+        setRequests((prev) =>
+          prev.filter((req) => req._id !== deletingRequestId),
+        );
         setIsDeleteModalOpen(false);
         setDeletingRequestId(null);
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to delete request');
+      toast.error(error.message || "Failed to delete request");
     } finally {
       setIsDeleting(false);
     }
@@ -127,22 +129,22 @@ export default function DonorDashboardClient({ userId }) {
   };
 
   // ── Status Badge Helper ──
-  const getStatusBadge = status => {
+  const getStatusBadge = (status) => {
     const config = {
       pending: {
-        color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        color: "bg-yellow-100 text-yellow-800 border-yellow-200",
         icon: <FaClock className="text-xs" />,
       },
       inprogress: {
-        color: 'bg-blue-100 text-blue-800 border-blue-200',
+        color: "bg-blue-100 text-blue-800 border-blue-200",
         icon: <FaSpinner className="text-xs animate-spin" />,
       },
       done: {
-        color: 'bg-green-100 text-green-800 border-green-200',
+        color: "bg-green-100 text-green-800 border-green-200",
         icon: <FaCheckCircle className="text-xs" />,
       },
       canceled: {
-        color: 'bg-gray-100 text-gray-800 border-gray-200',
+        color: "bg-gray-100 text-gray-800 border-gray-200",
         icon: <FaTimesCircle className="text-xs" />,
       },
     };
@@ -202,7 +204,7 @@ export default function DonorDashboardClient({ userId }) {
           {/* CHANGED: px-3 lg:px-6 on all cells via th/td below, minWidth for safety */}
           <table
             className="w-full text-sm text-left text-gray-600"
-            style={{ minWidth: '700px' }}
+            style={{ minWidth: "700px" }}
           >
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
               <tr>
@@ -221,7 +223,7 @@ export default function DonorDashboardClient({ userId }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {requests.map(req => {
+              {requests.map((req) => {
                 const statusBadge = getStatusBadge(req.status);
                 return (
                   <tr
@@ -235,7 +237,7 @@ export default function DonorDashboardClient({ userId }) {
                           {req.recipientName}
                         </span>
                         <span className="text-xs text-gray-400 xl:hidden mt-0.5 truncate max-w-[160px]">
-                          {req.recipientDistrictName},{' '}
+                          {req.recipientDistrictName},{" "}
                           {req.recipientUpazilaName}
                         </span>
                       </div>
@@ -281,7 +283,7 @@ export default function DonorDashboardClient({ userId }) {
                         {req.status}
                       </span>
 
-                      {req.status === 'inprogress' && req.donorName && (
+                      {req.status === "inprogress" && req.donorName && (
                         // CHANGED: max-w + truncate on donor info
                         <div className="mt-1 flex-row items-center gap-1 text-xs text-gray-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100 w-fit inline-flex ">
                           <FaUser
@@ -328,11 +330,11 @@ export default function DonorDashboardClient({ userId }) {
                           <FaEye size={14} />
                         </button>
 
-                        {req.status === 'inprogress' && (
+                        {req.status === "inprogress" && (
                           <div className="flex gap-0.5 ml-0.5 shrink-0">
                             <button
                               onClick={() =>
-                                handleStatusUpdate(req._id, 'done')
+                                handleStatusUpdate(req._id, "done")
                               }
                               className="px-1.5 py-1 text-[10px] font-medium text-green-700 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors whitespace-nowrap"
                             >
@@ -340,7 +342,7 @@ export default function DonorDashboardClient({ userId }) {
                             </button>
                             <button
                               onClick={() =>
-                                handleStatusUpdate(req._id, 'canceled')
+                                handleStatusUpdate(req._id, "canceled")
                               }
                               className="px-1.5 py-1 text-[10px] font-medium text-red-700 bg-red-50 border border-red-200 rounded hover:bg-red-100 transition-colors whitespace-nowrap"
                             >
@@ -359,7 +361,7 @@ export default function DonorDashboardClient({ userId }) {
 
         {/* ── MOBILE CARDS — CHANGED: block lg:hidden (was md) ── */}
         <div className="block lg:hidden divide-y divide-gray-100">
-          {requests.map(req => {
+          {requests.map((req) => {
             const statusBadge = getStatusBadge(req.status);
             return (
               <div
@@ -399,7 +401,7 @@ export default function DonorDashboardClient({ userId }) {
                     {req.status}
                   </span>
 
-                  {req.status === 'inprogress' && req.donorName && (
+                  {req.status === "inprogress" && req.donorName && (
                     // CHANGED: max-w + overflow-hidden so long email doesn't blow layout
                     <div className="flex items-center gap-1.5 text-xs text-gray-600 bg-blue-50 px-2.5 py-1.5 rounded-md border border-blue-100 w-fit max-w-full overflow-hidden">
                       <FaUser className="text-blue-500 shrink-0" size={11} />
@@ -415,16 +417,16 @@ export default function DonorDashboardClient({ userId }) {
 
                 {/* Mobile Actions */}
                 <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
-                  {req.status === 'inprogress' && (
+                  {req.status === "inprogress" && (
                     <div className="grid grid-cols-2 gap-1.5">
                       <button
-                        onClick={() => handleStatusUpdate(req._id, 'done')}
+                        onClick={() => handleStatusUpdate(req._id, "done")}
                         className="py-2 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 text-center"
                       >
                         Mark Done
                       </button>
                       <button
-                        onClick={() => handleStatusUpdate(req._id, 'canceled')}
+                        onClick={() => handleStatusUpdate(req._id, "canceled")}
                         className="py-2 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 text-center"
                       >
                         Cancel
@@ -490,7 +492,7 @@ export default function DonorDashboardClient({ userId }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-4">
           <div
             className="bg-white rounded-xl shadow-2xl max-w-md w-full p-5 sm:p-6 animate-in fade-in zoom-in duration-200"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 text-red-600 mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-50 flex items-center justify-center shrink-0">

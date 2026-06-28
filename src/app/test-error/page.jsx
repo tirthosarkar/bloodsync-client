@@ -1,13 +1,13 @@
-'use client';
-import Link from 'next/link';
+"use client";
+import Link from "next/link";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function TestError() {
   const [hasError, setHasError] = useState(false);
 
   if (hasError) {
-    throw new Error('🧪 Testing BloodSync Error Page - Triggered by button');
+    throw new Error("🧪 Testing BloodSync Error Page - Triggered by button");
   }
 
   return (

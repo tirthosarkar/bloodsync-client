@@ -1,13 +1,13 @@
 // components/home/BecomeHeroSection.jsx
-'use client';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+"use client";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import {
   FaHeart,
   FaArrowRight,
   FaHandHoldingHeart,
   FaEye,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 export default function BecomeHeroSection() {
   return (
@@ -16,7 +16,7 @@ export default function BecomeHeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
           className="relative overflow-hidden rounded-[32px] bg-linear-to-br from-red-600 to-red-500 px-8 py-16 md:px-16 text-white"
         >
@@ -29,7 +29,7 @@ export default function BecomeHeroSection() {
             transition={{
               duration: 8,
               repeat: Infinity,
-              ease: 'linear',
+              ease: "linear",
             }}
             className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-white/10"
           />
@@ -41,7 +41,7 @@ export default function BecomeHeroSection() {
             transition={{
               duration: 6,
               repeat: Infinity,
-              ease: 'linear',
+              ease: "linear",
             }}
             className="absolute -bottom-16 -left-16 w-52 h-52 rounded-full bg-white/10"
           />
@@ -55,7 +55,7 @@ export default function BecomeHeroSection() {
             transition={{
               duration: 5,
               repeat: Infinity,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
             className="absolute top-1/2 right-1/4 w-4 h-4 rounded-full bg-white/20"
           />
@@ -67,7 +67,7 @@ export default function BecomeHeroSection() {
             transition={{
               duration: 4,
               repeat: Infinity,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
             className="absolute bottom-1/3 left-1/3 w-3 h-3 rounded-full bg-white/20"
           />
@@ -80,7 +80,7 @@ export default function BecomeHeroSection() {
               viewport={{ once: true }}
               transition={{
                 duration: 0.5,
-                type: 'spring',
+                type: "spring",
                 stiffness: 200,
               }}
               whileHover={{ scale: 1.1 }}
@@ -95,7 +95,7 @@ export default function BecomeHeroSection() {
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  ease: 'easeInOut',
+                  ease: "easeInOut",
                 }}
                 className="absolute inset-0 rounded-2xl bg-white/20"
               />

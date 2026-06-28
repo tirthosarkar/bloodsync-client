@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { serverFetch, serverMutation } from '@/lib/core/server';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { protectedFetch, serverFetch, serverMutation } from "@/lib/core/server";
 import {
   FaSpinner,
   FaUser,
@@ -12,14 +12,14 @@ import {
   FaEllipsisV,
   FaChevronLeft,
   FaChevronRight,
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import Image from 'next/image';
+} from "react-icons/fa";
+import { toast } from "react-toastify";
+import Image from "next/image";
 
 const STATUS_OPTIONS = [
-  { value: 'all', label: 'All Users' },
-  { value: 'active', label: 'Active' },
-  { value: 'blocked', label: 'Blocked' },
+  { value: "all", label: "All Users" },
+  { value: "active", label: "Active" },
+  { value: "blocked", label: "Blocked" },
 ];
 
 export default function AllUsersClient() {
@@ -31,21 +31,21 @@ export default function AllUsersClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState("all");
   const [processingId, setProcessingId] = useState(null);
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const limit = 10;
 
   // 1. Fetch Users
-  const fetchUsers = async (page = 1, status = 'all') => {
+  const fetchUsers = async (page = 1, status = "all") => {
     try {
       setLoading(true);
       let url = `/api/admin/users?page=${page}&limit=${limit}`;
-      if (status && status !== 'all') {
+      if (status && status !== "all") {
         url += `&status=${status}`;
       }
 
-      const response = await serverFetch(url);
+      const response = await protectedFetch(url);
 
       if (response.success) {
         setUsers(response.data);
@@ -54,7 +54,7 @@ export default function AllUsersClient() {
         setTotalUsers(response.pagination.totalUsers);
       }
     } catch (error) {
-      toast.error('Failed to load users');
+      toast.error("Failed to load users");
       console.error(error);
     } finally {
       setLoading(false);
@@ -67,14 +67,14 @@ export default function AllUsersClient() {
   }, [currentPage, statusFilter]);
 
   // 2. Handle Filter Change
-  const handleFilterChange = e => {
+  const handleFilterChange = (e) => {
     setStatusFilter(e.target.value);
     setCurrentPage(1);
     setOpenDropdownId(null);
   };
 
   // 3. Handle Pagination
-  const goToPage = page => {
+  const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       setOpenDropdownId(null);
@@ -87,12 +87,12 @@ export default function AllUsersClient() {
       setProcessingId(userId);
       setOpenDropdownId(null);
 
-      const targetUser = users.find(u => u._id === userId);
+      const targetUser = users.find((u) => u._id === userId);
 
-      console.log('🔍 Sending authId to backend:', targetUser?.authId);
+      console.log("🔍 Sending authId to backend:", targetUser?.authId);
 
       if (!targetUser || !targetUser.authId) {
-        toast.error('User Auth ID missing!');
+        toast.error("User Auth ID missing!");
         setProcessingId(null);
         return;
       }
@@ -100,35 +100,35 @@ export default function AllUsersClient() {
       const response = await serverMutation(
         `/api/admin/users/${targetUser.authId.trim()}`,
         { action },
-        'PATCH',
+        "PATCH",
       );
 
       if (response.success) {
-        toast.success(response.message || 'User updated successfully!');
+        toast.success(response.message || "User updated successfully!");
         fetchUsers(currentPage, statusFilter);
       }
     } catch (error) {
-      console.error('🔥 Frontend Error:', error);
-      toast.error(error.message || 'Failed to update user');
+      console.error("🔥 Frontend Error:", error);
+      toast.error(error.message || "Failed to update user");
     } finally {
       setProcessingId(null);
     }
   };
 
   // ── Role & Status Badge Helpers ──
-  const getRoleBadge = role => {
+  const getRoleBadge = (role) => {
     const config = {
-      admin: 'bg-purple-100 text-purple-800 border-purple-200',
-      volunteer: 'bg-blue-100 text-blue-800 border-blue-200',
-      donor: 'bg-green-100 text-green-800 border-green-200',
+      admin: "bg-purple-100 text-purple-800 border-purple-200",
+      volunteer: "bg-blue-100 text-blue-800 border-blue-200",
+      donor: "bg-green-100 text-green-800 border-green-200",
     };
     return config[role] || config.donor;
   };
 
-  const getStatusBadge = status => {
-    return status === 'active'
-      ? 'bg-green-100 text-green-800 border-green-200'
-      : 'bg-red-100 text-red-800 border-red-200';
+  const getStatusBadge = (status) => {
+    return status === "active"
+      ? "bg-green-100 text-green-800 border-green-200"
+      : "bg-red-100 text-red-800 border-red-200";
   };
 
   // ── Reusable Avatar ──
@@ -181,7 +181,7 @@ export default function AllUsersClient() {
             onChange={handleFilterChange}
             className="flex-1 sm:flex-none sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
           >
-            {STATUS_OPTIONS.map(option => (
+            {STATUS_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -206,7 +206,7 @@ export default function AllUsersClient() {
             {/* CHANGED: minWidth 750 → 680, table-fixed removed so columns breathe */}
             <table
               className="w-full text-sm text-left text-gray-600"
-              style={{ minWidth: '680px' }}
+              style={{ minWidth: "680px" }}
             >
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
                 <tr>
@@ -220,7 +220,7 @@ export default function AllUsersClient() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {users.map(user => (
+                {users.map((user) => (
                   <tr
                     key={user._id}
                     className="hover:bg-gray-50 transition-colors"
@@ -275,10 +275,10 @@ export default function AllUsersClient() {
                         {/* ── Dropdown Menu ── */}
                         {openDropdownId === user._id && (
                           <div className="absolute right-0 top-10 z-20 mt-2 w-44 bg-white rounded-md shadow-lg border border-gray-200 py-1 text-sm animate-in fade-in zoom-in-95 duration-100">
-                            {user.status === 'active' ? (
+                            {user.status === "active" ? (
                               <button
                                 onClick={() =>
-                                  handleUserAction(user._id, 'block')
+                                  handleUserAction(user._id, "block")
                                 }
                                 className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2"
                               >
@@ -287,27 +287,27 @@ export default function AllUsersClient() {
                             ) : (
                               <button
                                 onClick={() =>
-                                  handleUserAction(user._id, 'unblock')
+                                  handleUserAction(user._id, "unblock")
                                 }
                                 className="w-full text-left px-4 py-2 text-green-600 hover:bg-green-50 flex items-center gap-2"
                               >
                                 <FaUserCheck size={14} /> Unblock User
                               </button>
                             )}
-                            {user.role === 'donor' && (
+                            {user.role === "donor" && (
                               <button
                                 onClick={() =>
-                                  handleUserAction(user._id, 'makeVolunteer')
+                                  handleUserAction(user._id, "makeVolunteer")
                                 }
                                 className="w-full text-left px-4 py-2 text-blue-600 hover:bg-blue-50 flex items-center gap-2 border-t border-gray-100"
                               >
                                 <FaUserCog size={14} /> Make Volunteer
                               </button>
                             )}
-                            {user.role !== 'admin' && (
+                            {user.role !== "admin" && (
                               <button
                                 onClick={() =>
-                                  handleUserAction(user._id, 'makeAdmin')
+                                  handleUserAction(user._id, "makeAdmin")
                                 }
                                 className="w-full text-left px-4 py-2 text-purple-600 hover:bg-purple-50 flex items-center gap-2 border-t border-gray-100"
                               >
@@ -326,7 +326,7 @@ export default function AllUsersClient() {
 
           {/* ── MOBILE CARD VIEW ── */}
           <div className="block lg:hidden divide-y divide-gray-100">
-            {users.map(user => (
+            {users.map((user) => (
               <div
                 key={user._id}
                 className="p-3 sm:p-4 bg-white hover:bg-gray-50 transition-colors relative"
@@ -358,7 +358,7 @@ export default function AllUsersClient() {
 
                 <div className="space-y-1 text-xs sm:text-sm text-gray-600 mb-2">
                   <p className="truncate">
-                    <span className="font-medium text-gray-500">Email:</span>{' '}
+                    <span className="font-medium text-gray-500">Email:</span>{" "}
                     {user.email}
                   </p>
                   <div className="flex flex-wrap gap-1.5 pt-1">
@@ -379,34 +379,34 @@ export default function AllUsersClient() {
                 {/* ── Mobile Dropdown ── */}
                 {openDropdownId === user._id && (
                   <div className="absolute right-4 top-14 z-20 w-44 bg-white rounded-md shadow-lg border border-gray-200 py-1 text-sm animate-in fade-in zoom-in-95 duration-100">
-                    {user.status === 'active' ? (
+                    {user.status === "active" ? (
                       <button
-                        onClick={() => handleUserAction(user._id, 'block')}
+                        onClick={() => handleUserAction(user._id, "block")}
                         className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2"
                       >
                         <FaUserSlash size={14} /> Block User
                       </button>
                     ) : (
                       <button
-                        onClick={() => handleUserAction(user._id, 'unblock')}
+                        onClick={() => handleUserAction(user._id, "unblock")}
                         className="w-full text-left px-4 py-2 text-green-600 hover:bg-green-50 flex items-center gap-2"
                       >
                         <FaUserCheck size={14} /> Unblock User
                       </button>
                     )}
-                    {user.role === 'donor' && (
+                    {user.role === "donor" && (
                       <button
                         onClick={() =>
-                          handleUserAction(user._id, 'makeVolunteer')
+                          handleUserAction(user._id, "makeVolunteer")
                         }
                         className="w-full text-left px-4 py-2 text-blue-600 hover:bg-blue-50 flex items-center gap-2 border-t border-gray-100"
                       >
                         <FaUserCog size={14} /> Make Volunteer
                       </button>
                     )}
-                    {user.role !== 'admin' && (
+                    {user.role !== "admin" && (
                       <button
-                        onClick={() => handleUserAction(user._id, 'makeAdmin')}
+                        onClick={() => handleUserAction(user._id, "makeAdmin")}
                         className="w-full text-left px-4 py-2 text-purple-600 hover:bg-purple-50 flex items-center gap-2 border-t border-gray-100"
                       >
                         <FaUserCog size={14} /> Make Admin

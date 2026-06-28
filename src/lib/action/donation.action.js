@@ -1,13 +1,13 @@
-'use server';
+"use server";
 
-const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
+const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export async function donateBloodAction(requestId, payload) {
   try {
     const res = await fetch(`${baseURL}/api/donation-requests/${requestId}`, {
-      method: 'PATCH', // HARDCODED to PATCH
+      method: "PATCH", // HARDCODED to PATCH
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     });
@@ -19,7 +19,7 @@ export async function donateBloodAction(requestId, payload) {
 
     return await res.json();
   } catch (error) {
-    console.error('Donation Action Error:', error);
+    console.error("Donation Action Error:", error);
     throw error;
   }
 }

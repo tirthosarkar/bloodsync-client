@@ -1,9 +1,9 @@
-import LoginForm from './LoginForm';
+import LoginForm from "./LoginForm";
 
 export const metadata = {
-  title: 'Login',
+  title: "Login",
   description:
-    'Login to your BloodSync account to manage donations and requests.',
+    "Login to your BloodSync account to manage donations and requests.",
 };
 
 export default function SignInPage() {

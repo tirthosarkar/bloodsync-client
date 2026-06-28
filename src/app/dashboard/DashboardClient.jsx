@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { serverFetch } from '@/lib/core/server';
+import { useState, useEffect, useCallback } from "react";
+import { protectedFetch, serverFetch } from "@/lib/core/server";
 import {
   FaUsers,
   FaMoneyBillWave,
   FaHandHoldingHeart,
   FaSpinner,
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
+} from "react-icons/fa";
+import { toast } from "react-toastify";
 import {
   PieChart,
   Pie,
@@ -20,16 +20,16 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-} from 'recharts';
+} from "recharts";
 
 // ── Pie chart status colors ──────────────────────────────────
 const STATUS_COLORS = {
-  Canceled: '#6b7280', // gray
-  Done: '#22c55e', // green
-  Inprogress: '#3b82f6', // blue
-  Pending: '#f59e0b', // amber
+  Canceled: "#6b7280", // gray
+  Done: "#22c55e", // green
+  Inprogress: "#3b82f6", // blue
+  Pending: "#f59e0b", // amber
 };
-const FALLBACK_COLORS = ['#f59e0b', '#3b82f6', '#22c55e', '#6b7280', '#ef4444'];
+const FALLBACK_COLORS = ["#f59e0b", "#3b82f6", "#22c55e", "#6b7280", "#ef4444"];
 
 // ── Custom Pie label ──────────────────────────────────────────
 const renderCustomLabel = ({
@@ -107,23 +107,23 @@ export default function DashboardClient({ user }) {
       setPieRadius(window.innerWidth < 640 ? 80 : 105);
     };
     handleResize(); // Set on initial load
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const isAdminOrVolunteer =
-    user?.role === 'admin' || user?.role === 'volunteer';
+    user?.role === "admin" || user?.role === "volunteer";
 
   const fetchDashboardStats = useCallback(async () => {
     try {
       setLoading(true);
       const [donorsRes, fundingRes, requestsRes, statusRes, weeklyRes] =
         await Promise.all([
-          serverFetch('/api/users/count'),
-          serverFetch('/api/funding/total'),
-          serverFetch('/api/donation-requests/count'),
-          serverFetch('/api/donation-requests/status-breakdown'),
-          serverFetch('/api/donation-requests/weekly-stats'),
+          serverFetch("/api/users/count"),
+          protectedFetch("/api/funding/total"),
+          serverFetch("/api/donation-requests/count"),
+          serverFetch("/api/donation-requests/status-breakdown"),
+          serverFetch("/api/donation-requests/weekly-stats"),
         ]);
 
       setStats({
@@ -134,8 +134,8 @@ export default function DashboardClient({ user }) {
       setStatusData(statusRes?.success ? statusRes.data : []);
       setWeeklyData(weeklyRes?.success ? weeklyRes.data : []);
     } catch (error) {
-      console.error('Dashboard stats fetch failed:', error);
-      toast.error('Could not load dashboard statistics.');
+      console.error("Dashboard stats fetch failed:", error);
+      toast.error("Could not load dashboard statistics.");
     } finally {
       setLoading(false);
     }
@@ -154,9 +154,9 @@ export default function DashboardClient({ user }) {
     );
   }
 
-  const formattedFunding = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  const formattedFunding = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     maximumFractionDigits: 2,
   }).format(stats.totalFunding);
 
@@ -170,7 +170,7 @@ export default function DashboardClient({ user }) {
         <p className="mt-2 text-sm md:text-base text-gray-500">
           {isAdminOrVolunteer
             ? "Here is an overview of your platform's activity."
-            : 'Track your donation requests and help save lives.'}
+            : "Track your donation requests and help save lives."}
         </p>
       </div>
 
@@ -234,10 +234,10 @@ export default function DashboardClient({ user }) {
                     <Tooltip
                       formatter={(value, name) => [`${value} requests`, name]}
                       contentStyle={{
-                        background: '#fff',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        fontSize: '13px',
+                        background: "#fff",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "8px",
+                        fontSize: "13px",
                       }}
                     />
                   </PieChart>
@@ -286,25 +286,25 @@ export default function DashboardClient({ user }) {
                     />
                     <XAxis
                       dataKey="day"
-                      tick={{ fill: '#9ca3af', fontSize: 10 }}
+                      tick={{ fill: "#9ca3af", fontSize: 10 }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <YAxis
-                      tick={{ fill: '#9ca3af', fontSize: 12 }}
+                      tick={{ fill: "#9ca3af", fontSize: 12 }}
                       axisLine={false}
                       tickLine={false}
                       allowDecimals={false}
                     />
                     <Tooltip
-                      formatter={value => [`${value} requests`, 'Count']}
+                      formatter={(value) => [`${value} requests`, "Count"]}
                       contentStyle={{
-                        background: '#fff',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        fontSize: '13px',
+                        background: "#fff",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "8px",
+                        fontSize: "13px",
                       }}
-                      cursor={{ fill: '#fef2f2' }}
+                      cursor={{ fill: "#fef2f2" }}
                     />
                     <Bar
                       dataKey="count"

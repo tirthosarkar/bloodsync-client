@@ -1,12 +1,12 @@
-import { redirect } from 'next/navigation';
-import CreateDonationRequestClient from './CreateDonationRequestClient';
-import { getUserSession } from '@/lib/core/session';
+import { redirect } from "next/navigation";
+import CreateDonationRequestClient from "./CreateDonationRequestClient";
+import { getUserSession } from "@/lib/core/session";
 
 export async function generateMetadata() {
   const user = await getUserSession();
   return {
-    title: user ? `${user.name} - Create Request` : 'Create Donation Request',
-    description: 'Submit a new blood donation request.',
+    title: user ? `${user.name} - Create Request` : "Create Donation Request",
+    description: "Submit a new blood donation request.",
   };
 }
 
@@ -14,7 +14,7 @@ export default async function CreateDonationRequestPage() {
   const user = await getUserSession();
 
   if (!user) {
-    redirect('/auth/signin');
+    redirect("/auth/signin");
   }
 
   return (

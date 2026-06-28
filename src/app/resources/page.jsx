@@ -1,49 +1,49 @@
 export const metadata = {
-  title: 'Resources',
+  title: "Resources",
   description:
-    'Explore helpful resources about BloodSync including About Us, FAQ, Privacy Policy, and Terms & Conditions.',
+    "Explore helpful resources about BloodSync including About Us, FAQ, Privacy Policy, and Terms & Conditions.",
   keywords: [
-    'blood donation resources',
-    'bloodsync help',
-    'faq blood donation',
-    'privacy policy bloodsync',
-    'terms and conditions blood donation',
+    "blood donation resources",
+    "bloodsync help",
+    "faq blood donation",
+    "privacy policy bloodsync",
+    "terms and conditions blood donation",
   ],
 };
 
-import Link from 'next/link';
+import Link from "next/link";
 import {
   FaInfoCircle,
   FaQuestionCircle,
   FaShieldAlt,
   FaFileContract,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 export default function ResourcesPage() {
   const items = [
     {
-      title: 'About Us',
-      desc: 'Learn about BloodSync mission and vision.',
+      title: "About Us",
+      desc: "Learn about BloodSync mission and vision.",
       icon: <FaInfoCircle />,
-      href: '/resources/about',
+      href: "/resources/about",
     },
     {
-      title: 'FAQ',
-      desc: 'Common questions about blood donation.',
+      title: "FAQ",
+      desc: "Common questions about blood donation.",
       icon: <FaQuestionCircle />,
-      href: '/resources/faq',
+      href: "/resources/faq",
     },
     {
-      title: 'Privacy Policy',
-      desc: 'How we handle and protect your data.',
+      title: "Privacy Policy",
+      desc: "How we handle and protect your data.",
       icon: <FaShieldAlt />,
-      href: '/resources/privacy-policy',
+      href: "/resources/privacy-policy",
     },
     {
-      title: 'Terms & Conditions',
-      desc: 'Rules and usage guidelines of BloodSync.',
+      title: "Terms & Conditions",
+      desc: "Rules and usage guidelines of BloodSync.",
       icon: <FaFileContract />,
-      href: '/resources/terms',
+      href: "/resources/terms",
     },
   ];
 

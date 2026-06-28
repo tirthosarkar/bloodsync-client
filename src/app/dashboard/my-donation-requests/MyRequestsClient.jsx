@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { serverFetch, serverMutation } from '@/lib/core/server';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { serverFetch, serverMutation } from "@/lib/core/server";
 import {
   FaEye,
   FaEdit,
@@ -15,15 +15,15 @@ import {
   FaExclamationTriangle,
   FaChevronLeft,
   FaChevronRight,
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
+} from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const STATUS_OPTIONS = [
-  { value: 'all', label: 'All Statuses' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'inprogress', label: 'In Progress' },
-  { value: 'done', label: 'Done' },
-  { value: 'canceled', label: 'Canceled' },
+  { value: "all", label: "All Statuses" },
+  { value: "pending", label: "Pending" },
+  { value: "inprogress", label: "In Progress" },
+  { value: "done", label: "Done" },
+  { value: "canceled", label: "Canceled" },
 ];
 
 export default function MyRequestsClient({ userId }) {
@@ -40,7 +40,7 @@ export default function MyRequestsClient({ userId }) {
   const limit = 10; // Requests per page
 
   // State for Filtering
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // Delete Modal States
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -48,11 +48,11 @@ export default function MyRequestsClient({ userId }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // 1. Fetch requests with pagination & filter
-  const fetchRequests = async (page = 1, status = 'all') => {
+  const fetchRequests = async (page = 1, status = "all") => {
     try {
       setLoading(true);
       let url = `/api/donation-requests/my-requests/${userId}?page=${page}&limit=${limit}`;
-      if (status && status !== 'all') {
+      if (status && status !== "all") {
         url += `&status=${status}`;
       }
 
@@ -65,7 +65,7 @@ export default function MyRequestsClient({ userId }) {
         setTotalRequests(response.pagination.totalRequests);
       }
     } catch (error) {
-      toast.error('Failed to load donation requests');
+      toast.error("Failed to load donation requests");
       console.error(error);
     } finally {
       setLoading(false);
@@ -84,7 +84,7 @@ export default function MyRequestsClient({ userId }) {
       const response = await serverMutation(
         `/api/donation-requests/${requestId}`,
         { status: newStatus },
-        'PATCH',
+        "PATCH",
       );
 
       if (response.success) {
@@ -92,12 +92,12 @@ export default function MyRequestsClient({ userId }) {
         fetchRequests(currentPage, statusFilter);
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to update status');
+      toast.error(error.message || "Failed to update status");
     }
   };
 
   // 3. Open Delete Confirmation Modal
-  const openDeleteModal = requestId => {
+  const openDeleteModal = (requestId) => {
     setDeletingRequestId(requestId);
     setIsDeleteModalOpen(true);
   };
@@ -110,18 +110,18 @@ export default function MyRequestsClient({ userId }) {
       setIsDeleting(true);
       const response = await serverMutation(
         `/api/donation-requests/${deletingRequestId}`,
-        { userId: userId, role: 'donor' },
-        'DELETE',
+        { userId: userId, role: "donor" },
+        "DELETE",
       );
 
       if (response.success) {
-        toast.success('Request deleted successfully');
+        toast.success("Request deleted successfully");
         fetchRequests(currentPage, statusFilter);
         setIsDeleteModalOpen(false);
         setDeletingRequestId(null);
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to delete request');
+      toast.error(error.message || "Failed to delete request");
     } finally {
       setIsDeleting(false);
     }
@@ -134,40 +134,40 @@ export default function MyRequestsClient({ userId }) {
   };
 
   // 6. Handle Filter Change
-  const handleFilterChange = e => {
+  const handleFilterChange = (e) => {
     const newStatus = e.target.value;
     setStatusFilter(newStatus);
     setCurrentPage(1);
   };
 
   // 7. Handle Pagination
-  const goToPage = page => {
+  const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
 
   // ── Status Badge Helper ──
-  const getStatusBadge = status => {
+  const getStatusBadge = (status) => {
     const config = {
       pending: {
-        color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        color: "bg-yellow-100 text-yellow-800 border-yellow-200",
         icon: <FaClock className="text-xs" />,
       },
       inprogress: {
-        color: 'bg-blue-100 text-blue-800 border-blue-200',
+        color: "bg-blue-100 text-blue-800 border-blue-200",
         icon: <FaSpinner className="text-xs animate-spin" />,
       },
       done: {
-        color: 'bg-green-100 text-green-800 border-green-200',
+        color: "bg-green-100 text-green-800 border-green-200",
         icon: <FaCheckCircle className="text-xs" />,
       },
       canceled: {
-        color: 'bg-gray-100 text-gray-800 border-gray-200',
+        color: "bg-gray-100 text-gray-800 border-gray-200",
         icon: <FaTimesCircle className="text-xs" />,
       },
       cancelled: {
-        color: 'bg-gray-100 text-gray-800 border-gray-200',
+        color: "bg-gray-100 text-gray-800 border-gray-200",
         icon: <FaTimesCircle className="text-xs" />,
       },
     };
@@ -214,7 +214,7 @@ export default function MyRequestsClient({ userId }) {
               onChange={handleFilterChange}
               className="flex-1 sm:flex-none sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
             >
-              {STATUS_OPTIONS.map(option => (
+              {STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -240,7 +240,7 @@ export default function MyRequestsClient({ userId }) {
               {/* ── CHANGED: removed min-w-[750px] from table; let overflow-x-auto scroll instead ── */}
               <table
                 className="w-full text-sm text-left text-gray-600"
-                style={{ minWidth: '680px' }}
+                style={{ minWidth: "680px" }}
               >
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
                   <tr>
@@ -264,7 +264,7 @@ export default function MyRequestsClient({ userId }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {requests.map(req => {
+                  {requests.map((req) => {
                     const statusBadge = getStatusBadge(req.status);
                     return (
                       <tr
@@ -278,7 +278,7 @@ export default function MyRequestsClient({ userId }) {
                               {req.recipientName}
                             </span>
                             <span className="text-xs text-gray-400 font-normal xl:hidden mt-0.5 truncate max-w-[140px] lg:max-w-[180px]">
-                              {req.recipientDistrictName},{' '}
+                              {req.recipientDistrictName},{" "}
                               {req.recipientUpazilaName}
                             </span>
                           </div>
@@ -326,7 +326,7 @@ export default function MyRequestsClient({ userId }) {
                               </span>
                               {req.status}
                             </span>
-                            {req.status === 'inprogress' && req.donorName && (
+                            {req.status === "inprogress" && req.donorName && (
                               // CHANGED: max-w + truncate on donor info
                               <div className="mt-1 flex-row items-center gap-1 text-xs text-gray-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100 w-fit inline-flex ">
                                 <FaUser
@@ -373,12 +373,12 @@ export default function MyRequestsClient({ userId }) {
                             >
                               <FaEye size={14} />
                             </button>
-                            {req.status === 'inprogress' && (
+                            {req.status === "inprogress" && (
                               // ── CHANGED: ml-0.5 instead of ml-1 on md ──
                               <div className="flex gap-0.5 lg:gap-1 ml-0.5 shrink-0">
                                 <button
                                   onClick={() =>
-                                    handleStatusUpdate(req._id, 'done')
+                                    handleStatusUpdate(req._id, "done")
                                   }
                                   className="px-1.5 lg:px-2 py-1 text-[10px] lg:text-[11px] font-medium text-green-700 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors whitespace-nowrap"
                                 >
@@ -386,7 +386,7 @@ export default function MyRequestsClient({ userId }) {
                                 </button>
                                 <button
                                   onClick={() =>
-                                    handleStatusUpdate(req._id, 'canceled')
+                                    handleStatusUpdate(req._id, "canceled")
                                   }
                                   className="px-1.5 lg:px-2 py-1 text-[10px] lg:text-[11px] font-medium text-red-700 bg-red-50 border border-red-200 rounded hover:bg-red-100 transition-colors whitespace-nowrap"
                                 >
@@ -405,7 +405,7 @@ export default function MyRequestsClient({ userId }) {
 
             {/* ── MOBILE CARD VIEW (Visible below 768px) ── */}
             <div className="block lg:hidden divide-y divide-gray-100">
-              {requests.map(req => {
+              {requests.map((req) => {
                 const statusBadge = getStatusBadge(req.status);
                 return (
                   <div
@@ -430,7 +430,7 @@ export default function MyRequestsClient({ userId }) {
                         </span>
                         {/* ── CHANGED: truncate on tiny screens ── */}
                         <span className="truncate">
-                          {req.recipientDistrictName},{' '}
+                          {req.recipientDistrictName},{" "}
                           {req.recipientUpazilaName}
                         </span>
                       </p>
@@ -439,7 +439,7 @@ export default function MyRequestsClient({ userId }) {
                           Date:
                         </span>
                         <span>
-                          {new Date(req.donationDate).toLocaleDateString()} at{' '}
+                          {new Date(req.donationDate).toLocaleDateString()} at{" "}
                           {req.donationTime}
                         </span>
                       </p>
@@ -450,7 +450,7 @@ export default function MyRequestsClient({ userId }) {
                           {statusBadge.icon}
                           {req.status}
                         </span>
-                        {req.status === 'inprogress' && req.donorName && (
+                        {req.status === "inprogress" && req.donorName && (
                           // CHANGED: max-w + overflow-hidden so long email doesn't blow layout
                           <div className="flex items-center gap-1.5 text-xs text-gray-600 bg-blue-50 px-2.5 py-1.5 rounded-md border border-blue-100 w-fit max-w-full overflow-hidden">
                             <FaUser
@@ -500,17 +500,17 @@ export default function MyRequestsClient({ userId }) {
                         </button>
                       </div>
 
-                      {req.status === 'inprogress' && (
+                      {req.status === "inprogress" && (
                         <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                           <button
-                            onClick={() => handleStatusUpdate(req._id, 'done')}
+                            onClick={() => handleStatusUpdate(req._id, "done")}
                             className="py-2 px-3 text-xs font-medium text-center text-green-700 bg-green-50 border border-green-200 rounded-lg active:bg-green-100"
                           >
                             Mark Done
                           </button>
                           <button
                             onClick={() =>
-                              handleStatusUpdate(req._id, 'canceled')
+                              handleStatusUpdate(req._id, "canceled")
                             }
                             className="py-2 px-3 text-xs font-medium text-center text-red-700 bg-red-50 border border-red-200 rounded-lg active:bg-red-100"
                           >
@@ -528,9 +528,9 @@ export default function MyRequestsClient({ userId }) {
             {/* ── CHANGED: p-3 on mobile, p-4 on sm+; stacks cleanly ── */}
             <div className="p-3 sm:p-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3 bg-gray-50">
               <span className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
-                Showing{' '}
+                Showing{" "}
                 {totalRequests === 0 ? 0 : (currentPage - 1) * limit + 1}–
-                {Math.min(currentPage * limit, totalRequests)} of{' '}
+                {Math.min(currentPage * limit, totalRequests)} of{" "}
                 {totalRequests} requests
               </span>
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -564,7 +564,7 @@ export default function MyRequestsClient({ userId }) {
           <div
             // ── CHANGED: w-[calc(100%-1.5rem)] caps width on tiny screens ──
             className="bg-white rounded-xl shadow-2xl w-full max-w-md p-5 sm:p-6 animate-in fade-in zoom-in duration-200"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 text-red-600 mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-50 flex items-center justify-center shrink-0">

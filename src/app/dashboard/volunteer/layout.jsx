@@ -1,8 +1,8 @@
-import { requireRole } from '@/lib/core/session';
+import { requireRole } from "@/lib/core/session";
 
 export default async function VolunteerLayout({ children }) {
   // ✅ Protect all volunteer routes
-  const user = await requireRole('volunteer');
+  const user = await requireRole("volunteer");
 
   return <>{children}</>;
 }

@@ -1,25 +1,25 @@
-import { Inter } from 'next/font/google';
-import './globals.css';
-import ClientLayout from './ClientLayout';
+import { Inter } from "next/font/google";
+import "./globals.css";
+import ClientLayout from "./ClientLayout";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    default: 'BloodSync | Blood Donation Platform',
-    template: '%s | BloodSync',
+    default: "BloodSync | Blood Donation Platform",
+    template: "%s | BloodSync",
   },
   description:
-    'BloodSync connects blood donors with those in need. Register as a donor, request blood, and save lives today.',
+    "BloodSync connects blood donors with those in need. Register as a donor, request blood, and save lives today.",
   keywords: [
-    'blood donation',
-    'donate blood',
-    'blood bank',
-    'blood request',
-    'save lives',
-    'donor registration',
+    "blood donation",
+    "donate blood",
+    "blood bank",
+    "blood request",
+    "save lives",
+    "donor registration",
   ],
-  authors: [{ name: 'Shahadat Hossain' }],
+  authors: [{ name: "Shahadat Hossain" }],
 };
 
 export default function RootLayout({ children }) {

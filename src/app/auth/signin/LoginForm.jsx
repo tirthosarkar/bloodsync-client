@@ -1,9 +1,9 @@
 // components/auth/LoginForm.jsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   FaEnvelope,
   FaLock,
@@ -11,22 +11,22 @@ import {
   FaEyeSlash,
   FaShieldAlt,
   FaHeartbeat,
-} from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
-import { signIn } from '@/lib/auth-client';
+} from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { signIn } from "@/lib/auth-client";
 
 export default function LoginForm() {
   const router = useRouter(); // Initialize router
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      toast.error('Please fill in all fields.');
+      toast.error("Please fill in all fields.");
       return;
     }
     setIsLoading(true);
@@ -41,21 +41,21 @@ export default function LoginForm() {
 
       // Handle Better Auth Specific Errors (e.g., Wrong password, Invalid User)
       if (error) {
-        toast.error(error.message || 'Invalid email or password.');
+        toast.error(error.message || "Invalid email or password.");
         return;
       }
 
-      toast.success('Welcome back! Redirecting...');
+      toast.success("Welcome back! Redirecting...");
 
       // Safety fallback route management if callbackURL is not handled implicitly
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = "/";
         // router.push("/");
         // router.refresh(); // Cleans up cached headers/server component routing configurations
       }, 1000);
     } catch (error) {
-      console.error('Login unexpected error:', error);
-      toast.error('An unexpected network error occurred.');
+      console.error("Login unexpected error:", error);
+      toast.error("An unexpected network error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +77,7 @@ export default function LoginForm() {
               scale: [1, 1.2, 1],
               rotate: [0, 90, 0],
             }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
             className="absolute w-48 h-48 rounded-full bg-white/5 -top-14 -left-14"
           />
           <motion.div
@@ -85,7 +85,7 @@ export default function LoginForm() {
               scale: [1, 1.3, 1],
               rotate: [0, -90, 0],
             }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             className="absolute w-32 h-32 rounded-full bg-white/5 -bottom-10 -right-10"
           />
 
@@ -95,7 +95,7 @@ export default function LoginForm() {
               y: [0, -20, 0],
               opacity: [0.3, 0.6, 0.3],
             }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             className="absolute top-1/4 left-1/4 text-white/10 text-4xl"
           >
             ❤️
@@ -105,7 +105,7 @@ export default function LoginForm() {
               y: [0, 15, 0],
               opacity: [0.4, 0.7, 0.4],
             }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="absolute bottom-1/3 right-1/4 text-white/10 text-3xl"
           >
             🩸
@@ -233,7 +233,7 @@ export default function LoginForm() {
             animate={{
               scale: [1, 1.1, 1],
             }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="absolute top-0 right-0 w-20 h-20 rounded-full bg-red-100 -translate-y-1/2 translate-x-1/2 opacity-60"
           />
 
@@ -262,7 +262,7 @@ export default function LoginForm() {
                   type="email"
                   placeholder="user@example.com"
                   value={formData.email}
-                  onChange={e =>
+                  onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
                   className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition"
@@ -293,10 +293,10 @@ export default function LoginForm() {
                 </span>
                 <input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   value={formData.password}
-                  onChange={e =>
+                  onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
                   className="w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition"
@@ -306,7 +306,7 @@ export default function LoginForm() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 text-gray-400 hover:text-gray-600 transition"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
                     <FaEyeSlash className="w-4 h-4" />
@@ -344,14 +344,14 @@ export default function LoginForm() {
                   Logging in...
                 </span>
               ) : (
-                'Log In'
+                "Log In"
               )}
             </button>
           </form>
 
           {/* Register link */}
           <p className="text-center text-sm text-gray-500 mt-5">
-            Don&apos;t have an account?{' '}
+            Don&apos;t have an account?{" "}
             <Link
               href="/auth/register"
               className="text-red-600 font-semibold hover:underline"

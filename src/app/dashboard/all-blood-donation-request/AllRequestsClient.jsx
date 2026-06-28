@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { serverFetch, serverMutation } from '@/lib/core/server';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { serverFetch, serverMutation } from "@/lib/core/server";
 import {
   FaEye,
   FaEdit,
@@ -18,15 +18,15 @@ import {
   FaEllipsisV,
   FaCheck,
   FaBan,
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
+} from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const STATUS_OPTIONS = [
-  { value: 'all', label: 'All Statuses' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'inprogress', label: 'In Progress' },
-  { value: 'done', label: 'Done' },
-  { value: 'canceled', label: 'Canceled' },
+  { value: "all", label: "All Statuses" },
+  { value: "pending", label: "Pending" },
+  { value: "inprogress", label: "In Progress" },
+  { value: "done", label: "Done" },
+  { value: "canceled", label: "Canceled" },
 ];
 
 export default function AllRequestsClient({ currentUserRole }) {
@@ -43,7 +43,7 @@ export default function AllRequestsClient({ currentUserRole }) {
   const limit = 10;
 
   // State for Filtering
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // Dropdown State
   const [openDropdownId, setOpenDropdownId] = useState(null);
@@ -53,14 +53,14 @@ export default function AllRequestsClient({ currentUserRole }) {
   const [deletingRequestId, setDeletingRequestId] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const isAdmin = currentUserRole === 'admin';
+  const isAdmin = currentUserRole === "admin";
 
   // 1. Fetch ALL requests with pagination & filter
-  const fetchRequests = async (page = 1, status = 'all') => {
+  const fetchRequests = async (page = 1, status = "all") => {
     try {
       setLoading(true);
       let url = `/api/donation-requests/all?page=${page}&limit=${limit}`;
-      if (status && status !== 'all') {
+      if (status && status !== "all") {
         url += `&status=${status}`;
       }
 
@@ -73,7 +73,7 @@ export default function AllRequestsClient({ currentUserRole }) {
         setTotalRequests(response.pagination.totalRequests);
       }
     } catch (error) {
-      toast.error('Failed to load donation requests');
+      toast.error("Failed to load donation requests");
       console.error(error);
     } finally {
       setLoading(false);
@@ -92,7 +92,7 @@ export default function AllRequestsClient({ currentUserRole }) {
       const response = await serverMutation(
         `/api/donation-requests/${requestId}`,
         { status: newStatus },
-        'PATCH',
+        "PATCH",
       );
 
       if (response.success) {
@@ -101,7 +101,7 @@ export default function AllRequestsClient({ currentUserRole }) {
         setOpenDropdownId(null);
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to update status');
+      toast.error(error.message || "Failed to update status");
     }
   };
 
@@ -113,25 +113,25 @@ export default function AllRequestsClient({ currentUserRole }) {
       setIsDeleting(true);
       const response = await serverMutation(
         `/api/donation-requests/admin-delete/${deletingRequestId}`,
-        { role: 'admin' }, // ✅ This satisfies the backend permission check
-        'DELETE',
+        { role: "admin" }, // ✅ This satisfies the backend permission check
+        "DELETE",
       );
 
       if (response.success) {
-        toast.success('Request deleted successfully');
+        toast.success("Request deleted successfully");
         fetchRequests(currentPage, statusFilter);
         setIsDeleteModalOpen(false);
         setDeletingRequestId(null);
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to delete request');
+      toast.error(error.message || "Failed to delete request");
     } finally {
       setIsDeleting(false);
     }
   };
 
   // UI Helpers
-  const openDeleteModal = requestId => {
+  const openDeleteModal = (requestId) => {
     setDeletingRequestId(requestId);
     setIsDeleteModalOpen(true);
     setOpenDropdownId(null);
@@ -142,35 +142,35 @@ export default function AllRequestsClient({ currentUserRole }) {
     setDeletingRequestId(null);
   };
 
-  const handleFilterChange = e => {
+  const handleFilterChange = (e) => {
     setStatusFilter(e.target.value);
     setCurrentPage(1);
     setOpenDropdownId(null);
   };
 
-  const goToPage = page => {
+  const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       setOpenDropdownId(null);
     }
   };
 
-  const getStatusBadge = status => {
+  const getStatusBadge = (status) => {
     const config = {
       pending: {
-        color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        color: "bg-yellow-100 text-yellow-800 border-yellow-200",
         icon: <FaClock className="text-xs" />,
       },
       inprogress: {
-        color: 'bg-blue-100 text-blue-800 border-blue-200',
+        color: "bg-blue-100 text-blue-800 border-blue-200",
         icon: <FaSpinner className="text-xs animate-spin" />,
       },
       done: {
-        color: 'bg-green-100 text-green-800 border-green-200',
+        color: "bg-green-100 text-green-800 border-green-200",
         icon: <FaCheckCircle className="text-xs" />,
       },
       canceled: {
-        color: 'bg-gray-100 text-gray-800 border-gray-200',
+        color: "bg-gray-100 text-gray-800 border-gray-200",
         icon: <FaTimesCircle className="text-xs" />,
       },
     };
@@ -212,7 +212,7 @@ export default function AllRequestsClient({ currentUserRole }) {
               onChange={handleFilterChange}
               className="flex-1 sm:flex-none sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
             >
-              {STATUS_OPTIONS.map(option => (
+              {STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -235,7 +235,7 @@ export default function AllRequestsClient({ currentUserRole }) {
             <div className="hidden lg:block w-full overflow-x-auto">
               <table
                 className="w-full text-sm text-left text-gray-600"
-                style={{ minWidth: '680px' }}
+                style={{ minWidth: "680px" }}
               >
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
                   <tr>
@@ -258,7 +258,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {requests.map(req => {
+                  {requests.map((req) => {
                     const statusBadge = getStatusBadge(req.status);
                     return (
                       <tr
@@ -271,7 +271,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                               {req.recipientName}
                             </span>
                             <span className="text-xs text-gray-400 font-normal xl:hidden mt-0.5 truncate">
-                              {req.recipientDistrictName},{' '}
+                              {req.recipientDistrictName},{" "}
                               {req.recipientUpazilaName}
                             </span>
                           </div>
@@ -312,7 +312,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                               </span>
                               {req.status}
                             </span>
-                            {req.status === 'inprogress' && req.donorName && (
+                            {req.status === "inprogress" && req.donorName && (
                               <div className="mt-1 flex-row items-center gap-1 text-xs text-gray-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100 w-fit inline-flex">
                                 <FaUser
                                   className="text-blue-500 shrink-0"
@@ -383,12 +383,12 @@ export default function AllRequestsClient({ currentUserRole }) {
                                   )}
 
                                   {/* Status Actions: Done & Cancel (For both Admin & Volunteer) */}
-                                  {req.status === 'inprogress' && (
+                                  {req.status === "inprogress" && (
                                     <>
                                       <div className="border-t border-gray-100 my-1"></div>
                                       <button
                                         onClick={() =>
-                                          handleStatusUpdate(req._id, 'done')
+                                          handleStatusUpdate(req._id, "done")
                                         }
                                         className="w-full text-left px-4 py-2 text-green-600 hover:bg-green-50 flex items-center gap-2"
                                       >
@@ -398,7 +398,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                                         onClick={() =>
                                           handleStatusUpdate(
                                             req._id,
-                                            'canceled',
+                                            "canceled",
                                           )
                                         }
                                         className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2"
@@ -421,7 +421,7 @@ export default function AllRequestsClient({ currentUserRole }) {
 
             {/* ── MOBILE CARD VIEW ── */}
             <div className="block lg:hidden divide-y divide-gray-100">
-              {requests.map(req => {
+              {requests.map((req) => {
                 const statusBadge = getStatusBadge(req.status);
                 return (
                   <div
@@ -445,7 +445,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                           Location:
                         </span>
                         <span className="truncate">
-                          {req.recipientDistrictName},{' '}
+                          {req.recipientDistrictName},{" "}
                           {req.recipientUpazilaName}
                         </span>
                       </p>
@@ -454,7 +454,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                           Date:
                         </span>
                         <span>
-                          {new Date(req.donationDate).toLocaleDateString()} at{' '}
+                          {new Date(req.donationDate).toLocaleDateString()} at{" "}
                           {req.donationTime}
                         </span>
                       </p>
@@ -464,7 +464,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                         >
                           {statusBadge.icon} {req.status}
                         </span>
-                        {req.status === 'inprogress' && req.donorName && (
+                        {req.status === "inprogress" && req.donorName && (
                           <div className="flex items-center gap-1.5 text-xs text-gray-600 bg-blue-50 px-2.5 py-1.5 rounded-md border border-blue-100 w-fit max-w-full overflow-hidden">
                             <FaUser
                               className="text-blue-500 shrink-0"
@@ -495,7 +495,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                         </button>
 
                         {/* 3-Dot Menu & Status Buttons for Mobile */}
-                        {req.status === 'inprogress' || isAdmin ? (
+                        {req.status === "inprogress" || isAdmin ? (
                           <div className="relative inline-block">
                             <button
                               onClick={() =>
@@ -535,12 +535,12 @@ export default function AllRequestsClient({ currentUserRole }) {
                                 )}
 
                                 {/* Status Actions: Done & Cancel (For both Admin & Volunteer) */}
-                                {req.status === 'inprogress' && (
+                                {req.status === "inprogress" && (
                                   <>
                                     <div className="border-t border-gray-100 my-1"></div>
                                     <button
                                       onClick={() =>
-                                        handleStatusUpdate(req._id, 'done')
+                                        handleStatusUpdate(req._id, "done")
                                       }
                                       className="w-full text-left px-4 py-2 text-green-600 hover:bg-green-50 flex items-center gap-2"
                                     >
@@ -548,7 +548,7 @@ export default function AllRequestsClient({ currentUserRole }) {
                                     </button>
                                     <button
                                       onClick={() =>
-                                        handleStatusUpdate(req._id, 'canceled')
+                                        handleStatusUpdate(req._id, "canceled")
                                       }
                                       className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2"
                                     >
@@ -569,9 +569,9 @@ export default function AllRequestsClient({ currentUserRole }) {
             {/* ── Pagination Footer ── */}
             <div className="p-3 sm:p-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3 bg-gray-50">
               <span className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
-                Showing{' '}
+                Showing{" "}
                 {totalRequests === 0 ? 0 : (currentPage - 1) * limit + 1}–
-                {Math.min(currentPage * limit, totalRequests)} of{' '}
+                {Math.min(currentPage * limit, totalRequests)} of{" "}
                 {totalRequests} requests
               </span>
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -603,7 +603,7 @@ export default function AllRequestsClient({ currentUserRole }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-4">
           <div
             className="bg-white rounded-xl shadow-2xl w-full max-w-md p-5 sm:p-6 animate-in fade-in zoom-in duration-200"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 text-red-600 mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-50 flex items-center justify-center shrink-0">

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
-import { Avatar } from '@heroui/react';
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { Avatar } from "@heroui/react";
 
 const DASHBOARD_PATHS = {
-  admin: '/dashboard',
-  volunteer: '/dashboard',
-  donor: '/dashboard/donor',
+  admin: "/dashboard",
+  volunteer: "/dashboard",
+  donor: "/dashboard/donor",
 };
 
 export default function UserDropdown({ user, handleLogout, isLoggingOut }) {
@@ -15,26 +15,26 @@ export default function UserDropdown({ user, handleLogout, isLoggingOut }) {
   const dropdownRef = useRef(null);
 
   const dashboardPath =
-    DASHBOARD_PATHS[user?.role?.toLowerCase()] || '/dashboard/donor';
+    DASHBOARD_PATHS[user?.role?.toLowerCase()] || "/dashboard/donor";
 
   // Close on outside click
   useEffect(() => {
-    const handleClickOutside = e => {
+    const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Close on Escape key
   useEffect(() => {
-    const handleEsc = e => {
-      if (e.key === 'Escape') setIsOpen(false);
+    const handleEsc = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
     };
-    document.addEventListener('keydown', handleEsc);
-    return () => document.removeEventListener('keydown', handleEsc);
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
   }, []);
 
   return (
@@ -54,11 +54,11 @@ export default function UserDropdown({ user, handleLogout, isLoggingOut }) {
           <Avatar.Fallback>
             {user?.name
               ? user.name
-                  .split(' ')
-                  .map(n => n[0])
-                  .join('')
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
                   .toUpperCase()
-              : '?'}
+              : "?"}
           </Avatar.Fallback>
         </Avatar>
       </button>
@@ -67,8 +67,8 @@ export default function UserDropdown({ user, handleLogout, isLoggingOut }) {
       <div
         className={`absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-xl shadow-lg z-50 overflow-hidden transition-all duration-200 origin-top-right ${
           isOpen
-            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 scale-95 -translate-y-1 pointer-events-none'
+            ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 scale-95 -translate-y-1 pointer-events-none"
         }`}
       >
         {/* User info header */}

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   FaHeartbeat,
   FaUser,
@@ -19,16 +19,16 @@ import {
   FaEyeSlash,
   FaPhone,
   FaVenusMars,
-} from 'react-icons/fa';
-import { useGeoData } from '@/hooks/useGeoData';
-import { uploadImageToImgBB } from '@/lib/imageUpload';
-import { signUp } from '@/lib/auth-client';
-import Image from 'next/image';
-import ClientMetadata from '@/components/seo/ClientMetadata';
-import { serverMutation } from '@/lib/core/server';
+} from "react-icons/fa";
+import { useGeoData } from "@/hooks/useGeoData";
+import { uploadImageToImgBB } from "@/lib/imageUpload";
+import { signUp } from "@/lib/auth-client";
+import Image from "next/image";
+import ClientMetadata from "@/components/seo/ClientMetadata";
+import { serverMutation } from "@/lib/core/server";
 
-const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-const genders = ['Male', 'Female', 'Other'];
+const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+const genders = ["Male", "Female", "Other"];
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -39,17 +39,17 @@ export default function RegisterPage() {
   } = useGeoData();
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    gender: '',
-    bloodGroup: '',
-    district: '',
-    districtName: '',
-    upazila: '',
-    upazilaName: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    phone: "",
+    gender: "",
+    bloodGroup: "",
+    district: "",
+    districtName: "",
+    upazila: "",
+    upazilaName: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [avatar, setAvatar] = useState(null);
@@ -61,41 +61,41 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
-  const handleDistrictChange = districtId => {
-    const selectedDistrict = districts.find(d => d.id === districtId);
-    handleInputChange('district', districtId);
+  const handleDistrictChange = (districtId) => {
+    const selectedDistrict = districts.find((d) => d.id === districtId);
+    handleInputChange("district", districtId);
     handleInputChange(
-      'districtName',
-      selectedDistrict ? selectedDistrict.name : '',
+      "districtName",
+      selectedDistrict ? selectedDistrict.name : "",
     );
-    handleInputChange('upazila', '');
-    handleInputChange('upazilaName', '');
+    handleInputChange("upazila", "");
+    handleInputChange("upazilaName", "");
   };
 
-  const handleUpazilaChange = upazilaId => {
+  const handleUpazilaChange = (upazilaId) => {
     const upazilas = getUpazilasByDistrict(formData.district);
-    const selectedUpazila = upazilas.find(u => u.id === upazilaId);
-    handleInputChange('upazila', upazilaId);
+    const selectedUpazila = upazilas.find((u) => u.id === upazilaId);
+    handleInputChange("upazila", upazilaId);
     handleInputChange(
-      'upazilaName',
-      selectedUpazila ? selectedUpazila.name : '',
+      "upazilaName",
+      selectedUpazila ? selectedUpazila.name : "",
     );
   };
 
-  const handleAvatarChange = e => {
+  const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image size should be less than 5MB');
+        toast.error("Image size should be less than 5MB");
         return;
       }
       setAvatar(file);
@@ -111,60 +111,60 @@ export default function RegisterPage() {
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Invalid email address';
+      newErrors.email = "Invalid email address";
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = "Phone number is required";
     } else if (
-      !/^(\+8801|01)[3-9]\d{8}$/.test(formData.phone.replace(/\s/g, ''))
+      !/^(\+8801|01)[3-9]\d{8}$/.test(formData.phone.replace(/\s/g, ""))
     ) {
-      newErrors.phone = 'Invalid phone number (e.g., 01XXXXXXXXX)';
+      newErrors.phone = "Invalid phone number (e.g., 01XXXXXXXXX)";
     }
 
     if (!formData.gender) {
-      newErrors.gender = 'Gender is required';
+      newErrors.gender = "Gender is required";
     }
 
     if (!formData.bloodGroup) {
-      newErrors.bloodGroup = 'Blood group is required';
+      newErrors.bloodGroup = "Blood group is required";
     }
 
     if (!formData.district) {
-      newErrors.district = 'District is required';
+      newErrors.district = "District is required";
     }
 
     if (!formData.upazila) {
-      newErrors.upazila = 'Upazila is required';
+      newErrors.upazila = "Upazila is required";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
-      toast.error('Please fix the errors in the form');
+      toast.error("Please fix the errors in the form");
       return;
     }
 
@@ -179,7 +179,7 @@ export default function RegisterPage() {
           const uploadResult = await uploadImageToImgBB(avatar);
           avatarUrl = uploadResult.url;
         } catch (error) {
-          toast.error('Failed to upload avatar. Please try again.');
+          toast.error("Failed to upload avatar. Please try again.");
           setIsSubmitting(false);
           setIsUploading(false);
           return;
@@ -194,8 +194,8 @@ export default function RegisterPage() {
         image: avatarUrl, // 'image' is the default field Better Auth uses for profiles
 
         // Pass your app's custom schema properties directly here
-        role: 'donor',
-        status: 'active',
+        role: "donor",
+        status: "active",
         phone: formData.phone,
         gender: formData.gender,
         bloodGroup: formData.bloodGroup,
@@ -211,11 +211,11 @@ export default function RegisterPage() {
         //   callbackURL: "/dashboard",
       });
 
-      console.log('DATA:', data);
-      console.log('ERROR:', error);
+      console.log("DATA:", data);
+      console.log("ERROR:", error);
       // 1. FIRST check error
       if (error) {
-        toast.error(error.message || 'Registration failed');
+        toast.error(error.message || "Registration failed");
         return;
       }
 
@@ -240,9 +240,9 @@ export default function RegisterPage() {
           upazila: formData.upazila,
           upazilaName: formData.upazilaName,
 
-          role: 'donor',
+          role: "donor",
 
-          status: 'active',
+          status: "active",
           donationCount: 0,
 
           lastDonationDate: null,
@@ -250,9 +250,9 @@ export default function RegisterPage() {
           createdAt: new Date().toISOString(),
         };
 
-        await serverMutation('/api/users', userPayload);
+        await serverMutation("/api/users", userPayload);
 
-        toast.success('Account created successfully');
+        toast.success("Account created successfully");
       }
 
       // 3. Handle errors returned straight from the Auth Engine
@@ -265,21 +265,21 @@ export default function RegisterPage() {
       // Better Auth handles immediate background sessions perfectly.
       // If you don't use callbackURL parameter above, you can route them manually:
 
-      toast.success('Registration successful! Redirecting to login...');
+      toast.success("Registration successful! Redirecting to login...");
       setTimeout(() => {
-        router.push('/auth/signin');
+        router.push("/auth/signin");
       }, 2000);
     } catch (error) {
-      console.error('Registration error encountered:', error);
-      toast.error('An unexpected error occurred. Please try again.');
+      console.error("Registration error encountered:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handlePhoneInput = e => {
-    let value = e.target.value.replace(/[^0-9+]/g, '');
-    handleInputChange('phone', value);
+  const handlePhoneInput = (e) => {
+    let value = e.target.value.replace(/[^0-9+]/g, "");
+    handleInputChange("phone", value);
   };
 
   return (
@@ -288,12 +288,12 @@ export default function RegisterPage() {
         title="Register"
         description="BloodSync connects blood donors with those in need. Register as a donor, request blood, and save lives today."
         keywords={[
-          'blood donation',
-          'donate blood',
-          'blood bank',
-          'blood request',
-          'save lives',
-          'donor registration',
+          "blood donation",
+          "donate blood",
+          "blood bank",
+          "blood request",
+          "save lives",
+          "donor registration",
         ]}
       />
 
@@ -365,8 +365,8 @@ export default function RegisterPage() {
                 </div>
                 <span className="text-xs text-gray-500">
                   {avatarPreview
-                    ? 'Click to change photo'
-                    : 'Upload your photo (optional)'}
+                    ? "Click to change photo"
+                    : "Upload your photo (optional)"}
                 </span>
               </div>
 
@@ -385,11 +385,11 @@ export default function RegisterPage() {
                     type="text"
                     placeholder="Enter your full name"
                     value={formData.name}
-                    onChange={e => handleInputChange('name', e.target.value)}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition ${
                       errors.name
-                        ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                        : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                        ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                        : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                     }`}
                   />
                 </div>
@@ -414,11 +414,13 @@ export default function RegisterPage() {
                       type="email"
                       placeholder="your.email@example.com"
                       value={formData.email}
-                      onChange={e => handleInputChange('email', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition ${
                         errors.email
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                          : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                       }`}
                     />
                   </div>
@@ -445,8 +447,8 @@ export default function RegisterPage() {
                       maxLength={14}
                       className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition ${
                         errors.phone
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                          : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                       }`}
                     />
                   </div>
@@ -470,17 +472,17 @@ export default function RegisterPage() {
                     <select
                       id="gender"
                       value={formData.gender}
-                      onChange={e =>
-                        handleInputChange('gender', e.target.value)
+                      onChange={(e) =>
+                        handleInputChange("gender", e.target.value)
                       }
                       className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition appearance-none bg-white ${
                         errors.gender
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                          : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                       }`}
                     >
                       <option value="">Select Gender</option>
-                      {genders.map(gender => (
+                      {genders.map((gender) => (
                         <option key={gender} value={gender}>
                           {gender}
                         </option>
@@ -506,17 +508,17 @@ export default function RegisterPage() {
                     <select
                       id="bloodGroup"
                       value={formData.bloodGroup}
-                      onChange={e =>
-                        handleInputChange('bloodGroup', e.target.value)
+                      onChange={(e) =>
+                        handleInputChange("bloodGroup", e.target.value)
                       }
                       className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition appearance-none bg-white ${
                         errors.bloodGroup
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                          : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                       }`}
                     >
                       <option value="">Select Blood Group</option>
-                      {bloodGroups.map(group => (
+                      {bloodGroups.map((group) => (
                         <option key={group} value={group}>
                           {group}
                         </option>
@@ -545,18 +547,18 @@ export default function RegisterPage() {
                     <select
                       id="district"
                       value={formData.district}
-                      onChange={e => handleDistrictChange(e.target.value)}
+                      onChange={(e) => handleDistrictChange(e.target.value)}
                       disabled={geoLoading}
                       className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition appearance-none bg-white disabled:bg-gray-50 disabled:cursor-not-allowed ${
                         errors.district
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                          : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                       }`}
                     >
                       <option value="">
-                        {geoLoading ? 'Loading...' : 'Select District'}
+                        {geoLoading ? "Loading..." : "Select District"}
                       </option>
-                      {districts.map(district => (
+                      {districts.map((district) => (
                         <option key={district.id} value={district.id}>
                           {district.name}
                         </option>
@@ -582,24 +584,26 @@ export default function RegisterPage() {
                     <select
                       id="upazila"
                       value={formData.upazila}
-                      onChange={e => handleUpazilaChange(e.target.value)}
+                      onChange={(e) => handleUpazilaChange(e.target.value)}
                       disabled={!formData.district}
                       className={`w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition appearance-none bg-white disabled:bg-gray-50 disabled:cursor-not-allowed ${
                         errors.upazila
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                          : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                       }`}
                     >
                       <option value="">
                         {!formData.district
-                          ? 'Select district first'
-                          : 'Select Upazila'}
+                          ? "Select district first"
+                          : "Select Upazila"}
                       </option>
-                      {getUpazilasByDistrict(formData.district).map(upazila => (
-                        <option key={upazila.id} value={upazila.id}>
-                          {upazila.name}
-                        </option>
-                      ))}
+                      {getUpazilasByDistrict(formData.district).map(
+                        (upazila) => (
+                          <option key={upazila.id} value={upazila.id}>
+                            {upazila.name}
+                          </option>
+                        ),
+                      )}
                     </select>
                   </div>
                   {errors.upazila && (
@@ -623,16 +627,16 @@ export default function RegisterPage() {
                     <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                       id="password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       placeholder="Min. 6 characters"
                       value={formData.password}
-                      onChange={e =>
-                        handleInputChange('password', e.target.value)
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
                       }
                       className={`w-full pl-10 pr-10 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition ${
                         errors.password
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                          : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                       }`}
                     />
                     <button
@@ -665,16 +669,16 @@ export default function RegisterPage() {
                     <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                       id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
+                      type={showConfirmPassword ? "text" : "password"}
                       placeholder="Re-enter password"
                       value={formData.confirmPassword}
-                      onChange={e =>
-                        handleInputChange('confirmPassword', e.target.value)
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
                       }
                       className={`w-full pl-10 pr-10 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 transition ${
                         errors.confirmPassword
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                          : 'border-gray-200 focus:border-red-500 focus:ring-red-100'
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                          : "border-gray-200 focus:border-red-500 focus:ring-red-100"
                       }`}
                     />
                     <button
@@ -723,7 +727,7 @@ export default function RegisterPage() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
                     </svg>
-                    {isUploading ? 'Uploading Photo...' : 'Creating Account...'}
+                    {isUploading ? "Uploading Photo..." : "Creating Account..."}
                   </>
                 ) : (
                   <>

@@ -1,8 +1,8 @@
 // app/loading.jsx
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Loading() {
   return (
@@ -11,7 +11,7 @@ export default function Loading() {
       <motion.div
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <Image
           src="/assets/nav-logo.png"
@@ -29,7 +29,7 @@ export default function Loading() {
         <motion.span
           className="absolute inline-flex rounded-full bg-red-100"
           animate={{ scale: [1, 1.9], opacity: [0.6, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
           style={{ width: 100, height: 100 }}
         />
 
@@ -40,7 +40,7 @@ export default function Loading() {
           transition={{
             duration: 1.8,
             repeat: Infinity,
-            ease: 'easeOut',
+            ease: "easeOut",
             delay: 0.3,
           }}
           style={{ width: 70, height: 70 }}
@@ -49,7 +49,7 @@ export default function Loading() {
         {/* Blood drop */}
         <motion.div
           animate={{ y: [0, -12, 0] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
           className="relative z-10"
         >
           <svg
@@ -100,7 +100,7 @@ export default function Loading() {
           transition={{
             duration: 1.3,
             repeat: Infinity,
-            ease: 'easeIn',
+            ease: "easeIn",
             delay: 0,
           }}
         >
@@ -120,7 +120,7 @@ export default function Loading() {
           transition={{
             duration: 1.3,
             repeat: Infinity,
-            ease: 'easeIn',
+            ease: "easeIn",
             delay: 0.45,
           }}
         >
@@ -140,7 +140,7 @@ export default function Loading() {
           transition={{
             duration: 1.3,
             repeat: Infinity,
-            ease: 'easeIn',
+            ease: "easeIn",
             delay: 0.9,
           }}
         >
@@ -174,8 +174,8 @@ export default function Loading() {
       >
         <motion.div
           className="h-full rounded-full bg-red-500"
-          animate={{ x: ['-100%', '400%'] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ x: ["-100%", "400%"] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         />
       </motion.div>
 
@@ -185,7 +185,7 @@ export default function Loading() {
         style={{
           height: 1,
           background:
-            'linear-gradient(to right, transparent, #dc2626, transparent)',
+            "linear-gradient(to right, transparent, #dc2626, transparent)",
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

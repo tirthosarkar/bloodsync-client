@@ -4,14 +4,14 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'i.ibb.co', // ImageBB domain
-        pathname: '/**',
+        protocol: "https",
+        hostname: "i.ibb.co", // ImageBB domain
+        pathname: "/**",
       },
       // Add any other domains you'll use
       {
-        protocol: 'https',
-        hostname: '**',
+        protocol: "https",
+        hostname: "**",
       },
     ],
   },

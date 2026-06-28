@@ -1,11 +1,11 @@
-import { getUserSession } from '@/lib/core/session';
-import MyRequestsClient from './MyRequestsClient';
+import { getUserSession } from "@/lib/core/session";
+import MyRequestsClient from "./MyRequestsClient";
 
 export async function generateMetadata() {
   const user = await getUserSession();
   return {
-    title: user ? `${user.name} - My Requests` : 'My Donation Requests',
-    description: 'View and manage all your blood donation requests.',
+    title: user ? `${user.name} - My Requests` : "My Donation Requests",
+    description: "View and manage all your blood donation requests.",
   };
 }
 

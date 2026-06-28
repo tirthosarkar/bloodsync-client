@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { useGeoData } from '@/hooks/useGeoData';
-import { serverFetch, serverMutation } from '@/lib/core/server';
-import { authClient } from '@/lib/auth-client'; // ✅ Using your Better Auth client
-import { toast } from 'react-toastify';
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { useGeoData } from "@/hooks/useGeoData";
+import { serverFetch, serverMutation } from "@/lib/core/server";
+import { authClient } from "@/lib/auth-client"; // ✅ Using your Better Auth client
+import { toast } from "react-toastify";
 import {
   FaSpinner,
   FaUser,
@@ -18,12 +18,12 @@ import {
   FaClock,
   FaCommentDots,
   FaArrowLeft,
-} from 'react-icons/fa';
-import { motion } from 'framer-motion';
-import { BiSolidDonateBlood } from 'react-icons/bi';
-import { Button } from '@heroui/react';
+} from "react-icons/fa";
+import { motion } from "framer-motion";
+import { BiSolidDonateBlood } from "react-icons/bi";
+import { Button } from "@heroui/react";
 
-const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 export default function EditDonationRequestPage() {
   const router = useRouter();
@@ -41,15 +41,15 @@ export default function EditDonationRequestPage() {
   const [user, setUser] = useState(null);
 
   const [formData, setFormData] = useState({
-    recipientName: '',
-    recipientDistrict: '',
-    recipientUpazila: '',
-    hospitalName: '',
-    fullAddress: '',
-    bloodGroup: '',
-    donationDate: '',
-    donationTime: '',
-    requestMessage: '',
+    recipientName: "",
+    recipientDistrict: "",
+    recipientUpazila: "",
+    hospitalName: "",
+    fullAddress: "",
+    bloodGroup: "",
+    donationDate: "",
+    donationTime: "",
+    requestMessage: "",
   });
 
   // 1. Fetch the current user session using authClient
@@ -63,9 +63,9 @@ export default function EditDonationRequestPage() {
           session?.user || session?.data?.user || session?.data;
         setUser(currentUser);
       } catch (error) {
-        console.error('Failed to get session:', error);
-        toast.error('Please log in again');
-        router.push('/auth/login');
+        console.error("Failed to get session:", error);
+        toast.error("Please log in again");
+        router.push("/auth/login");
       }
     };
     getUser();
@@ -77,14 +77,14 @@ export default function EditDonationRequestPage() {
       try {
         if (!user?.id) return;
         const data = await serverFetch(`/api/users/${user.id}`);
-        if (data.status === 'blocked') {
+        if (data.status === "blocked") {
           setIsUserBlocked(true);
           toast.error(
-            'Your account has been blocked. You cannot edit donation requests.',
+            "Your account has been blocked. You cannot edit donation requests.",
           );
         }
       } catch (error) {
-        console.error('Failed to check user status:', error);
+        console.error("Failed to check user status:", error);
       }
     };
     if (user?.id) checkUserStatus();
@@ -101,31 +101,31 @@ export default function EditDonationRequestPage() {
         if (data.donationDate) {
           data.donationDate = new Date(data.donationDate)
             .toISOString()
-            .split('T')[0];
+            .split("T")[0];
         }
 
-        console.log('✅ Fetched Request Data:', data);
+        console.log("✅ Fetched Request Data:", data);
 
         // Populate form with existing data
         setFormData({
-          recipientName: data.recipientName || '',
-          recipientDistrict: data.recipientDistrict || '',
-          recipientUpazila: data.recipientUpazila || '',
-          hospitalName: data.hospitalName || '',
-          fullAddress: data.fullAddress || '',
-          bloodGroup: data.bloodGroup || '',
-          donationDate: data.donationDate || '',
-          donationTime: data.donationTime || '',
-          requestMessage: data.requestMessage || '',
+          recipientName: data.recipientName || "",
+          recipientDistrict: data.recipientDistrict || "",
+          recipientUpazila: data.recipientUpazila || "",
+          hospitalName: data.hospitalName || "",
+          fullAddress: data.fullAddress || "",
+          bloodGroup: data.bloodGroup || "",
+          donationDate: data.donationDate || "",
+          donationTime: data.donationTime || "",
+          requestMessage: data.requestMessage || "",
 
           // 🔥 CRITICAL: Save these hidden names too!
-          recipientDistrictName: data.recipientDistrictName || '',
-          recipientUpazilaName: data.recipientUpazilaName || '',
+          recipientDistrictName: data.recipientDistrictName || "",
+          recipientUpazilaName: data.recipientUpazilaName || "",
         });
       } catch (error) {
-        console.error('Fetch error:', error);
-        toast.error('Failed to load request details');
-        router.push('/');
+        console.error("Fetch error:", error);
+        toast.error("Failed to load request details");
+        router.push("/");
       } finally {
         setLoadingRequest(false);
       }
@@ -139,11 +139,11 @@ export default function EditDonationRequestPage() {
     if (!geoLoading && districts.length > 0 && formData.recipientDistrict) {
       // This ensures the UI shows the correct District Name once districts are loaded
       const selectedDistrict = districts.find(
-        d => d.id === formData.recipientDistrict,
+        (d) => d.id === formData.recipientDistrict,
       );
       if (selectedDistrict) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           recipientDistrictName: selectedDistrict.name,
         }));
@@ -152,73 +152,73 @@ export default function EditDonationRequestPage() {
   }, [geoLoading, districts, formData.recipientDistrict]);
 
   // 4. Handle form input changes
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 5. Handle District Change
-  const handleDistrictChange = e => {
+  const handleDistrictChange = (e) => {
     const selectedDistrictId = e.target.value;
-    const selectedDistrict = districts.find(d => d.id === selectedDistrictId);
+    const selectedDistrict = districts.find((d) => d.id === selectedDistrictId);
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       recipientDistrict: selectedDistrictId,
-      recipientDistrictName: selectedDistrict ? selectedDistrict.name : '',
-      recipientUpazila: '', // Reset upazila
-      recipientUpazilaName: '',
+      recipientDistrictName: selectedDistrict ? selectedDistrict.name : "",
+      recipientUpazila: "", // Reset upazila
+      recipientUpazilaName: "",
     }));
   };
 
   // 6. Handle Upazila Change
-  const handleUpazilaChange = e => {
+  const handleUpazilaChange = (e) => {
     const selectedUpazilaId = e.target.value;
     const upazilas = getUpazilasByDistrict(formData.recipientDistrict);
-    const selectedUpazila = upazilas.find(u => u.id === selectedUpazilaId);
+    const selectedUpazila = upazilas.find((u) => u.id === selectedUpazilaId);
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       recipientUpazila: selectedUpazilaId,
-      recipientUpazilaName: selectedUpazila ? selectedUpazila.name : '',
+      recipientUpazilaName: selectedUpazila ? selectedUpazila.name : "",
     }));
   };
 
   // 7. Handle Form Submission (UPDATE)
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validation
     if (!formData.recipientName.trim()) {
-      toast.error('Recipient name is required');
+      toast.error("Recipient name is required");
       return;
     }
     if (!formData.recipientDistrict) {
-      toast.error('Please select a district');
+      toast.error("Please select a district");
       return;
     }
     if (!formData.recipientUpazila) {
-      toast.error('Please select an upazila');
+      toast.error("Please select an upazila");
       return;
     }
     if (!formData.hospitalName.trim()) {
-      toast.error('Hospital name is required');
+      toast.error("Hospital name is required");
       return;
     }
     if (!formData.fullAddress.trim()) {
-      toast.error('Full address is required');
+      toast.error("Full address is required");
       return;
     }
     if (!formData.bloodGroup) {
-      toast.error('Please select a blood group');
+      toast.error("Please select a blood group");
       return;
     }
     if (!formData.donationDate) {
-      toast.error('Please select a donation date');
+      toast.error("Please select a donation date");
       return;
     }
     if (!formData.donationTime) {
-      toast.error('Please select a donation time');
+      toast.error("Please select a donation time");
       return;
     }
     if (
@@ -226,19 +226,19 @@ export default function EditDonationRequestPage() {
       formData.requestMessage.length < 20
     ) {
       toast.error(
-        'Please write a detailed request message (minimum 20 characters)',
+        "Please write a detailed request message (minimum 20 characters)",
       );
       return;
     }
 
     // Blocked user check
     if (isUserBlocked) {
-      toast.error('Your account is blocked. You cannot edit requests.');
+      toast.error("Your account is blocked. You cannot edit requests.");
       return;
     }
 
     if (!user) {
-      toast.error('Please log in again');
+      toast.error("Please log in again");
       return;
     }
 
@@ -262,27 +262,27 @@ export default function EditDonationRequestPage() {
         donationTime: formData.donationTime,
         requestMessage: formData.requestMessage.trim(),
         userId: user.authId || user.id, // ✅ Critical: This must match request.requesterId in DB,
-        role: user.role || 'donor',
+        role: user.role || "donor",
       };
 
       // CALL THE PUT API
       const response = await serverMutation(
         `/api/donation-requests/edit/${id}`,
         payload,
-        'PUT',
+        "PUT",
       );
 
       if (response.success) {
-        toast.success('Donation request updated successfully!');
+        toast.success("Donation request updated successfully!");
         setTimeout(() => {
-          router.push('/dashboard/my-donation-requests'); // Redirect to donor dashboard
+          router.push("/dashboard/my-donation-requests"); // Redirect to donor dashboard
         }, 1500);
       } else {
-        toast.error(response.message || 'Failed to update request');
+        toast.error(response.message || "Failed to update request");
       }
     } catch (error) {
-      console.error('Error updating donation request:', error);
-      toast.error(error.message || 'An error occurred. Please try again.');
+      console.error("Error updating donation request:", error);
+      toast.error(error.message || "An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -321,7 +321,7 @@ export default function EditDonationRequestPage() {
     >
       {/* Back Button */}
       <button
-        onClick={() => router.push('/dashboard/my-donation-requests')}
+        onClick={() => router.push("/dashboard/my-donation-requests")}
         className="inline-flex items-center gap-2 text-gray-600 hover:text-red-600 mb-4 transition-colors"
       >
         <FaArrowLeft size={16} />
@@ -347,7 +347,7 @@ export default function EditDonationRequestPage() {
               </label>
               <input
                 type="text"
-                value={user?.name || ''}
+                value={user?.name || ""}
                 disabled
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 cursor-not-allowed text-gray-500"
               />
@@ -359,7 +359,7 @@ export default function EditDonationRequestPage() {
               </label>
               <input
                 type="email"
-                value={user?.email || ''}
+                value={user?.email || ""}
                 disabled
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 cursor-not-allowed text-gray-500"
               />
@@ -398,7 +398,7 @@ export default function EditDonationRequestPage() {
                   required
                 >
                   <option value="">Select Blood Group</option>
-                  {bloodGroups.map(group => (
+                  {bloodGroups.map((group) => (
                     <option key={group} value={group}>
                       {group}
                     </option>
@@ -424,9 +424,9 @@ export default function EditDonationRequestPage() {
                   required
                 >
                   <option value="">
-                    {geoLoading ? 'Loading districts...' : 'Select District'}
+                    {geoLoading ? "Loading districts..." : "Select District"}
                   </option>
-                  {districts.map(district => (
+                  {districts.map((district) => (
                     <option key={district.id} value={district.id}>
                       {district.name}
                     </option>
@@ -449,10 +449,10 @@ export default function EditDonationRequestPage() {
                 >
                   <option value="">
                     {!formData.recipientDistrict
-                      ? 'Select district first'
-                      : 'Select Upazila'}
+                      ? "Select district first"
+                      : "Select Upazila"}
                   </option>
-                  {currentUpazilas.map(upazila => (
+                  {currentUpazilas.map((upazila) => (
                     <option key={upazila.id} value={upazila.id}>
                       {upazila.name}
                     </option>
@@ -513,7 +513,7 @@ export default function EditDonationRequestPage() {
                   name="donationDate"
                   value={formData.donationDate}
                   onChange={handleChange}
-                  min={new Date().toISOString().split('T')[0]}
+                  min={new Date().toISOString().split("T")[0]}
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors"
                   required
                 />
@@ -569,7 +569,7 @@ export default function EditDonationRequestPage() {
             size="lg"
           >
             {!isSubmitting && <BiSolidDonateBlood size={22} />}
-            {isSubmitting ? 'Updating Request...' : 'Update Donation Request'}
+            {isSubmitting ? "Updating Request..." : "Update Donation Request"}
           </Button>
         </form>
       </div>

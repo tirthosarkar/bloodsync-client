@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Avatar } from '@heroui/react';
-import { FaBars, FaBell } from 'react-icons/fa';
+import { Avatar } from "@heroui/react";
+import { FaBars, FaBell } from "react-icons/fa";
 
 export default function DashboardHeader({ user, toggleSidebar }) {
   return (
@@ -33,7 +33,7 @@ export default function DashboardHeader({ user, toggleSidebar }) {
             >
               <Avatar.Image src={user?.image || user?.avatar} />
               <Avatar.Fallback>
-                {user?.name ? user?.name?.charAt(0).toUpperCase() || 'U' : '?'}
+                {user?.name ? user?.name?.charAt(0).toUpperCase() || "U" : "?"}
               </Avatar.Fallback>
             </Avatar>
           </div>

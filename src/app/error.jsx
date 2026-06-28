@@ -1,31 +1,31 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { FaHeartBroken, FaHome, FaRedo } from 'react-icons/fa';
+import { useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { FaHeartBroken, FaHome, FaRedo } from "react-icons/fa";
 
 // Generate random positions outside of render
 const floatingElements = [
-  { id: 1, top: '25%', left: '15%', duration: 3.5, delay: 0.2 },
-  { id: 2, top: '65%', left: '75%', duration: 4.2, delay: 1.1 },
-  { id: 3, top: '45%', left: '35%', duration: 3.8, delay: 0.7 },
-  { id: 4, top: '80%', left: '20%', duration: 4.5, delay: 1.8 },
-  { id: 5, top: '30%', left: '85%', duration: 3.2, delay: 0.4 },
+  { id: 1, top: "25%", left: "15%", duration: 3.5, delay: 0.2 },
+  { id: 2, top: "65%", left: "75%", duration: 4.2, delay: 1.1 },
+  { id: 3, top: "45%", left: "35%", duration: 3.8, delay: 0.7 },
+  { id: 4, top: "80%", left: "20%", duration: 4.5, delay: 1.8 },
+  { id: 5, top: "30%", left: "85%", duration: 3.2, delay: 0.4 },
 ];
 
 export default function Error({ error, reset }) {
   // Generate error reference ID on client side only
   const errorRefId = useMemo(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return Date().toString(36).toUpperCase();
     }
-    return 'ERR-001';
+    return "ERR-001";
   }, []);
 
   useEffect(() => {
     // Log error to your monitoring service
-    console.error('BloodSync Error:', {
+    console.error("BloodSync Error:", {
       message: error?.message,
       stack: error?.stack,
       timestamp: new Date().toISOString(),
@@ -42,7 +42,7 @@ export default function Error({ error, reset }) {
             scale: [1, 1.2, 1],
             rotate: [0, 45, 0],
           }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
           className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-red-50"
         />
         <motion.div
@@ -50,12 +50,12 @@ export default function Error({ error, reset }) {
             scale: [1, 1.3, 1],
             rotate: [0, -45, 0],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
           className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-red-50/50"
         />
 
         {/* Floating elements - Using static values */}
-        {floatingElements.map(element => (
+        {floatingElements.map((element) => (
           <motion.div
             key={element.id}
             className="absolute w-2 h-2 bg-red-200 rounded-full"
@@ -71,7 +71,7 @@ export default function Error({ error, reset }) {
               duration: element.duration,
               delay: element.delay,
               repeat: Infinity,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
         ))}
@@ -90,7 +90,7 @@ export default function Error({ error, reset }) {
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{
-          type: 'spring',
+          type: "spring",
           stiffness: 200,
           damping: 15,
         }}
@@ -99,9 +99,9 @@ export default function Error({ error, reset }) {
         <motion.div
           animate={{
             boxShadow: [
-              '0 0 0 0 rgba(220, 38, 38, 0)',
-              '0 0 0 20px rgba(220, 38, 38, 0.1)',
-              '0 0 0 0 rgba(220, 38, 38, 0)',
+              "0 0 0 0 rgba(220, 38, 38, 0)",
+              "0 0 0 20px rgba(220, 38, 38, 0.1)",
+              "0 0 0 0 rgba(220, 38, 38, 0)",
             ],
           }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -114,7 +114,7 @@ export default function Error({ error, reset }) {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.5, type: 'spring', stiffness: 300 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 300 }}
           className="absolute -top-1 -right-1 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center shadow-lg"
         >
           <span className="text-white text-xs font-bold">!</span>
@@ -132,17 +132,17 @@ export default function Error({ error, reset }) {
           Oops! Something Went Wrong
         </h1>
         <p className="text-gray-500 text-sm leading-relaxed">
-          An unexpected error occurred on{' '}
+          An unexpected error occurred on{" "}
           <span className="text-red-600 font-semibold">BloodSync</span>.
           Don&apos;t worry — your data is safe. Please try again or return to
           the home page.
         </p>
 
         {/* Error message (only in development) */}
-        {process.env.NODE_ENV === 'development' && error?.message && (
+        {process.env.NODE_ENV === "development" && error?.message && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             className="mt-2 w-full bg-red-50 border border-red-100 rounded-lg px-4 py-3"
           >
             <p className="text-xs text-red-600 font-mono wrap-break-word">

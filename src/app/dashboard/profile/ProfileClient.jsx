@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '@/context/AuthContext';
-import { uploadImageToImgBB } from '@/lib/imageUpload';
-import { useGeoData } from '@/hooks/useGeoData';
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { uploadImageToImgBB } from "@/lib/imageUpload";
+import { useGeoData } from "@/hooks/useGeoData";
 import {
   FaUser,
   FaEnvelope,
@@ -17,11 +17,11 @@ import {
   FaHandsHelping,
   FaCheckCircle, // 👈 New Icon for Active
   FaBan, // 👈 New Icon for Blocked
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import Image from 'next/image';
-import { getUserById } from '@/lib/api/users';
-import { updateUserById } from '@/lib/action/users';
+} from "react-icons/fa";
+import { toast } from "react-toastify";
+import Image from "next/image";
+import { getUserById } from "@/lib/api/users";
+import { updateUserById } from "@/lib/action/users";
 
 // ✅ Receive the initial user data from the server
 export default function ProfileClient({ initialUser }) {
@@ -39,17 +39,17 @@ export default function ProfileClient({ initialUser }) {
   const [originalData, setOriginalData] = useState({});
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    bloodGroup: '',
-    district: '',
-    districtName: '',
-    upazila: '',
-    upazilaName: '',
-    image: '',
-    role: '',
-    status: '', // 👈 Added status
+    name: "",
+    email: "",
+    phone: "",
+    bloodGroup: "",
+    district: "",
+    districtName: "",
+    upazila: "",
+    upazilaName: "",
+    image: "",
+    role: "",
+    status: "", // 👈 Added status
   });
 
   // 1. Fetch user data on mount
@@ -63,23 +63,23 @@ export default function ProfileClient({ initialUser }) {
         const data = await getUserById(user.id);
 
         const loadedData = {
-          name: data.name || '',
-          email: data.email || '',
-          phone: data.phone || '',
-          bloodGroup: data.bloodGroup || '',
-          district: data.district || '',
-          districtName: data.districtName || '',
-          upazila: data.upazila || '',
-          upazilaName: data.upazilaName || '',
-          image: data.image || '',
-          role: data.role || 'donor',
-          status: data.status || 'active', // 👈 Fetch status from DB
+          name: data.name || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          bloodGroup: data.bloodGroup || "",
+          district: data.district || "",
+          districtName: data.districtName || "",
+          upazila: data.upazila || "",
+          upazilaName: data.upazilaName || "",
+          image: data.image || "",
+          role: data.role || "donor",
+          status: data.status || "active", // 👈 Fetch status from DB
         };
 
         setFormData(loadedData);
         setOriginalData(loadedData);
       } catch (error) {
-        toast.error('Failed to load profile data');
+        toast.error("Failed to load profile data");
         console.error(error);
       } finally {
         setLoading(false);
@@ -90,45 +90,45 @@ export default function ProfileClient({ initialUser }) {
   }, [user]);
 
   // 2. Handle Form Input Changes
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 3. Handle District Change
-  const handleDistrictChange = e => {
+  const handleDistrictChange = (e) => {
     const selectedDistrictId = e.target.value;
-    const selectedDistrict = districts.find(d => d.id === selectedDistrictId);
+    const selectedDistrict = districts.find((d) => d.id === selectedDistrictId);
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       district: selectedDistrictId,
-      districtName: selectedDistrict ? selectedDistrict.name : '',
-      upazila: '',
-      upazilaName: '',
+      districtName: selectedDistrict ? selectedDistrict.name : "",
+      upazila: "",
+      upazilaName: "",
     }));
   };
 
   // 4. Handle Upazila Change
-  const handleUpazilaChange = e => {
+  const handleUpazilaChange = (e) => {
     const selectedUpazilaId = e.target.value;
     const upazilas = getUpazilasByDistrict(formData.district);
-    const selectedUpazila = upazilas.find(u => u.id === selectedUpazilaId);
+    const selectedUpazila = upazilas.find((u) => u.id === selectedUpazilaId);
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       upazila: selectedUpazilaId,
-      upazilaName: selectedUpazila ? selectedUpazila.name : '',
+      upazilaName: selectedUpazila ? selectedUpazila.name : "",
     }));
   };
 
   // 5. Handle Avatar Upload
-  const handleImageUpload = async e => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image size should be less than 5MB');
+      toast.error("Image size should be less than 5MB");
       return;
     }
 
@@ -137,11 +137,11 @@ export default function ProfileClient({ initialUser }) {
       const result = await uploadImageToImgBB(file);
 
       if (result) {
-        setFormData(prev => ({ ...prev, image: result.url }));
-        toast.success('Avatar uploaded successfully!');
+        setFormData((prev) => ({ ...prev, image: result.url }));
+        toast.success("Avatar uploaded successfully!");
       }
     } catch (error) {
-      toast.error('Failed to upload avatar');
+      toast.error("Failed to upload avatar");
       console.error(error);
     } finally {
       setIsUploading(false);
@@ -167,7 +167,7 @@ export default function ProfileClient({ initialUser }) {
 
       const response = await updateUserById(user.id, updatedData);
 
-      toast.success(response.message || 'Profile updated successfully!');
+      toast.success(response.message || "Profile updated successfully!");
 
       if (refreshSession) {
         await refreshSession();
@@ -175,7 +175,7 @@ export default function ProfileClient({ initialUser }) {
 
       setIsEditing(false);
     } catch (error) {
-      toast.error(error.message || 'Failed to update profile');
+      toast.error(error.message || "Failed to update profile");
     } finally {
       setIsSaving(false);
     }
@@ -199,22 +199,22 @@ export default function ProfileClient({ initialUser }) {
   const currentUpazilas = getUpazilasByDistrict(formData.district);
 
   // ── Role Badge Configurations ──
-  const getRoleBadge = role => {
+  const getRoleBadge = (role) => {
     const roleConfig = {
       admin: {
         icon: <FaUserShield className="text-xs" />,
-        color: 'bg-purple-100 text-purple-700 border-purple-200',
-        label: 'Admin',
+        color: "bg-purple-100 text-purple-700 border-purple-200",
+        label: "Admin",
       },
       volunteer: {
         icon: <FaHandsHelping className="text-xs" />,
-        color: 'bg-blue-100 text-blue-700 border-blue-200',
-        label: 'Volunteer',
+        color: "bg-blue-100 text-blue-700 border-blue-200",
+        label: "Volunteer",
       },
       donor: {
         icon: <FaHeartbeat className="text-xs" />,
-        color: 'bg-red-100 text-red-700 border-red-200',
-        label: 'Donor',
+        color: "bg-red-100 text-red-700 border-red-200",
+        label: "Donor",
       },
     };
 
@@ -223,17 +223,17 @@ export default function ProfileClient({ initialUser }) {
   };
 
   // ── Status Badge Configurations ──
-  const getStatusBadge = status => {
+  const getStatusBadge = (status) => {
     const statusConfig = {
       active: {
         icon: <FaCheckCircle className="text-xs" />,
-        color: 'bg-green-100 text-green-700 border-green-200',
-        label: 'Active',
+        color: "bg-green-100 text-green-700 border-green-200",
+        label: "Active",
       },
       blocked: {
         icon: <FaBan className="text-xs" />,
-        color: 'bg-red-100 text-red-700 border-red-200',
-        label: 'Blocked',
+        color: "bg-red-100 text-red-700 border-red-200",
+        label: "Blocked",
       },
     };
 
@@ -294,7 +294,7 @@ export default function ProfileClient({ initialUser }) {
                   {isSaving ? (
                     <FaSpinner className="animate-spin" />
                   ) : (
-                    'Save Changes'
+                    "Save Changes"
                   )}
                 </button>
               </div>
@@ -318,7 +318,7 @@ export default function ProfileClient({ initialUser }) {
                 sizes="96px"
               />
             ) : (
-              formData.name?.charAt(0).toUpperCase() || 'U'
+              formData.name?.charAt(0).toUpperCase() || "U"
             )}
 
             {isEditing && (
@@ -396,8 +396,8 @@ export default function ProfileClient({ initialUser }) {
               disabled={!isEditing}
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors ${
                 isEditing
-                  ? 'border-gray-300 bg-white'
-                  : 'border-gray-200 bg-gray-50 cursor-not-allowed'
+                  ? "border-gray-300 bg-white"
+                  : "border-gray-200 bg-gray-50 cursor-not-allowed"
               }`}
             />
           </div>
@@ -429,8 +429,8 @@ export default function ProfileClient({ initialUser }) {
               disabled={!isEditing}
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors ${
                 isEditing
-                  ? 'border-gray-300 bg-white'
-                  : 'border-gray-200 bg-gray-50 cursor-not-allowed'
+                  ? "border-gray-300 bg-white"
+                  : "border-gray-200 bg-gray-50 cursor-not-allowed"
               }`}
             />
           </div>
@@ -447,8 +447,8 @@ export default function ProfileClient({ initialUser }) {
               disabled={!isEditing}
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors ${
                 isEditing
-                  ? 'border-gray-300 bg-white'
-                  : 'border-gray-200 bg-gray-50 cursor-not-allowed'
+                  ? "border-gray-300 bg-white"
+                  : "border-gray-200 bg-gray-50 cursor-not-allowed"
               }`}
             >
               <option value="">Select Blood Group</option>
@@ -474,14 +474,14 @@ export default function ProfileClient({ initialUser }) {
               disabled={!isEditing || geoLoading}
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors ${
                 isEditing
-                  ? 'border-gray-300 bg-white'
-                  : 'border-gray-200 bg-gray-50 cursor-not-allowed'
+                  ? "border-gray-300 bg-white"
+                  : "border-gray-200 bg-gray-50 cursor-not-allowed"
               }`}
             >
               <option value="">
-                {geoLoading ? 'Loading districts...' : 'Select District'}
+                {geoLoading ? "Loading districts..." : "Select District"}
               </option>
-              {districts.map(district => (
+              {districts.map((district) => (
                 <option key={district.id} value={district.id}>
                   {district.name}
                 </option>
@@ -500,16 +500,16 @@ export default function ProfileClient({ initialUser }) {
               disabled={!isEditing || !formData.district}
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors ${
                 isEditing
-                  ? 'border-gray-300 bg-white'
-                  : 'border-gray-200 bg-gray-50 cursor-not-allowed'
+                  ? "border-gray-300 bg-white"
+                  : "border-gray-200 bg-gray-50 cursor-not-allowed"
               }`}
             >
               <option value="">
                 {!formData.district
-                  ? 'Select district first'
-                  : 'Select Upazila'}
+                  ? "Select district first"
+                  : "Select Upazila"}
               </option>
-              {currentUpazilas.map(upazila => (
+              {currentUpazilas.map((upazila) => (
                 <option key={upazila.id} value={upazila.id}>
                   {upazila.name}
                 </option>

@@ -1,6 +1,6 @@
-import { headers } from 'next/headers';
-import { auth } from '../auth';
-import { redirect } from 'next/navigation';
+import { headers } from "next/headers";
+import { auth } from "../auth";
+import { redirect } from "next/navigation";
 
 export const getUserSession = async () => {
   const session = await auth.api.getSession({
@@ -18,12 +18,12 @@ export const getUserToken = async () => {
   return session?.session?.token || null;
 };
 
-export const requireRole = async allowedRoles => {
+export const requireRole = async (allowedRoles) => {
   const user = await getUserSession();
 
   // If no user, redirect to login
   if (!user) {
-    redirect('/auth/signin');
+    redirect("/auth/signin");
   }
 
   // If the user's role is not in the allowedRoles array, redirect to unauthorized
@@ -33,7 +33,7 @@ export const requireRole = async allowedRoles => {
     : [allowedRoles];
 
   if (!rolesArray.includes(user?.role)) {
-    redirect('/unauthorized');
+    redirect("/unauthorized");
   }
 
   return user;

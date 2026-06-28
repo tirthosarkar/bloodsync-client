@@ -1,6 +1,6 @@
-import { betterAuth } from 'better-auth';
-import { MongoClient } from 'mongodb';
-import { mongodbAdapter } from 'better-auth/adapters/mongodb';
+import { betterAuth } from "better-auth";
+import { MongoClient } from "mongodb";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
 const client = new MongoClient(process.env.MONGO_DB_URI);
 const db = client.db(process.env.AUTH_DB_NAME);
@@ -16,47 +16,47 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        type: 'string',
-        default: 'donor',
+        type: "string",
+        default: "donor",
       },
       status: {
-        type: 'string',
-        default: 'active',
+        type: "string",
+        default: "active",
       },
       phone: {
-        type: 'string',
+        type: "string",
         required: true,
       },
       gender: {
-        type: 'string',
+        type: "string",
         required: true,
       },
       bloodGroup: {
-        type: 'string',
+        type: "string",
         required: true,
       },
       district: {
-        type: 'string',
+        type: "string",
         required: true,
       },
       districtName: {
-        type: 'string',
+        type: "string",
         required: true,
       },
       upazila: {
-        type: 'string',
+        type: "string",
         required: true,
       },
       upazilaName: {
-        type: 'string',
+        type: "string",
         required: true,
       },
       donationCount: {
-        type: 'number',
+        type: "number",
         default: 0,
       },
       lastDonationDate: {
-        type: 'date',
+        type: "date",
         default: null,
       },
     },

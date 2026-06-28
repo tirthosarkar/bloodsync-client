@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 export default function DashboardLayout({ children }) {
   const { user, loading } = useContext(AuthContext);
@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }) {
   // Protect dashboard route - redirect if not logged in
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/auth/signin');
+      router.push("/auth/signin");
     }
   }, [user, loading, router]);
 

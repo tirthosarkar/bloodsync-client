@@ -1,8 +1,9 @@
-'use server';
+"use server";
 
-import { getUserToken } from './session';
+import { redirect } from "next/navigation";
+import { getUserToken } from "./session";
 
-const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
+const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export const authHeader = async () => {
   const token = await getUserToken();
@@ -15,7 +16,34 @@ export const authHeader = async () => {
   return header;
 };
 
-export const serverFetch = async path => {
+const handleStatusCode = (res, errorData = {}) => {
+  const errorMessage =
+    errorData.message || `Request failed with status ${res.status}`;
+
+  switch (res.status) {
+    case 401:
+      console.warn("Unauthorized request. Access tokens may be expired.");
+      redirect("/unauthorized"); // ✅ Removed window check
+      break;
+    case 403:
+      console.warn("Forbidden. You do not have permission.");
+      redirect("/forbidden"); // ✅ Removed window check
+      break;
+    case 404:
+      console.warn("Resource not found.");
+      redirect("/not-found"); // ✅ Removed window check
+      break;
+    case 500:
+      console.error("Internal Server Error.");
+      break;
+    default:
+      console.error(`HTTP Error: ${res.status}`);
+  }
+
+  throw new Error(errorMessage);
+};
+
+export const serverFetch = async (path) => {
   try {
     const res = await fetch(`${baseURL}${path}`);
 
@@ -38,59 +66,57 @@ export const serverFetch = async path => {
   }
 };
 
-/**
- * Core utility for mutating data (POST, PUT, PATCH, DELETE) with robust error handling.
- */
-export const serverMutation = async (path, data, method = 'POST') => {
+export const protectedFetch = async (path) => {
   try {
-    // ✅ Print to console to verify the method is actually "PATCH"
-    console.log(`🚀 Request Method: ${method} | URL: ${baseURL}${path}`);
-
     const res = await fetch(`${baseURL}${path}`, {
-      method: method, // ✅ Now correctly sends PATCH / DELETE
-      headers: {
-        'Content-Type': 'application/json',
-        ...(await authHeader()),
-      },
-      body: data ? JSON.stringify(data) : undefined,
+      headers: await authHeader(),
     });
 
-    // Handle 401, 403, 404, 500 network exceptions safely
     if (!res.ok) {
       let errorData;
       try {
         errorData = await res.json();
       } catch {
-        errorData = { message: 'An unknown error occurred' };
+        errorData = {};
       }
-
-      switch (res.status) {
-        case 401:
-          console.warn('Unauthorized request. Access tokens may be expired.');
-          break;
-        case 403:
-          console.warn(
-            'Forbidden. You do not have permission to execute this operation.',
-          );
-          break;
-        case 404:
-          console.warn('The requested resource endpoint could not be found.');
-          break;
-        case 500:
-          console.error(
-            'Internal Server Error encountered on the backend framework.',
-          );
-          break;
-        default:
-          console.error(`HTTP Error: ${res.status}`);
-      }
-
-      throw new Error(
-        errorData.message || `Mutation failed with status ${res.status}`,
-      );
+      handleStatusCode(res, errorData);
     }
 
-    // Protect against syntax crashes on empty responses (like 204 No Content)
+    return res.json();
+  } catch (error) {
+    console.error(`Protected Fetch error at ${path}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Core utility for mutating data (POST, PUT, PATCH, DELETE) with robust error handling.
+ */
+
+// Updated serverMutation using the utility
+export const serverMutation = async (path, data, method = "POST") => {
+  try {
+    console.log(`🚀 Request Method: ${method} | URL: ${baseURL}${path}`);
+
+    const res = await fetch(`${baseURL}${path}`, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+        ...(await authHeader()),
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    });
+
+    if (!res.ok) {
+      let errorData;
+      try {
+        errorData = await res.json();
+      } catch {
+        errorData = { message: "An unknown error occurred" };
+      }
+      handleStatusCode(res, errorData);
+    }
+
     if (res.status === 204) {
       return { success: true };
     }

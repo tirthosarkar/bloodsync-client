@@ -1,17 +1,17 @@
-import { getUserSession } from '@/lib/core/session';
-import { redirect } from 'next/navigation';
-import FundingClient from './FundingClient';
+import { getUserSession } from "@/lib/core/session";
+import { redirect } from "next/navigation";
+import FundingClient from "./FundingClient";
 
 export async function generateMetadata() {
   return {
-    title: 'Funding - Support BloodSync',
-    description: 'Donate to support our blood donation platform.',
+    title: "Funding - Support BloodSync",
+    description: "Donate to support our blood donation platform.",
   };
 }
 
 export default async function FundingPage() {
   const user = await getUserSession();
-  if (!user) redirect('/login');
+  if (!user) redirect("/login");
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 min-h-screen">

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { serverFetch, serverMutation } from '@/lib/core/server';
-import { loadStripe } from '@stripe/stripe-js';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { serverFetch, serverMutation } from "@/lib/core/server";
+import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
   useStripe,
   useElements,
   PaymentElement,
-} from '@stripe/react-stripe-js';
+} from "@stripe/react-stripe-js";
 import {
   FaSpinner,
   FaMoneyBillWave,
@@ -18,8 +18,8 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaHeartbeat,
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
+} from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -31,7 +31,7 @@ const CheckoutForm = ({ userId, amount, onSuccess, onCancel }) => {
   const elements = useElements();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
@@ -44,7 +44,7 @@ const CheckoutForm = ({ userId, amount, onSuccess, onCancel }) => {
           confirmParams: {
             return_url: `${window.location.origin}/dashboard/funding`,
           },
-          redirect: 'if_required',
+          redirect: "if_required",
         },
       );
 
@@ -52,22 +52,22 @@ const CheckoutForm = ({ userId, amount, onSuccess, onCancel }) => {
         throw new Error(stripeError.message);
       }
 
-      if (paymentIntent.status === 'succeeded') {
+      if (paymentIntent.status === "succeeded") {
         await serverMutation(
-          '/api/funding',
+          "/api/funding",
           {
             userId: userId,
             amount: amount,
             paymentId: paymentIntent.id,
           },
-          'POST',
+          "POST",
         );
 
-        toast.success('🎉 Donation successful. Thank you for saving lives!');
+        toast.success("🎉 Donation successful. Thank you for saving lives!");
         onSuccess();
       }
     } catch (error) {
-      toast.error(error.message || 'Payment failed. Please try again.');
+      toast.error(error.message || "Payment failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -121,12 +121,12 @@ export default function FundingClient({ currentUserId }) {
   const fetchFunding = async () => {
     try {
       setLoading(true);
-      const response = await serverFetch('/api/funding');
+      const response = await serverFetch("/api/funding");
       if (response.success) {
         setFunding(response.data);
       }
     } catch (error) {
-      toast.error('Failed to load funding history');
+      toast.error("Failed to load funding history");
       console.error(error);
     } finally {
       setLoading(false);
@@ -148,16 +148,16 @@ export default function FundingClient({ currentUserId }) {
           const res = await fetch(
             `${apiUrl}/api/funding/create-payment-intent`,
             {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ amount: donationAmount * 100 }),
             },
           );
           const data = await res.json();
           setClientSecret(data.clientSecret);
         } catch (error) {
-          console.error('Failed to get client secret', error);
-          toast.error('Failed to initialize payment. Try again.');
+          console.error("Failed to get client secret", error);
+          toast.error("Failed to initialize payment. Try again.");
         } finally {
           setIsLoadingSecret(false);
         }
@@ -176,7 +176,7 @@ export default function FundingClient({ currentUserId }) {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentFunding = funding.slice(indexOfFirstItem, indexOfLastItem);
 
-  const goToPage = page => {
+  const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
@@ -237,7 +237,7 @@ export default function FundingClient({ currentUserId }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {currentFunding.map(fund => (
+                  {currentFunding.map((fund) => (
                     <tr
                       key={fund._id}
                       className="hover:bg-gray-50 transition-colors"
@@ -245,7 +245,7 @@ export default function FundingClient({ currentUserId }) {
                       <td className="px-3 lg:px-4 py-4 font-medium text-gray-900">
                         <div className="flex items-center gap-2">
                           <FaUser className="text-gray-400" size={14} />
-                          {fund.donorName || 'Anonymous'}
+                          {fund.donorName || "Anonymous"}
                         </div>
                       </td>
                       <td className="px-3 lg:px-4 py-4 text-green-600 font-semibold">
@@ -256,7 +256,7 @@ export default function FundingClient({ currentUserId }) {
                           <FaCalendarAlt size={14} />
                           {new Date(
                             fund.createdAt,
-                          ).toLocaleDateString()} at{' '}
+                          ).toLocaleDateString()} at{" "}
                           {new Date(fund.createdAt).toLocaleTimeString()}
                         </div>
                       </td>
@@ -268,7 +268,7 @@ export default function FundingClient({ currentUserId }) {
 
             {/* Mobile Cards */}
             <div className="block lg:hidden divide-y divide-gray-100">
-              {currentFunding.map(fund => (
+              {currentFunding.map((fund) => (
                 <div
                   key={fund._id}
                   className="p-4 bg-white hover:bg-gray-50 transition-colors"
@@ -276,7 +276,7 @@ export default function FundingClient({ currentUserId }) {
                   <div className="flex justify-between items-start mb-1">
                     <h3 className="font-medium text-gray-900 text-sm flex items-center gap-2">
                       <FaUser className="text-gray-400" size={12} />
-                      {fund.donorName || 'Anonymous'}
+                      {fund.donorName || "Anonymous"}
                     </h3>
                     <span className="text-green-600 font-bold text-sm">
                       ${fund.amount.toFixed(2)}
@@ -284,7 +284,7 @@ export default function FundingClient({ currentUserId }) {
                   </div>
                   <p className="text-xs text-gray-500 flex items-center gap-2 mt-1">
                     <FaCalendarAlt size={12} />
-                    {new Date(fund.createdAt).toLocaleDateString()} at{' '}
+                    {new Date(fund.createdAt).toLocaleDateString()} at{" "}
                     {new Date(fund.createdAt).toLocaleTimeString()}
                   </p>
                 </div>
@@ -296,7 +296,7 @@ export default function FundingClient({ currentUserId }) {
               <div className="p-3 sm:p-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3 bg-gray-50">
                 <span className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
                   Showing {indexOfFirstItem + 1}–
-                  {Math.min(indexOfLastItem, totalFunding)} of {totalFunding}{' '}
+                  {Math.min(indexOfLastItem, totalFunding)} of {totalFunding}{" "}
                   donations
                 </span>
                 <div className="flex items-center gap-1.5 sm:gap-2">
@@ -346,7 +346,7 @@ export default function FundingClient({ currentUserId }) {
                 type="number"
                 min="1"
                 value={donationAmount}
-                onChange={e =>
+                onChange={(e) =>
                   setDonationAmount(parseFloat(e.target.value) || 0)
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"

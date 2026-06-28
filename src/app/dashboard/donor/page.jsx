@@ -1,11 +1,11 @@
-import { getUserSession } from '@/lib/core/session';
-import DonorDashboardClient from './DonorDashboardClient';
+import { getUserSession } from "@/lib/core/session";
+import DonorDashboardClient from "./DonorDashboardClient";
 
 export async function generateMetadata() {
   const user = await getUserSession();
   return {
-    title: user ? `${user.name} - Dashboard` : 'Donor Dashboard',
-    description: 'Manage your blood donation requests and activity.',
+    title: user ? `${user.name} - Dashboard` : "Donor Dashboard",
+    description: "Manage your blood donation requests and activity.",
   };
 }
 

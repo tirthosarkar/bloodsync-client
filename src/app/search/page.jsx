@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import { toast } from "react-toastify";
 import {
   FaSearch,
   FaTint,
   FaMapMarkerAlt,
   FaUser,
   FaSpinner,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
-import { useGeoData } from '@/hooks/useGeoData';
-import { searchDonorsAction } from '@/lib/action/search.action';
-import Image from 'next/image';
+import { useGeoData } from "@/hooks/useGeoData";
+import { searchDonorsAction } from "@/lib/action/search.action";
+import Image from "next/image";
 
 export default function SearchPage() {
   // 1. Load Geo Data
@@ -28,26 +28,26 @@ export default function SearchPage() {
 
   // 2. Form State
   const [formData, setFormData] = useState({
-    bloodGroup: '',
-    district: '',
-    upazila: '',
+    bloodGroup: "",
+    district: "",
+    upazila: "",
   });
 
   // 3. Handle Input Changes (Reset Upazila if District changes)
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData(prev => {
+    setFormData((prev) => {
       const newData = { ...prev, [name]: value };
-      if (name === 'district') {
-        newData.upazila = '';
+      if (name === "district") {
+        newData.upazila = "";
       }
       return newData;
     });
   };
 
   // 4. Handle Search Submit
-  const handleSearch = async e => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
     setHasSearched(true);
@@ -57,12 +57,12 @@ export default function SearchPage() {
       if (result.success) {
         setDonors(result.data);
         if (result.data.length === 0) {
-          toast.info('No donors found matching your criteria.');
+          toast.info("No donors found matching your criteria.");
         }
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.message || 'Failed to search donors');
+      toast.error(error.message || "Failed to search donors");
       setDonors([]);
     } finally {
       setLoading(false);
@@ -103,8 +103,8 @@ export default function SearchPage() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
               >
                 <option value="">Select Blood Group</option>
-                {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(
-                  type => (
+                {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
+                  (type) => (
                     <option key={type} value={type}>
                       {type}
                     </option>
@@ -128,7 +128,7 @@ export default function SearchPage() {
                 {geoLoading ? (
                   <option disabled>Loading districts...</option>
                 ) : (
-                  districts.map(d => (
+                  districts.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.name}
                     </option>
@@ -150,7 +150,7 @@ export default function SearchPage() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
                 <option value="">Select Upazila</option>
-                {filteredUpazilas.map(u => (
+                {filteredUpazilas.map((u) => (
                   <option key={u.id} value={u.id}>
                     {u.name}
                   </option>
@@ -172,7 +172,7 @@ export default function SearchPage() {
               className="inline-flex items-center gap-2 px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md shadow-red-500/20 disabled:opacity-70"
             >
               {loading ? <FaSpinner className="animate-spin" /> : <FaSearch />}
-              {loading ? 'Searching...' : 'Search Donors'}
+              {loading ? "Searching..." : "Search Donors"}
             </button>
           </div>
         </form>
@@ -220,7 +220,7 @@ export default function SearchPage() {
                         {donor.image ? (
                           <Image
                             src={donor.image}
-                            alt={donor.name || 'Donor'}
+                            alt={donor.name || "Donor"}
                             fill
                             className="object-cover"
                             sizes="48px"
@@ -236,7 +236,7 @@ export default function SearchPage() {
                       {/* Name and Email */}
                       <div className="flex flex-col">
                         <h3 className="font-bold text-gray-900 text-base leading-tight">
-                          {donor.name || 'Anonymous Donor'}
+                          {donor.name || "Anonymous Donor"}
                         </h3>
                         <p className="text-xs text-gray-500 mt-0.5 truncate max-w-[150px]">
                           {donor.email}
@@ -246,7 +246,7 @@ export default function SearchPage() {
 
                     {/* Blood Badge */}
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-red-600 text-white shadow-sm shrink-0 ml-2">
-                      <FaTint className="mr-1.5 text-[10px]" />{' '}
+                      <FaTint className="mr-1.5 text-[10px]" />{" "}
                       {donor.bloodGroup}
                     </span>
                   </div>
@@ -257,8 +257,8 @@ export default function SearchPage() {
                     <div className="flex items-center gap-2.5 text-sm text-gray-600">
                       <FaMapMarkerAlt className="text-red-500 text-xs w-4 shrink-0" />
                       <span>
-                        {donor.districtName || 'N/A'},{' '}
-                        {donor.upazilaName || 'N/A'}
+                        {donor.districtName || "N/A"},{" "}
+                        {donor.upazilaName || "N/A"}
                       </span>
                     </div>
                     {/* Phone */}

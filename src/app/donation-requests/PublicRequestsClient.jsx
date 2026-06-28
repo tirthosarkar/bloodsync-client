@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { serverFetch } from '@/lib/core/server';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { serverFetch } from "@/lib/core/server";
 import {
   FaSpinner,
   FaTint,
@@ -11,8 +11,8 @@ import {
   FaClock,
   FaEye,
   FaArrowDown,
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
+} from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function PublicRequestsClient({ isLoggedIn }) {
   const router = useRouter();
@@ -30,10 +30,10 @@ export default function PublicRequestsClient({ isLoggedIn }) {
       try {
         setLoading(true);
         // ✅ Correctly matching your backend route
-        const data = await serverFetch('/api/donation-requests');
+        const data = await serverFetch("/api/donation-requests");
         setRequests(data);
       } catch (error) {
-        toast.error('Failed to load donation requests');
+        toast.error("Failed to load donation requests");
         console.error(error);
       } finally {
         setLoading(false);
@@ -44,10 +44,10 @@ export default function PublicRequestsClient({ isLoggedIn }) {
   }, []);
 
   // Handle View Button Click
-  const handleViewDetails = id => {
+  const handleViewDetails = (id) => {
     if (!isLoggedIn) {
-      toast.info('Please log in to view the details of this request.');
-      router.push('/auth/signin');
+      toast.info("Please log in to view the details of this request.");
+      router.push("/auth/signin");
       return;
     }
     router.push(`/donation-requests/${id}`);
@@ -58,7 +58,7 @@ export default function PublicRequestsClient({ isLoggedIn }) {
     setLoadingMore(true);
     // Simulate a tiny delay for UX
     setTimeout(() => {
-      setVisibleCount(prev => prev + itemsPerPage);
+      setVisibleCount((prev) => prev + itemsPerPage);
       setLoadingMore(false);
     }, 500);
   };
@@ -96,7 +96,7 @@ export default function PublicRequestsClient({ isLoggedIn }) {
     <div className="space-y-8">
       {/* ── Grid of Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {visibleRequests.map(req => (
+        {visibleRequests.map((req) => (
           <div
             key={req._id}
             className="bg-white rounded-xl shadow-sm border border-gray-100 relative overflow-visible hover:shadow-md transition-shadow duration-300 p-6"

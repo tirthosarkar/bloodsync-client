@@ -1,7 +1,7 @@
-import { serverFetch } from '@/lib/core/server';
-import { redirect } from 'next/navigation';
-import DonationRequestDetailsClient from './DonationRequestDetailsClient';
-import { getUserSession } from '@/lib/core/session';
+import { protectedFetch, serverFetch } from "@/lib/core/server";
+import { redirect } from "next/navigation";
+import DonationRequestDetailsClient from "./DonationRequestDetailsClient";
+import { getUserSession } from "@/lib/core/session";
 
 export async function generateMetadata({ params }) {
   // ✅ Wait for params to be fully resolved
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
     };
   } catch {
     return {
-      title: 'Donation Request Details',
+      title: "Donation Request Details",
     };
   }
 }
@@ -29,17 +29,17 @@ export default async function DonationRequestDetailsPage({ params }) {
 
   // 2. If not logged in, redirect to login page
   if (!user) {
-    redirect('/auth/signin');
+    redirect("/auth/signin");
   }
 
   // 3. Fetch the request data
   let requestData = null;
   try {
-    requestData = await serverFetch(`/api/donation-requests/${id}`);
+    requestData = await protectedFetch(`/api/donation-requests/${id}`);
   } catch (error) {
     // If request not found, redirect to home or list
-    console.error('Failed to fetch request:', error);
-    redirect('/donation-requests');
+    console.error("Failed to fetch request:", error);
+    redirect("/donation-requests");
   }
 
   // 4. Prevent the requester from donating to their own request

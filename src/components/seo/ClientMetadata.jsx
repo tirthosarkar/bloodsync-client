@@ -1,19 +1,19 @@
 // components/seo/ClientMetadata.jsx
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 export default function ClientMetadata({
   title,
   description,
   keywords = [],
   ogImage,
-  ogType = 'website',
+  ogType = "website",
 }) {
   useEffect(() => {
     // Update Document Title
     if (title) {
-      document.title = title.includes('|') ? title : `${title} | BloodSync`;
+      document.title = title.includes("|") ? title : `${title} | BloodSync`;
     }
 
     // Helper function to update or create meta tags
@@ -24,45 +24,45 @@ export default function ClientMetadata({
       let metaTag = document.querySelector(selector);
 
       if (!metaTag) {
-        metaTag = document.createElement('meta');
+        metaTag = document.createElement("meta");
         if (isProperty) {
-          metaTag.setAttribute('property', name);
+          metaTag.setAttribute("property", name);
         } else {
-          metaTag.setAttribute('name', name);
+          metaTag.setAttribute("name", name);
         }
         document.head.appendChild(metaTag);
       }
 
-      metaTag.setAttribute('content', content);
+      metaTag.setAttribute("content", content);
     };
 
     // Update Description
     if (description) {
-      updateMetaTag('description', description);
-      updateMetaTag('og:description', description, true);
+      updateMetaTag("description", description);
+      updateMetaTag("og:description", description, true);
     }
 
     // Update Keywords
     if (keywords.length > 0) {
-      updateMetaTag('keywords', keywords.join(', '));
+      updateMetaTag("keywords", keywords.join(", "));
     }
 
     // Update OG Tags
     if (title) {
-      updateMetaTag('og:title', title, true);
+      updateMetaTag("og:title", title, true);
     }
 
     if (ogImage) {
-      updateMetaTag('og:image', ogImage, true);
+      updateMetaTag("og:image", ogImage, true);
     }
 
-    updateMetaTag('og:type', ogType, true);
+    updateMetaTag("og:type", ogType, true);
 
     // Update Twitter Card
-    updateMetaTag('twitter:card', 'summary_large_image');
-    if (title) updateMetaTag('twitter:title', title);
-    if (description) updateMetaTag('twitter:description', description);
-    if (ogImage) updateMetaTag('twitter:image', ogImage);
+    updateMetaTag("twitter:card", "summary_large_image");
+    if (title) updateMetaTag("twitter:title", title);
+    if (description) updateMetaTag("twitter:description", description);
+    if (ogImage) updateMetaTag("twitter:image", ogImage);
 
     // Cleanup function
     return () => {
