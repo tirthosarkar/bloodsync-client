@@ -1,4 +1,3 @@
-// app/components/Banner.jsx
 'use client';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -10,8 +9,39 @@ import {
   FaUsers,
   FaHospital,
 } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
+import { useEffect, useState } from 'react';
 
 const Banner = ({ stats = {} }) => {
+  const router = useRouter();
+  const [session, setSession] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const s = await authClient.getSession();
+      const user = s?.data?.user || s?.user;
+      setSession(s);
+      setIsLoggedIn(!!user);
+    };
+    checkSession();
+  }, []);
+
+  const handleDonorJoin = () => {
+    if (isLoggedIn) {
+      const DASHBOARD_PATHS = {
+        admin: '/dashboard',
+        volunteer: '/dashboard',
+        donor: '/dashboard/donor',
+      };
+      const role = session?.data?.user?.role || session?.user?.role;
+      const path = DASHBOARD_PATHS[role?.toLowerCase()] || '/dashboard/donor';
+      router.push(path);
+    } else {
+      router.push('/register');
+    }
+  };
   return (
     <section className="relative min-h-screen bg-linear-to-br from-[#0a0f1a] via-[#1a1f2e] to-[#0d1117] flex items-center overflow-hidden pb-20 lg:pb-0">
       {/* Background Elements */}
@@ -129,8 +159,8 @@ const Banner = ({ stats = {} }) => {
               transition={{ delay: 0.7, duration: 0.8 }}
               className="flex flex-col sm:flex-row gap-3 lg:gap-4"
             >
-              <Link
-                href="/register"
+              <button
+                onClick={handleDonorJoin}
                 className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 lg:py-4 bg-linear-to-r from-red-600 to-red-700 text-white font-semibold text-sm sm:text-base rounded-xl shadow-lg shadow-red-500/30 hover:shadow-red-500/40 hover:-translate-y-0.5 transition-all duration-300 group"
               >
                 <FaHandHoldingHeart className="text-lg sm:text-xl" />
@@ -150,7 +180,7 @@ const Banner = ({ stats = {} }) => {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </Link>
+              </button>
 
               <Link
                 href="/search"
