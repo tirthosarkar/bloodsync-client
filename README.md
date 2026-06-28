@@ -24,14 +24,6 @@
 
 ---
 
-## 📌 Project Overview
-
-**BloodSync** is a full-stack blood donation management platform built to bridge the gap between blood donors and recipients. The platform enables users to register as donors, create blood donation requests, search for compatible donors, and fund the organization — all in one seamless experience.
-
-> _"Because every drop of blood is a chance to save a life."_
-
----
-
 ## 🔗 Important Links
 
 | Resource             | Link                                                                                      |
@@ -252,11 +244,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Frontend — Vercel
 
-The client is deployed on **Vercel** with automatic CI/CD from the main branch.
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=flat-square&logo=vercel)](https://bloodsync-every-drop-counts.vercel.app/)
+
+Deployed with automatic CI/CD from the `main` branch.
 
 ```bash
-npm run build   # Build for production
-npm run start   # Start production server
+npm run build    # production build
+npm run start    # start production server
 ```
 
 ### Backend — Render / Railway / Vercel
@@ -290,6 +284,169 @@ The Express server is deployed separately. Ensure the following:
 ```
 
 ---
+## 💡 Idea Behind BloodSync
+
+Every year, thousands of people in Bangladesh die due to the unavailability of blood at the right time. The existing process of finding a donor is manual, slow, and unreliable — phone calls, Facebook posts, word of mouth.
+
+**BloodSync was born to solve exactly this.**
+
+The idea was simple: build a platform where:
+
+- A person in need can **post a blood request in under 2 minutes**
+- A willing donor can **find that request and respond instantly**
+- An organization can **manage everything from a single dashboard**
+
+The name _BloodSync_ reflects the core mission — **synchronizing** the right blood with the right person, at the right time.
+
+---
+
+## 🧩 Problems BloodSync Solves
+
+| Problem                         | How BloodSync Solves It                                                      |
+| ------------------------------- | ---------------------------------------------------------------------------- |
+| 🔍 Hard to find donors fast     | Search page filters donors by blood group, district & upazila instantly      |
+| 📋 No organized request system  | Structured donation requests with status tracking (pending → done)           |
+| 🔒 No accountability            | Role-based system — every action is tied to a verified user                  |
+| 🚫 Blocked users causing issues | Admin can block users, blocked users cannot create requests                  |
+| 💸 No funding mechanism         | Stripe-powered funding page for organizational support                       |
+| 📊 No visibility for admins     | Live dashboard with charts, stats, and full user/request control             |
+| 📱 Poor mobile experience       | Fully responsive UI with mobile drawer sidebar                               |
+| 🔁 Page reload logs user out    | Session persists on reload using Better Auth — private routes stay protected |
+
+---
+
+## ❓ Frequently Asked Questions
+
+### 🔐 Authentication
+
+**Q1. Why did you choose Better Auth over Firebase or JWT?**
+
+> Better Auth is a modern, framework-native authentication library built specifically for Next.js. Unlike Firebase, it keeps auth logic on your own server — no vendor lock-in, no extra cost at scale. Unlike raw JWT, it handles session management, token rotation, and MongoDB adapter out of the box. It gave full control with minimal boilerplate.
+
+---
+
+**Q2. How does the app handle private routes on page reload?**
+
+> Better Auth maintains a server-side session. On every page load, `authClient.useSession()` rehydrates the session from the server — so a logged-in user is never redirected to login just because they refreshed. The `AuthContext` wraps the entire app and holds the user state globally.
+
+---
+
+**Q3. What happens when a blocked user tries to log in or create a request?**
+
+> Two layers of protection:
+>
+> 1. **Login** — The server checks `user.status` before issuing a session. Blocked users get a `403` error immediately.
+> 2. **Create Request** — Even if somehow authenticated, the server re-checks `status === "blocked"` before inserting a donation request and returns a `403` with a clear message.
+
+---
+
+### 🩸 Donation Flow
+
+**Q4. Walk me through the full donation request lifecycle.**
+
+> 1. A **Donor** creates a request → status: `pending`
+> 2. Any logged-in user visits the request details page and clicks **"Donate"** → a modal appears with their name & email pre-filled
+> 3. On confirmation → status changes to `inprogress`, donor info is saved on the request
+> 4. The **requester** sees the donor info and can mark it as `done` (blood received) or `canceled`
+> 5. Once `done` or `canceled`, the action buttons disappear permanently
+
+---
+
+**Q5. Can a user donate blood to their own request?**
+
+> No. The server explicitly checks `request.requesterId === userId` when the status is being changed to `inprogress`. If they match, a `403` is returned with the message _"You cannot donate to your own request."_ This is enforced at the API level, not just the UI.
+
+---
+
+**Q6. How does the status filter and pagination work on the My Requests page?**
+
+> The API accepts `?status=pending&page=1&limit=10` as query parameters. MongoDB queries are built dynamically — if a status filter is provided, it's added to the query object. `skip` and `limit` handle pagination. The response includes `totalPages` and `currentPage` so the frontend can render pagination controls accurately.
+
+---
+
+### 📊 Dashboard & Analytics
+
+**Q7. How are the dashboard charts populated?**
+
+> Two dedicated API endpoints power the charts:
+>
+> - **Pie Chart** → `/api/donation-requests/status-breakdown` uses MongoDB `$group` aggregation to count requests per status
+> - **Bar Chart** → `/api/donation-requests/weekly-stats` uses `$match` to filter the last 7 days, then `$group` by `$dayOfWeek` to count per day
+>
+> Both are called in parallel using `Promise.all()` so the dashboard loads in a single round trip.
+
+---
+
+**Q8. Why does the chart section only appear for Admin and Volunteer?**
+
+> Donors only see their own requests — platform-wide analytics aren't relevant to them and could feel overwhelming. Admins and Volunteers have a broader responsibility (managing all requests, monitoring activity), so the charts give them the visibility they need to make decisions.
+
+---
+
+### 👥 Role System
+
+**Q9. How are roles assigned and changed?**
+
+> - Every new user gets the `donor` role by default on registration
+> - Only an **Admin** can promote a user to `volunteer` or `admin` via the All Users page
+> - Role changes update both the `users` collection (app data) and the `user` collection (Better Auth session data) simultaneously, so the change reflects immediately on next login
+> - To make the first admin: manually update `role: "admin"` in the MongoDB Atlas dashboard
+
+---
+
+**Q10. What is the difference between Volunteer and Admin?**
+
+> | Action                       | Volunteer | Admin |
+> | ---------------------------- | :-------: | :---: |
+> | View all requests            |    ✅     |  ✅   |
+> | Update request status        |    ✅     |  ✅   |
+> | View platform stats & charts |    ✅     |  ✅   |
+> | Delete any request           |    ❌     |  ✅   |
+> | Manage users (block/role)    |    ❌     |  ✅   |
+> | View all users               |    ❌     |  ✅   |
+
+---
+
+### 💳 Payments
+
+**Q11. How does the Stripe payment flow work?**
+
+> 1. User enters an amount on the Funding page
+> 2. Frontend calls `POST /api/funding/create-payment-intent` with the amount in cents
+> 3. Server creates a Stripe `PaymentIntent` and returns a `clientSecret`
+> 4. Frontend uses `@stripe/react-stripe-js` to collect card details and confirm the payment using the `clientSecret`
+> 5. On success, frontend calls `POST /api/funding` to save the transaction (userId, amount, paymentId) to MongoDB
+> 6. The Funding page table updates to show the new contribution
+
+---
+
+### 🎨 Frontend & UX
+
+**Q12. Why Next.js App Router instead of Pages Router?**
+
+> App Router enables **server components**, **nested layouts**, and **per-route loading states** natively. The dashboard layout (sidebar + header) is defined once as a layout and shared across all dashboard routes without re-rendering. It also enables future use of server-side data fetching without an extra API call.
+
+---
+
+**Q13. How does the collapsible sidebar work on desktop without breaking mobile?**
+
+> The `collapsed` state lives in the sidebar component. Every conditional class uses the `md:` Tailwind prefix — so on mobile, the sidebar always renders in full expanded mode regardless of the `collapsed` state. On desktop (`md+`), the `collapsed` state toggles between `w-64` (expanded) and `w-[72px]` (icon-only). Labels, the help box, and user info are hidden with `md:hidden` when collapsed.
+
+---
+
+**Q14. Why Better Auth over NextAuth for this project?**
+
+> NextAuth (Auth.js) has great community support but its MongoDB adapter required extra setup for custom user fields like `role`, `status`, `bloodGroup`, etc. Better Auth's MongoDB adapter stores exactly what you give it, making it trivial to add custom fields. It also has a cleaner client API (`authClient.useSession()`) that integrates naturally with React context.
+
+---
+
+**Q15. What was the most challenging part of this project?**
+
+> **Route ordering in Express.js.**
+> Express matches routes top-to-bottom. Specific routes like `/api/donation-requests/status-breakdown` must be defined _before_ the generic `/api/donation-requests/:id` — otherwise Express treats `"status-breakdown"` as an `id` parameter and the wrong handler fires. Debugging this silently broken behavior (no errors, just wrong data) was the most time-consuming challenge of the backend.
+
+---
+
 
 ## 👨‍💻 Developer
 
