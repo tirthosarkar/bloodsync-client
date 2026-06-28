@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   FaHome,
   FaUser,
@@ -11,35 +11,35 @@ import {
   FaSignOutAlt,
   FaTimes,
   FaHeartbeat,
-} from "react-icons/fa";
-import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
-import { MdSpaceDashboard } from "react-icons/md";
-import Image from "next/image";
-import { Avatar, Button } from "@heroui/react";
+} from 'react-icons/fa';
+import { useContext } from 'react';
+import { AuthContext } from '@/context/AuthContext';
+import { MdSpaceDashboard } from 'react-icons/md';
+import Image from 'next/image';
+import { Avatar, Button } from '@heroui/react';
 
 export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
   const pathname = usePathname();
   const { logout } = useContext(AuthContext);
-  const role = user?.role?.toLowerCase() || "donor";
+  const role = user?.role?.toLowerCase() || 'donor';
 
   const getNavItems = () => {
     const commonItems = [
-      { label: "HomePage", href: `/`, icon: FaHome },
+      { label: 'HomePage', href: `/`, icon: FaHome },
       {
-        label: "Dashboard",
+        label: 'Dashboard',
         href: `/dashboard`,
         icon: MdSpaceDashboard,
       },
-      { label: "Profile", href: "/dashboard/profile", icon: FaUser },
+      { label: 'Profile', href: '/dashboard/profile', icon: FaUser },
       {
-        label: "My Requests",
-        href: "/dashboard/my-donation-requests",
+        label: 'My Requests',
+        href: '/dashboard/my-donation-requests',
         icon: FaClipboardList,
       },
       {
-        label: "Create Request",
-        href: "/dashboard/create-donation-request",
+        label: 'Create Request',
+        href: '/dashboard/create-donation-request',
         icon: FaPlusCircle,
       },
     ];
@@ -59,20 +59,20 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
       ],
       admin: [
         {
-          label: "All Users",
-          href: "/dashboard/admin/all-users",
+          label: 'All Users',
+          href: '/dashboard/admin/all-users',
           icon: FaUsers,
         },
         {
-          label: "All Requests",
-          href: "/dashboard/all-blood-donation-request",
+          label: 'All Requests',
+          href: '/dashboard/all-blood-donation-request',
           icon: FaClipboardList,
         },
       ],
       volunteer: [
         {
-          label: "All Requests",
-          href: "/dashboard/all-blood-donation-request",
+          label: 'All Requests',
+          href: '/dashboard/all-blood-donation-request',
           icon: FaClipboardList,
         },
       ],
@@ -85,7 +85,7 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
 
   const handleLogout = async () => {
     await logout();
-    window.location.href = "/";
+    window.location.href = '/auth/signin';
   };
 
   return (
@@ -97,7 +97,7 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
         />
       )}
       <aside
-        className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} flex flex-col h-full`}
+        className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} flex flex-col h-full`}
       >
         {/* Sidebar Header with Logo */}
         <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
@@ -127,21 +127,38 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
             >
               <Avatar.Image src={user?.image || user?.avatar} />
               <Avatar.Fallback>
-                {user?.name ? user?.name?.charAt(0).toUpperCase() || "U" : "?"}
+                {user?.name
+                  ? user.name
+                      .split(' ')
+                      .map(n => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2)
+                  : '?'}
               </Avatar.Fallback>
             </Avatar>
             <div>
               <p className="text-sm font-semibold text-gray-800">
                 {user?.name}
               </p>
-              <p className="text-xs text-gray-500 capitalize">{role}</p>
+              <span
+                className={`inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                  role === 'admin'
+                    ? 'bg-purple-100 text-purple-700'
+                    : role === 'volunteer'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'bg-green-100 text-green-700'
+                }`}
+              >
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </span>
             </div>
           </div>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
-            {navItems.map((item) => {
+            {navItems.map(item => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
               return (
@@ -151,10 +168,10 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
                     onClick={() => {
                       if (window.innerWidth < 768) toggleSidebar();
                     }}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive ? "bg-red-50 text-red-600" : "text-gray-600 hover:bg-gray-50 hover:text-red-600"}`}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive ? 'bg-red-50 text-red-600' : 'text-gray-600 hover:bg-gray-50 hover:text-red-600'}`}
                   >
                     <Icon
-                      className={isActive ? "text-red-500" : "text-gray-400"}
+                      className={isActive ? 'text-red-500' : 'text-gray-400'}
                     />
                     <span className="text-sm font-medium">{item.label}</span>
                     {isActive && (
@@ -170,7 +187,7 @@ export default function DashboardSidebar({ user, isOpen, toggleSidebar }) {
         <div className="border-t border-gray-200 p-4">
           <Button
             onClick={handleLogout}
-            className="md:w-full inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 lg:py-4 bg-linear-to-r from-red-600 to-red-700 text-white font-semibold text-sm sm:text-base rounded-xl shadow-lg shadow-red-500/30 hover:shadow-red-500/40 hover:-translate-y-0.5 transition-all duration-300 group"
+            className="w-full inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 lg:py-4 bg-linear-to-r from-red-600 to-red-700 text-white font-semibold text-sm sm:text-base rounded-xl shadow-lg shadow-red-500/30 hover:shadow-red-500/40 hover:-translate-y-0.5 transition-all duration-300 group"
           >
             <FaSignOutAlt /> <span className="text-sm font-medium">Logout</span>
           </Button>
