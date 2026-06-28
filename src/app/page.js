@@ -4,13 +4,27 @@ import ContactSection from '@/components/home/ContactSection';
 import HowBloodSyncWorks from '@/components/home/HowBloodSyncWorks';
 import MarqueeSection from '@/components/home/MarqueeSection';
 import WhyChooseBloodSync from '@/components/home/WhyChooseBloodSync';
+import { getMarqueeData } from '@/lib/marquee';
 import { ToastContainer } from 'react-toastify';
 
-export default function Home() {
+async function getStats() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/stats`, {
+      next: { revalidate: 300 },
+    });
+    const data = await res.json();
+    if (data.success) return data;
+  } catch {}
+  // fallback
+  return { totalDonors: 0, totalRequests: 0, totalFunding: 0 };
+}
+
+export default async function Home() {
+  const [items, stats] = await Promise.all([getMarqueeData(), getStats()]);
   return (
     <>
-      <Banner />
-      <MarqueeSection />
+      <Banner stats={stats} />
+      <MarqueeSection items={items} />
       <HowBloodSyncWorks />
       <WhyChooseBloodSync />
       <BecomeHeroSection />

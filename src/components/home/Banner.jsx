@@ -1,6 +1,7 @@
-"use client";
-import Link from "next/link";
-import { motion } from "framer-motion";
+// app/components/Banner.jsx
+'use client';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
   FaHandHoldingHeart,
   FaSearch,
@@ -8,40 +9,9 @@ import {
   FaShieldAlt,
   FaUsers,
   FaHospital,
-} from "react-icons/fa";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
+} from 'react-icons/fa';
 
 const Banner = ({ stats = {} }) => {
-  const router = useRouter();
-  const [session, setSession] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const checkSession = async () => {
-      const s = await authClient.getSession();
-      const user = s?.data?.user || s?.user;
-      setSession(s);
-      setIsLoggedIn(!!user);
-    };
-    checkSession();
-  }, []);
-
-  const handleDonorJoin = () => {
-    if (isLoggedIn) {
-      const DASHBOARD_PATHS = {
-        admin: "/dashboard",
-        volunteer: "/dashboard",
-        donor: "/dashboard/donor",
-      };
-      const role = session?.data?.user?.role || session?.user?.role;
-      const path = DASHBOARD_PATHS[role?.toLowerCase()] || "/dashboard/donor";
-      router.push(path);
-    } else {
-      router.push("/register");
-    }
-  };
   return (
     <section className="relative min-h-screen bg-linear-to-br from-[#0a0f1a] via-[#1a1f2e] to-[#0d1117] flex items-center overflow-hidden pb-20 lg:pb-0">
       {/* Background Elements */}
@@ -67,7 +37,7 @@ const Banner = ({ stats = {} }) => {
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
             className="space-y-6 lg:space-y-8"
           >
             {/* Emergency Badge */}
@@ -112,15 +82,15 @@ const Banner = ({ stats = {} }) => {
                   icon: FaUsers,
                   number: stats.totalDonors
                     ? `${stats.totalDonors.toLocaleString()}+`
-                    : "...",
-                  label: "Donors",
+                    : '...',
+                  label: 'Donors',
                 },
                 {
                   icon: FaHeartbeat,
                   number: stats.totalRequests
                     ? `${stats.totalRequests.toLocaleString()}+`
-                    : "...",
-                  label: "Requests Made",
+                    : '...',
+                  label: 'Requests Made',
                 },
                 {
                   icon: FaHospital,
@@ -133,8 +103,8 @@ const Banner = ({ stats = {} }) => {
                           return `$${(amount / 1000).toFixed(1)}K`;
                         return `$${Math.floor(amount)}`;
                       })()
-                    : "...",
-                  label: "Total Funded",
+                    : '...',
+                  label: 'Total Funded',
                 },
               ].map((stat, index) => (
                 <div
@@ -159,8 +129,8 @@ const Banner = ({ stats = {} }) => {
               transition={{ delay: 0.7, duration: 0.8 }}
               className="flex flex-col sm:flex-row gap-3 lg:gap-4"
             >
-              <button
-                onClick={handleDonorJoin}
+              <Link
+                href="/register"
                 className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 lg:py-4 bg-linear-to-r from-red-600 to-red-700 text-white font-semibold text-sm sm:text-base rounded-xl shadow-lg shadow-red-500/30 hover:shadow-red-500/40 hover:-translate-y-0.5 transition-all duration-300 group"
               >
                 <FaHandHoldingHeart className="text-lg sm:text-xl" />
@@ -180,7 +150,7 @@ const Banner = ({ stats = {} }) => {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </button>
+              </Link>
 
               <Link
                 href="/search"
@@ -220,7 +190,7 @@ const Banner = ({ stats = {} }) => {
                   transition={{
                     duration: 20,
                     repeat: Infinity,
-                    ease: "linear",
+                    ease: 'linear',
                   }}
                   className="w-87.5 xl:w-100 h-87.5 xl:h-100 border-2 border-red-500/20 rounded-full absolute"
                 />
@@ -229,7 +199,7 @@ const Banner = ({ stats = {} }) => {
                   transition={{
                     duration: 15,
                     repeat: Infinity,
-                    ease: "linear",
+                    ease: 'linear',
                   }}
                   className="w-62.5 xl:w-75 h-62.5 xl:h-75 border-2 border-red-500/10 rounded-full absolute"
                 />
@@ -238,7 +208,7 @@ const Banner = ({ stats = {} }) => {
                   transition={{
                     duration: 10,
                     repeat: Infinity,
-                    ease: "linear",
+                    ease: 'linear',
                   }}
                   className="w-37.5 xl:w-50 h-37.5 xl:h-50 border-2 border-red-500/5 rounded-full absolute"
                 />
@@ -255,7 +225,7 @@ const Banner = ({ stats = {} }) => {
                     transition={{
                       duration: 3,
                       repeat: Infinity,
-                      ease: "easeInOut",
+                      ease: 'easeInOut',
                     }}
                     className="w-20 h-20 xl:w-24 xl:h-24 bg-red-500/20 rounded-full flex items-center justify-center"
                   >
@@ -275,7 +245,7 @@ const Banner = ({ stats = {} }) => {
 
                 {/* Blood Types Grid */}
                 <div className="grid grid-cols-4 gap-1.5 lg:gap-2">
-                  {["A+", "B+", "O+", "AB+", "A-", "B-", "O-", "AB-"].map(
+                  {['A+', 'B+', 'O+', 'AB+', 'A-', 'B-', 'O-', 'AB-'].map(
                     (type, index) => (
                       <motion.div
                         key={type}
@@ -286,8 +256,8 @@ const Banner = ({ stats = {} }) => {
                         className={`text-center py-1.5 lg:py-2 px-2 lg:px-3 rounded-lg text-xs sm:text-sm font-bold cursor-default
                         ${
                           index % 2 === 0
-                            ? "bg-red-500/20 text-red-300 border border-red-500/30"
-                            : "bg-white/10 text-gray-300 border border-white/20"
+                            ? 'bg-red-500/20 text-red-300 border border-red-500/30'
+                            : 'bg-white/10 text-gray-300 border border-white/20'
                         }`}
                       >
                         {type}
