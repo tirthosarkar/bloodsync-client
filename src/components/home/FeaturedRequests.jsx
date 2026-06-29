@@ -36,7 +36,7 @@ export default async function FeaturedRequests({ isLoggedIn }) {
   if (!requests.length) return null;
 
   return (
-    <section className="bg-linear-to-b from-gray-50 to-white py-16">
+    <section className="bg-linear-to-b from-gray-50 to-white py-10 md:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end md:gap-8">

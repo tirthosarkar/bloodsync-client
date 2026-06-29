@@ -1,13 +1,14 @@
 import Banner from '@/components/home/Banner';
 import BecomeHeroSection from '@/components/home/BecomeHeroSection';
+import BloodCompatibilityChart from '@/components/home/BloodCompatibilityChart';
 import ContactSection from '@/components/home/ContactSection';
+import FAQSection from '@/components/home/FAQSection';
 import FeaturedRequests from '@/components/home/FeaturedRequests';
 import HowBloodSyncWorks from '@/components/home/HowBloodSyncWorks';
 import MarqueeSection from '@/components/home/MarqueeSection';
 import WhyChooseBloodSync from '@/components/home/WhyChooseBloodSync';
 import { getUserSession } from '@/lib/core/session';
 import { getMarqueeData } from '@/lib/marquee';
-import { ToastContainer } from 'react-toastify';
 
 async function getStats() {
   try {
@@ -33,7 +34,9 @@ export default async function Home() {
       <MarqueeSection items={items} />
       <HowBloodSyncWorks />
       <FeaturedRequests isLoggedIn={!!user} />
+      <BloodCompatibilityChart />
       <WhyChooseBloodSync />
+      <FAQSection />
       <BecomeHeroSection />
       <ContactSection />
     </>

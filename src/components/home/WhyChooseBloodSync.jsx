@@ -29,7 +29,7 @@ export default function WhyChooseBloodSync() {
   ];
 
   return (
-    <section className="py-20 bg-red-50/40">
+    <section className="py-10 md:py-20 bg-red-50/40">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
@@ -74,7 +74,7 @@ export default function WhyChooseBloodSync() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-5 text-gray-600 leading-8"
+              className="text-gray-500 text-base md:text-lg max-w-xl mx-auto leading-relaxed"
             >
               We are building a modern blood donation platform that helps
               patients, families, and donors connect when every minute matters.
