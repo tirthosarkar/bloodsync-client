@@ -19,6 +19,7 @@ import {
   FaHeartbeat,
 } from 'react-icons/fa';
 import { showToast } from '@/utils/toast';
+import Skeleton from '@/components/shared/LoadingUi/Skeleton';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
@@ -180,12 +181,7 @@ export default function MyRequestsClient({ userId }) {
     return config[status] || config.pending;
   };
 
-  if (loading && requests.length === 0)
-    return (
-      <div className="flex items-center justify-center h-64">
-        <FaSpinner className="animate-spin text-red-600 text-4xl" />
-      </div>
-    );
+  if (loading && requests.length === 0) return <Skeleton />;
 
   return (
     <>

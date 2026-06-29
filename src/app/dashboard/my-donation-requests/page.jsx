@@ -1,11 +1,11 @@
-import { getUserSession } from "@/lib/core/session";
-import MyRequestsClient from "./MyRequestsClient";
+import { getUserSession } from '@/lib/core/session';
+import MyRequestsClient from './MyRequestsClient';
 
 export async function generateMetadata() {
   const user = await getUserSession();
   return {
-    title: user ? `${user.name} - My Requests` : "My Donation Requests",
-    description: "View and manage all your blood donation requests.",
+    title: user ? `${user.name} - My Requests` : 'My Donation Requests',
+    description: 'View and manage all your blood donation requests.',
   };
 }
 
@@ -23,7 +23,7 @@ export default async function MyRequestsPage() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8 pt-4">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight">
           My <span className="text-red-600">Donation Requests</span>
         </h1>
         <p className="text-gray-500 mt-2 text-lg">

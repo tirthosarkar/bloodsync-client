@@ -21,6 +21,7 @@ import {
 import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 import { showToast } from '@/utils/toast';
+import Skeleton from '@/components/shared/LoadingUi/Skeleton';
 
 export default function DonorDashboardClient({ userId }) {
   const router = useRouter();
@@ -170,11 +171,7 @@ export default function DonorDashboardClient({ userId }) {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-72">
-        <FaSpinner className="animate-spin text-red-600 text-3xl" />
-      </div>
-    );
+    return <Skeleton />;
   }
 
   if (requests.length === 0) {
