@@ -192,11 +192,11 @@ export default function AllRequestsClient({ currentUserRole }) {
             <h2 className="text-lg font-bold text-gray-900">
               All Donation Requests
             </h2>
-            <p className="text-xs text-gray-500 mt-0.5">
+            {/* <p className="text-xs text-gray-500 mt-0.5">
               {isAdmin
-                ? 'Manage all donation requests across the platform'
-                : 'View and update donation request statuses'}
-            </p>
+                ? "Manage all donation requests across the platform"
+                : "View and update donation request statuses"}
+            </p> */}
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
             <span className="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-100 px-3 py-1 rounded-full shrink-0">

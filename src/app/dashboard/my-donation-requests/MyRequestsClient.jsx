@@ -190,9 +190,9 @@ export default function MyRequestsClient({ userId }) {
         <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <h2 className="text-lg font-bold text-gray-900">All My Requests</h2>
-            <p className="text-xs text-gray-500 mt-0.5">
+            {/* <p className="text-xs text-gray-500 mt-0.5">
               Manage and track all your donation requests
-            </p>
+            </p> */}
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
             <span className="text-xs font-semibold text-gray-600 bg-gray-50 border border-gray-100 px-3 py-1 rounded-full shrink-0">
