@@ -1,7 +1,7 @@
-import { protectedFetch, serverFetch } from "@/lib/core/server";
-import { redirect } from "next/navigation";
-import DonationRequestDetailsClient from "./DonationRequestDetailsClient";
-import { getUserSession } from "@/lib/core/session";
+import { protectedFetch, serverFetch } from '@/lib/core/server';
+import { redirect } from 'next/navigation';
+import DonationRequestDetailsClient from './DonationRequestDetailsClient';
+import { getUserSession } from '@/lib/core/session';
 
 export async function generateMetadata({ params }) {
   // ✅ Wait for params to be fully resolved
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
     };
   } catch {
     return {
-      title: "Donation Request Details",
+      title: 'Donation Request Details',
     };
   }
 }
@@ -29,7 +29,7 @@ export default async function DonationRequestDetailsPage({ params }) {
 
   // 2. If not logged in, redirect to login page
   if (!user) {
-    redirect("/auth/signin");
+    redirect('/auth/signin');
   }
 
   // 3. Fetch the request data
@@ -38,8 +38,8 @@ export default async function DonationRequestDetailsPage({ params }) {
     requestData = await protectedFetch(`/api/donation-requests/${id}`);
   } catch (error) {
     // If request not found, redirect to home or list
-    console.error("Failed to fetch request:", error);
-    redirect("/donation-requests");
+    console.error('Failed to fetch request:', error);
+    redirect('/donation-requests');
   }
 
   // 4. Prevent the requester from donating to their own request
@@ -48,7 +48,7 @@ export default async function DonationRequestDetailsPage({ params }) {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight">
           Donation <span className="text-red-600">Request Details</span>
         </h1>
         <p className="text-gray-500 mt-2">

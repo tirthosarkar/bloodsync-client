@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { serverMutation } from '@/lib/core/server';
-import { toast } from 'react-toastify';
 import {
   FaUser,
   FaEnvelope,
@@ -12,8 +11,6 @@ import {
   FaHospital,
   FaMapPin,
   FaCalendar,
-  FaClock,
-  FaCommentDots,
   FaHeart,
   FaSpinner,
   FaTimes,
@@ -21,8 +18,26 @@ import {
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { showToast } from '@/utils/toast';
-// import { setDonationInProgress } from "@/lib/action/donetion";
-// import { donateBloodAction } from "@/lib/action/donation.action";
+
+// ── shared info row ──
+const InfoItem = ({ icon, label, value, sub, iconRed = false }) => (
+  <div className="flex items-start gap-3 p-5 border-b border-gray-50">
+    <div
+      className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${iconRed ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-400'}`}
+    >
+      {icon}
+    </div>
+    <div>
+      <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mb-1">
+        {label}
+      </p>
+      <p className="text-sm font-semibold text-gray-800 leading-snug">
+        {value}
+      </p>
+      {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+    </div>
+  </div>
+);
 
 export default function DonationRequestDetailsClient({
   request,
@@ -33,61 +48,82 @@ export default function DonationRequestDetailsClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Check if the request is already inprogress/done/canceled
   const isDonatable = request.status === 'pending';
 
-  // Handle Donate Button Click
+  // ── status config ──
+  const statusConfig = {
+    pending: {
+      label: 'Pending',
+      cls: 'bg-amber-50 text-amber-700 border-amber-200',
+      dot: 'bg-amber-400',
+    },
+    inprogress: {
+      label: 'In Progress',
+      cls: 'bg-blue-50 text-blue-700 border-blue-200',
+      dot: 'bg-blue-500',
+    },
+    done: {
+      label: 'Done',
+      cls: 'bg-green-50 text-green-700 border-green-200',
+      dot: 'bg-green-500',
+    },
+    canceled: {
+      label: 'Canceled',
+      cls: 'bg-red-50 text-red-400 border-red-200',
+      dot: 'bg-red-400',
+    },
+  };
+  const st = statusConfig[request.status] || statusConfig.pending;
+
   const handleDonateClick = () => {
-    // ── blocked user check ──
     if (currentUser?.status === 'blocked') {
       showToast.error('Account blocked', 'You cannot donate. Contact support.');
       return;
     }
-
     if (isMyOwnRequest) {
-      showToast.error('You cannot donate to your own request.');
+      showToast.error('Not allowed', 'You cannot donate to your own request.');
       return;
     }
     if (!isDonatable) {
-      showToast.info(`This request is already ${request.status}.`);
+      showToast.info(
+        'Unavailable',
+        `This request is already ${request.status}.`,
+      );
       return;
     }
     setIsModalOpen(true);
   };
 
-  // Handle Confirm Donation
   const handleConfirmDonation = async () => {
     setIsSubmitting(true);
     try {
-      // Prepare PATCH payload
       const payload = {
         status: 'inprogress',
         donorName: currentUser.name,
         donorEmail: currentUser.email,
-        userId: currentUser.id || currentUser._id, // <--- ADD THIS
-        role: currentUser.role || 'donor', // <--- ADD THIS
+        userId: currentUser.id || currentUser._id,
+        role: currentUser.role || 'donor',
       };
-      // Call the PATCH API
-
       const response = await serverMutation(
         `/api/donation-requests/${request._id}`,
         payload,
         'PATCH',
       );
-      // Call the server action directly (do NOT use serverMutation here)
-      // const response = await donateBloodAction(request._id, payload);
-
       if (response.success) {
-        showToast.success('You have successfully volunteered to donate! 🩸');
+        showToast.success(
+          'Donation confirmed!',
+          'You have volunteered to donate blood 🩸',
+        );
         setIsModalOpen(false);
-        // Refresh the page to show updated status
         router.refresh();
       } else {
-        showToast.error(response.message || 'Failed to confirm donation');
+        showToast.error(
+          'Failed',
+          response.message || 'Could not confirm donation.',
+        );
       }
     } catch (error) {
-      console.error('Donation error:', error);
-      showToast.error(error.message || 'An error occurred. Please try again.');
+      showToast.error('Error', error.message || 'An error occurred.');
     } finally {
       setIsSubmitting(false);
     }
@@ -95,197 +131,244 @@ export default function DonationRequestDetailsClient({
 
   return (
     <>
-      {/* ── Main Info Card ── */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 bg-linear-to-r from-red-50 to-white">
-          <div className="flex justify-between items-start flex-wrap gap-4">
-            <h2 className="text-2xl font-bold text-gray-800">
-              Request for {request.recipientName}
+      {/* ── Back link ── */}
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-600 transition-colors mb-6"
+      >
+        ← Back to requests
+      </button>
+
+      {/* ── Hero Banner ── */}
+      <div className="relative bg-gradient-to-br from-red-600 to-red-900 rounded-2xl p-7 mb-5 overflow-hidden">
+        {/* decorative circles */}
+        <div className="absolute -right-8 -top-8 w-44 h-44 rounded-full bg-white/5" />
+        <div className="absolute right-10 -bottom-10 w-28 h-28 rounded-full bg-white/[0.04]" />
+
+        <div className="relative flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-xs font-semibold tracking-widest text-red-300 mb-2">
+              BLOOD REQUEST
+            </p>
+            <h2 className="text-2xl font-extrabold text-white mb-1">
+              {request.recipientName}
             </h2>
-            <span className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-800 border border-yellow-200 rounded-full text-sm font-medium">
-              {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+            <p className="text-sm text-red-200">
+              Posted on{' '}
+              {new Date(request.createdAt).toLocaleDateString('en-BD', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+              {request.requesterName && ` · by ${request.requesterName}`}
+            </p>
+          </div>
+          <div className="flex flex-col items-end gap-3">
+            <div className="w-16 h-16 rounded-2xl bg-white/15 border-2 border-white/25 flex items-center justify-center text-white text-xl font-black">
+              {request.bloodGroup}
+            </div>
+            <span
+              className={`inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wider px-3 py-1.5 rounded-full border ${st.cls}`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
+              {st.label.toUpperCase()}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mt-2">
-            Posted on {new Date(request.createdAt).toLocaleDateString()}
-          </p>
+        </div>
+      </div>
+
+      {/* ── Main Card ── */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-5">
+        {/* section label */}
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-50">
+          <span className="text-[10px] font-bold tracking-widest text-gray-400">
+            REQUEST INFORMATION
+          </span>
+          <div className="flex-1 h-px bg-gray-50" />
         </div>
 
-        <div className="p-6 space-y-6">
-          {/* ── Grid Details ── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <FaUser className="text-gray-400 mt-1" size={18} />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Requester</p>
-                  <p className="text-gray-800 font-medium">
-                    {request.requesterName}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {request.requesterEmail}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <FaTint className="text-red-400 mt-1" size={18} />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">
-                    Blood Group
-                  </p>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800 border border-red-200">
-                    {request.bloodGroup}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <FaCalendar className="text-gray-400 mt-1" size={18} />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">
-                    Donation Date & Time
-                  </p>
-                  <p className="text-gray-800">
-                    {new Date(request.donationDate).toLocaleDateString()}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {request.donationTime}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <FaMapMarkerAlt className="text-red-400 mt-1" size={18} />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Location</p>
-                  <p className="text-gray-800 font-medium">
-                    {request.recipientDistrictName}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {request.recipientUpazilaName}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <FaHospital className="text-gray-400 mt-1" size={18} />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Hospital</p>
-                  <p className="text-gray-800">{request.hospitalName}</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <FaMapPin className="text-gray-400 mt-1" size={18} />
-                <div>
-                  <p className="text-sm font-medium text-gray-500">
-                    Full Address
-                  </p>
-                  <p className="text-gray-800">{request.fullAddress}</p>
-                </div>
-              </div>
-            </div>
+        {/* 2-col grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-50">
+          {/* left col */}
+          <div>
+            <InfoItem
+              icon={<FaUser size={14} />}
+              label="Requester"
+              value={request.requesterName}
+              sub={request.requesterEmail}
+            />
+            <InfoItem
+              icon={<FaTint size={14} />}
+              label="Blood Group"
+              iconRed
+              value={
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg text-sm font-bold">
+                  ♥ {request.bloodGroup}
+                </span>
+              }
+            />
+            <InfoItem
+              icon={<FaCalendar size={14} />}
+              label="Date & Time"
+              value={new Date(request.donationDate).toLocaleDateString(
+                'en-BD',
+                { day: 'numeric', month: 'long', year: 'numeric' },
+              )}
+              sub={request.donationTime}
+            />
           </div>
-
-          {/* ── Request Message ── */}
-          <div className="pt-4 border-t border-gray-100">
-            <div className="flex items-start gap-3">
-              <FaCommentDots className="text-gray-400 mt-1" size={18} />
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">
-                  Request Message
-                </p>
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                  <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                    {request.requestMessage}
-                  </p>
-                </div>
-              </div>
-            </div>
+          {/* right col */}
+          <div>
+            <InfoItem
+              icon={<FaMapMarkerAlt size={14} />}
+              label="Location"
+              iconRed
+              value={request.recipientDistrictName}
+              sub={request.recipientUpazilaName}
+            />
+            <InfoItem
+              icon={<FaHospital size={14} />}
+              label="Hospital"
+              value={request.hospitalName}
+            />
+            <InfoItem
+              icon={<FaMapPin size={14} />}
+              label="Full Address"
+              value={request.fullAddress}
+            />
           </div>
         </div>
 
-        {/* ── Footer: Donate Button ── */}
-        <div className="p-6 border-t border-gray-200 bg-gray-50 flex justify-end">
+        {/* donor info — only when inprogress */}
+        {request.status === 'inprogress' && request.donorName && (
+          <div className="mx-6 mb-5 mt-1 flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl p-4">
+            <div className="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-base flex-shrink-0">
+              {request.donorName?.charAt(0)}
+            </div>
+            <div>
+              <p className="text-xs font-bold text-green-600 tracking-wider uppercase mb-0.5">
+                Donor Confirmed
+              </p>
+              <p className="text-sm font-semibold text-green-800">
+                {request.donorName}
+              </p>
+              <p className="text-xs text-green-500">{request.donorEmail}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Request Message */}
+        <div className="flex items-center gap-3 px-6 py-4 border-t border-gray-50">
+          <span className="text-[10px] font-bold tracking-widest text-gray-400">
+            REQUEST MESSAGE
+          </span>
+          <div className="flex-1 h-px bg-gray-50" />
+        </div>
+        <div className="px-6 pb-6">
+          <div className="bg-gray-50 border border-gray-100 rounded-xl p-5 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+            {request.requestMessage}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-5 border-t border-gray-100 bg-gray-50/50 flex items-center justify-end gap-3">
+          <button
+            onClick={() => router.back()}
+            className="px-5 py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+          >
+            Back
+          </button>
           <button
             onClick={handleDonateClick}
             disabled={!isDonatable || isMyOwnRequest}
-            className="flex items-center gap-3 px-8 py-3 bg-red-600 hover:bg-red-700 text-white text-lg font-semibold rounded-lg transition-colors shadow-md shadow-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-7 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
           >
-            <FaHeart className="text-red-100" />
+            <FaHeart size={13} />
             {isMyOwnRequest
-              ? 'Cannot Donate to Own Request'
+              ? 'Your Own Request'
               : !isDonatable
-                ? `Already ${request.status}`
+                ? `Already ${st.label}`
                 : 'Donate Blood'}
           </button>
         </div>
       </div>
 
-      {/* ── Donate Confirmation Modal ── */}
+      {/* ── Confirm Modal ── */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={() => setIsModalOpen(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
+              initial={{ scale: 0.92, y: 16 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
+              exit={{ scale: 0.92, y: 16 }}
+              transition={{ type: 'spring', damping: 22, stiffness: 300 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
               onClick={e => e.stopPropagation()}
             >
-              {/* Modal Header */}
-              <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+              {/* head */}
+              <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                    <FaHeart className="text-red-600" />
+                  <div className="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+                    <FaHeart size={15} />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-lg font-bold text-gray-900">
                     Confirm Donation
                   </h3>
                 </div>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
                 >
-                  <FaTimes size={20} />
+                  <FaTimes size={15} />
                 </button>
               </div>
 
-              {/* Modal Body */}
-              <div className="p-6 space-y-4">
-                <p className="text-gray-600">
-                  You are about to volunteer to donate blood for this request.
-                  Please confirm your details.
+              {/* body */}
+              <div className="px-6 py-5 space-y-4">
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  You are about to volunteer to donate blood. Please confirm
+                  your details below.
                 </p>
 
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-2">
-                  <div className="flex items-center gap-3">
-                    <FaUser className="text-gray-400" size={16} />
+                {/* donor info box */}
+                <div className="bg-gray-50 border border-gray-100 rounded-xl divide-y divide-gray-100">
+                  <div className="flex items-center gap-3 p-4">
+                    <FaUser className="text-gray-400" size={14} />
                     <div>
-                      <p className="text-xs text-gray-500">Donor Name</p>
-                      <p className="text-gray-800 font-medium">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        Donor Name
+                      </p>
+                      <p className="text-sm font-semibold text-gray-800">
                         {currentUser.name}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <FaEnvelope className="text-gray-400" size={16} />
+                  <div className="flex items-center gap-3 p-4">
+                    <FaEnvelope className="text-gray-400" size={14} />
                     <div>
-                      <p className="text-xs text-gray-500">Donor Email</p>
-                      <p className="text-gray-800 font-medium">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        Donor Email
+                      </p>
+                      <p className="text-sm font-semibold text-gray-800">
                         {currentUser.email}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg flex items-start gap-2">
-                  <FaCheckCircle className="text-blue-500 mt-0.5 shrink-0" />
-                  <p className="text-xs text-blue-700">
+                {/* notice */}
+                <div className="flex gap-3 items-start bg-blue-50 border border-blue-100 rounded-xl p-4">
+                  <FaCheckCircle
+                    className="text-blue-500 mt-0.5 flex-shrink-0"
+                    size={14}
+                  />
+                  <p className="text-xs text-blue-700 leading-relaxed">
                     By confirming, you agree to donate blood for{' '}
                     <strong>{request.recipientName}</strong> at{' '}
                     <strong>{request.hospitalName}</strong> on{' '}
@@ -297,31 +380,26 @@ export default function DonationRequestDetailsClient({
                 </div>
               </div>
 
-              {/* Modal Footer */}
-              <div className="p-6 border-t border-gray-200 flex gap-3 justify-end bg-gray-50">
+              {/* footer */}
+              <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex gap-3 justify-end">
                 <button
                   onClick={() => setIsModalOpen(false)}
                   disabled={isSubmitting}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  className="px-5 py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleConfirmDonation}
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 shadow-sm"
+                  className="flex items-center gap-2 px-6 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50 shadow-md shadow-red-500/20"
                 >
                   {isSubmitting ? (
-                    <>
-                      <FaSpinner className="animate-spin" />
-                      Confirming...
-                    </>
+                    <FaSpinner className="animate-spin" size={13} />
                   ) : (
-                    <>
-                      <FaHeart size={14} />
-                      Confirm Donation
-                    </>
+                    <FaHeart size={13} />
                   )}
+                  {isSubmitting ? 'Confirming...' : 'Confirm Donation'}
                 </button>
               </div>
             </motion.div>
