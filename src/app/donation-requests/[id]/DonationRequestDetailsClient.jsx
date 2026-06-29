@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { serverMutation } from "@/lib/core/server";
-import { toast } from "react-toastify";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { serverMutation } from '@/lib/core/server';
+import { toast } from 'react-toastify';
 import {
   FaUser,
   FaEnvelope,
@@ -18,8 +18,9 @@ import {
   FaSpinner,
   FaTimes,
   FaCheckCircle,
-} from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+} from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { showToast } from '@/utils/toast';
 // import { setDonationInProgress } from "@/lib/action/donetion";
 // import { donateBloodAction } from "@/lib/action/donation.action";
 
@@ -33,16 +34,22 @@ export default function DonationRequestDetailsClient({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Check if the request is already inprogress/done/canceled
-  const isDonatable = request.status === "pending";
+  const isDonatable = request.status === 'pending';
 
   // Handle Donate Button Click
   const handleDonateClick = () => {
+    // ── blocked user check ──
+    if (currentUser?.status === 'blocked') {
+      showToast.error('Account blocked', 'You cannot donate. Contact support.');
+      return;
+    }
+
     if (isMyOwnRequest) {
-      toast.error("You cannot donate to your own request.");
+      showToast.error('You cannot donate to your own request.');
       return;
     }
     if (!isDonatable) {
-      toast.info(`This request is already ${request.status}.`);
+      showToast.info(`This request is already ${request.status}.`);
       return;
     }
     setIsModalOpen(true);
@@ -54,33 +61,33 @@ export default function DonationRequestDetailsClient({
     try {
       // Prepare PATCH payload
       const payload = {
-        status: "inprogress",
+        status: 'inprogress',
         donorName: currentUser.name,
         donorEmail: currentUser.email,
         userId: currentUser.id || currentUser._id, // <--- ADD THIS
-        role: currentUser.role || "donor", // <--- ADD THIS
+        role: currentUser.role || 'donor', // <--- ADD THIS
       };
       // Call the PATCH API
 
       const response = await serverMutation(
         `/api/donation-requests/${request._id}`,
         payload,
-        "PATCH",
+        'PATCH',
       );
       // Call the server action directly (do NOT use serverMutation here)
       // const response = await donateBloodAction(request._id, payload);
 
       if (response.success) {
-        toast.success("You have successfully volunteered to donate! 🩸");
+        showToast.success('You have successfully volunteered to donate! 🩸');
         setIsModalOpen(false);
         // Refresh the page to show updated status
         router.refresh();
       } else {
-        toast.error(response.message || "Failed to confirm donation");
+        showToast.error(response.message || 'Failed to confirm donation');
       }
     } catch (error) {
-      console.error("Donation error:", error);
-      toast.error(error.message || "An error occurred. Please try again.");
+      console.error('Donation error:', error);
+      showToast.error(error.message || 'An error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -90,7 +97,7 @@ export default function DonationRequestDetailsClient({
     <>
       {/* ── Main Info Card ── */}
       <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-red-50 to-white">
+        <div className="p-6 border-b border-gray-200 bg-linear-to-r from-red-50 to-white">
           <div className="flex justify-between items-start flex-wrap gap-4">
             <h2 className="text-2xl font-bold text-gray-800">
               Request for {request.recipientName}
@@ -206,10 +213,10 @@ export default function DonationRequestDetailsClient({
           >
             <FaHeart className="text-red-100" />
             {isMyOwnRequest
-              ? "Cannot Donate to Own Request"
+              ? 'Cannot Donate to Own Request'
               : !isDonatable
                 ? `Already ${request.status}`
-                : "Donate Blood"}
+                : 'Donate Blood'}
           </button>
         </div>
       </div>
@@ -228,7 +235,7 @@ export default function DonationRequestDetailsClient({
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               {/* Modal Header */}
               <div className="p-6 border-b border-gray-200 flex justify-between items-center">
@@ -279,9 +286,9 @@ export default function DonationRequestDetailsClient({
                 <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg flex items-start gap-2">
                   <FaCheckCircle className="text-blue-500 mt-0.5 shrink-0" />
                   <p className="text-xs text-blue-700">
-                    By confirming, you agree to donate blood for{" "}
-                    <strong>{request.recipientName}</strong> at{" "}
-                    <strong>{request.hospitalName}</strong> on{" "}
+                    By confirming, you agree to donate blood for{' '}
+                    <strong>{request.recipientName}</strong> at{' '}
+                    <strong>{request.hospitalName}</strong> on{' '}
                     <strong>
                       {new Date(request.donationDate).toLocaleDateString()}
                     </strong>
